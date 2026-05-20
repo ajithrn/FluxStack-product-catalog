@@ -5,6 +5,34 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2025-05-20
+
+### Added
+- **REST API**: Public read endpoints under `fs-catalog/v1` namespace
+  - `GET /products` — paginated list with search, orderby, and taxonomy filters (category, brand, type, tag by slug)
+  - `GET /products/{id}` — single product with full content, gallery images, product info, and specifications
+  - `GET /terms/{taxonomy}` — taxonomy terms with counts, parent info for hierarchical taxonomies
+  - Response headers: `X-WP-Total`, `X-WP-TotalPages` for pagination
+  - All endpoints are publicly readable (no auth required for GET)
+- **Import/Export**: CSV-based product data management
+  - **Export**: Download all products as CSV with optional taxonomy filters (category, brand, type)
+  - **Import**: Upload CSV to create or update products
+    - Products with existing ID are updated; new rows created as drafts
+    - Taxonomy terms auto-created if they don't exist
+    - Pipe-separated values for multiple terms (e.g. `wire-rope|chain`)
+    - AJAX upload with results feedback (created/updated/skipped/errors)
+  - Admin UI at Products > Import/Export with two-column layout
+  - CSV columns: id, title, content, excerpt, status, menu_order, featured_image, categories, brands, types, tags
+- **REST API Toggle**: API is disabled by default; enable from Products > Settings > Advanced
+  - New "Advanced" settings tab with REST API toggle
+  - Shows endpoint URL when enabled
+
+### Technical
+- New file: `includes/class-fs-product-rest-api.php` — REST API controller with route registration, response formatting
+- New file: `includes/class-fs-product-import-export.php` — CSV export/import handlers with validation
+- New file: `templates/admin/import-export-page.php` — Admin UI with export filters and import form
+- Updated `fs-product-catalog.php`: Load and initialize REST API and Import/Export classes
+
 ## [1.6.0] - 2025-05-20
 
 ### Added
@@ -386,6 +414,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **1.8.0** (2025-05-20): REST API endpoints, CSV import/export with admin UI
 - **1.6.0** (2025-05-20): Sorting dropdown, related products, pagination, Schema.org markup, lazy loading, search integration
 - **1.5.0** (2025-05-20): Card-based sidebar, item limits, collapsible sections, active filters at top, separate archive/single limits
 - **1.4.0** (2025-05-20): Admin settings page with tabbed UI, AJAX save, all options configurable from dashboard

@@ -44,6 +44,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<span class="dashicons dashicons-format-image"></span>
 			<?php esc_html_e( 'Product Card', 'fs-product-catalog' ); ?>
 		</button>
+		<button class="fs-settings-tabs__tab" data-tab="advanced">
+			<span class="dashicons dashicons-admin-tools"></span>
+			<?php esc_html_e( 'Advanced', 'fs-product-catalog' ); ?>
+		</button>
 	</nav>
 
 	<!-- General Tab -->
@@ -320,6 +324,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<option value="16:9" <?php selected( $settings['card_image_ratio'], '16:9' ); ?>><?php esc_html_e( 'Landscape (16:9) — wider, good for horizontal products', 'fs-product-catalog' ); ?></option>
 					</select>
 					<span class="fs-settings-field__help"><?php esc_html_e( 'Upload images at or above this ratio for best results. Smaller images will be upscaled to fill.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<!-- Advanced Tab -->
+	<div class="fs-settings-panel" data-panel="advanced">
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'REST API', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'The REST API exposes product data as JSON endpoints for headless frontends, mobile apps, or third-party integrations.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[enable_rest_api]" value="1" <?php checked( $settings['enable_rest_api'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Enable REST API', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help">
+						<?php
+						printf(
+							/* translators: %s: API base URL */
+							esc_html__( 'When enabled, product data is available at %s. Public read access, no authentication required.', 'fs-product-catalog' ),
+							'<code>' . esc_html( rest_url( 'fs-catalog/v1/products' ) ) . '</code>'
+						);
+						?>
+					</span>
 				</div>
 			</div>
 		</section>

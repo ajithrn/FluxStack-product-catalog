@@ -3,7 +3,7 @@
  * Plugin Name: FluxStack Product Catalog
  * Plugin URI: https://ajithrn.com
  * Description: A custom product catalog system without e-commerce functionality. Creates a custom post type for products with categories, brands, tags, and types.
- * Version: 1.6.0
+ * Version: 1.8.0
  * Author: Ajith R N
  * Author URI: https://ajithrn.com
  * Text Domain: fs-product-catalog
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'FS_PRODUCT_CATALOG_VERSION', '1.6.0' );
+define( 'FS_PRODUCT_CATALOG_VERSION', '1.8.0' );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -69,6 +69,8 @@ class FS_Product_Catalog {
 		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-frontend.php';
 		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-ajax.php';
 		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-settings.php';
+		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-rest-api.php';
+		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-import-export.php';
 	}
 
 	/**
@@ -152,6 +154,8 @@ class FS_Product_Catalog {
 		FS_Product_Frontend::init();
 		FS_Product_Ajax::init();
 		FS_Product_Settings::init();
+		FS_Product_REST_API::init();
+		FS_Product_Import_Export::init();
 	}
 
 	/**

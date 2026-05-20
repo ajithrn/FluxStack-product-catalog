@@ -11,8 +11,10 @@ This document provides detailed technical information for developers working wit
 3. [Template System](#template-system)
 4. [Hooks & Filters Reference](#hooks--filters-reference)
 5. [AJAX Implementation](#ajax-implementation)
-6. [CSS Architecture](#css-architecture)
-7. [JavaScript Modules](#javascript-modules)
+6. [REST API](#rest-api)
+7. [Import / Export](#import--export)
+8. [CSS Architecture](#css-architecture)
+9. [JavaScript Modules](#javascript-modules)
 8. [Extending the Plugin](#extending-the-plugin)
 9. [Best Practices](#best-practices)
 10. [Troubleshooting](#troubleshooting)
@@ -34,7 +36,9 @@ fs-product-catalog/
 │   ├── class-fs-product-template-loader.php
 │   ├── class-fs-product-frontend.php
 │   ├── class-fs-product-ajax.php
-│   └── class-fs-product-settings.php
+│   ├── class-fs-product-settings.php
+│   ├── class-fs-product-rest-api.php
+│   └── class-fs-product-import-export.php
 ├── templates/                       # Frontend templates
 │   ├── admin/
 │   │   └── settings-page.php
@@ -572,6 +576,183 @@ echo esc_url($url);
 echo esc_attr($attribute);
 echo wp_kses_post($html);
 ```
+
+---
+
+## REST API
+
+The plugin provides a public read-only REST API under the `fs-catalog/v1` namespace. No authentication is required for GET requests.
+
+> **Note:** The REST API is disabled by default. Enable it from **Products > Settings > Advanced > Enable REST API**, or via filter:
+> ```php
+> add_filter('init', function() {
+>     update_option('fs_product_catalog_settings', array_merge(
+>         get_option('fs_product_catalog_settings', array()),
+>         array('enable_rest_api' => true)
+>     ));
+> }, 1);
+> ```
+
+### Base URL
+
+```
+/wp-json/fs-catalog/v1/
+```
+
+### Endpoints
+
+#### List Products
+
+```
+GET /wp-json/fs-catalog/v1/products
+```
+
+**Parameters:**
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `page` | int | 1 | Page number |
+| `per_page` | int | 12 | Items per page (max 100) |
+| `search` | string | — | Search query |
+| `orderby` | string | menu_order | Sort field: `menu_order`, `title`, `date` |
+| `order` | string | ASC | Sort direction: `ASC`, `DESC` |
+| `category` | string | — | Filter by category slug (comma-separated for multiple) |
+| `brand` | string | — | Filter by brand slug |
+| `type` | string | — | Filter by type slug |
+| `tag` | string | — | Filter by tag slug |
+
+**Response Headers:**
+- `X-WP-Total` — Total number of matching products
+- `X-WP-TotalPages` — Total number of pages
+
+**Response (array of products):**
+```json
+[
+  {
+    "id": 123,
+    "title": "Product Name",
+    "slug": "product-name",
+    "excerpt": "Short description...",
+    "link": "https://site.com/product/product-name/",
+    "date": "2025-01-15 10:30:00",
+    "modified": "2025-05-20 14:00:00",
+    "menu_order": 0,
+    "image": { "id": 456, "url": "...", "thumbnail": "...", "alt": "..." },
+    "categories": [{ "id": 1, "name": "Wire Rope", "slug": "wire-rope" }],
+    "brands": [],
+    "types": [],
+    "tags": []
+  }
+]
+```
+
+#### Single Product
+
+```
+GET /wp-json/fs-catalog/v1/products/{id}
+```
+
+Returns the same fields as the list endpoint plus:
+- `content` — Full HTML content
+- `gallery` — Array of gallery images (`id`, `url`, `thumbnail`)
+- `info` — Product info repeater items (`title`, `content`)
+- `specifications` — Specification tabs (`title`, `content`)
+
+#### Taxonomy Terms
+
+```
+GET /wp-json/fs-catalog/v1/terms/{taxonomy}
+```
+
+**Allowed taxonomies:** `fs-product-category`, `fs-product-brand`, `fs-product-type`, `fs-product-tag`
+
+**Parameters:**
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `hide_empty` | bool | true | Hide terms with no products |
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Wire Rope",
+    "slug": "wire-rope",
+    "count": 24,
+    "link": "https://site.com/product-category/wire-rope/",
+    "parent": 0
+  }
+]
+```
+
+### Usage Examples
+
+```javascript
+// Fetch products filtered by category
+fetch('/wp-json/fs-catalog/v1/products?category=wire-rope&per_page=20')
+  .then(r => r.json())
+  .then(products => console.log(products));
+
+// Get single product with full details
+fetch('/wp-json/fs-catalog/v1/products/123')
+  .then(r => r.json())
+  .then(product => console.log(product.specifications));
+
+// Get all categories
+fetch('/wp-json/fs-catalog/v1/terms/fs-product-category')
+  .then(r => r.json())
+  .then(terms => console.log(terms));
+```
+
+---
+
+## Import / Export
+
+Products can be bulk-managed via CSV files from **Products > Import/Export** in the admin.
+
+### CSV Format
+
+The CSV uses these columns (only `title` is required for import):
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| `id` | No | Product ID (if provided, updates existing product) |
+| `title` | **Yes** | Product title |
+| `content` | No | Full HTML content |
+| `excerpt` | No | Short description |
+| `status` | No | `publish`, `draft`, or `pending` (defaults to `draft`) |
+| `menu_order` | No | Sort order number |
+| `featured_image` | No | Image URL (export only, not imported) |
+| `categories` | No | Category slugs, pipe-separated |
+| `brands` | No | Brand slugs, pipe-separated |
+| `types` | No | Type slugs, pipe-separated |
+| `tags` | No | Tag slugs, pipe-separated |
+
+### Taxonomy Values
+
+Multiple terms are separated by pipe (`|`):
+
+```csv
+title,categories,brands,tags
+"Wire Rope 6x7","general-purpose-wire-rope|wire-rope","x100-grade","heavy-duty|outdoor"
+```
+
+### Import Behavior
+
+- Rows with an `id` matching an existing product will **update** that product
+- Rows without an `id` (or with a non-matching ID) will **create** a new product as draft
+- Taxonomy terms that don't exist will be **auto-created**
+- Rows without a `title` are **skipped**
+
+### Export Filters
+
+Export can be filtered by:
+- Category (single select)
+- Brand (single select)
+- Type (single select)
+
+Leaving all filters on "All" exports the entire catalog.
 
 ---
 

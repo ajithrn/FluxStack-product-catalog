@@ -66,6 +66,9 @@ class FS_Product_Settings {
 		'card_show_excerpt'    => true,
 		'card_show_more_link'  => true,
 		'card_image_ratio'     => '1:1',
+
+		// Advanced.
+		'enable_rest_api'      => false,
 	);
 
 	/**
@@ -236,6 +239,7 @@ class FS_Product_Settings {
 			'card_show_more_link',
 			'show_related_products',
 			'show_sorting',
+			'enable_rest_api',
 		);
 
 		foreach ( $toggles as $toggle ) {

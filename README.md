@@ -21,6 +21,8 @@ A custom WordPress product catalog plugin without e-commerce functionality. Crea
 - **Product Search**: Dedicated search results page with archive layout
 - **Template Override System**: Easy customization via theme directory
 - **Admin Settings**: Full settings UI with no code required
+- **REST API**: Public read endpoints for headless/decoupled usage
+- **Import/Export**: Bulk manage products via CSV files
 
 ## Requirements
 
@@ -56,6 +58,7 @@ Most display options can be configured from **Products > Settings** in the WordP
 - **Single Product**: Sidebar on/off, position, visible sections, items limit, related products toggle and count
 - **Archive**: Sorting dropdown on/off, filter sidebar on/off, position, visible filter groups
 - **Product Card**: Category label, excerpt, "View Details" link, image ratio
+- **Advanced**: Enable/disable REST API
 
 All settings can also be overridden via PHP filters for developers (see below).
 
@@ -87,6 +90,28 @@ The plugin uses CSS custom properties (variables) for easy styling:
 ```
 
 For complete CSS documentation, see [DEVELOPER.md](DEVELOPER.md#css-architecture)
+
+### REST API
+
+The plugin exposes a public read-only API for headless or decoupled usage:
+
+```
+GET /wp-json/fs-catalog/v1/products          # List (with filters, search, pagination)
+GET /wp-json/fs-catalog/v1/products/{id}     # Single product (full details + ACF fields)
+GET /wp-json/fs-catalog/v1/terms/{taxonomy}  # Taxonomy terms
+```
+
+No authentication required for reading. See [DEVELOPER.md](DEVELOPER.md#rest-api) for full parameter docs.
+
+**Note:** The REST API is disabled by default. Enable it from **Products > Settings > Advanced**.
+
+### Import / Export
+
+Bulk manage products via CSV at **Products > Import/Export**:
+- **Export**: Download all products (or filtered by category/brand/type) as CSV
+- **Import**: Upload CSV to create or update products in bulk
+
+See [DEVELOPER.md](DEVELOPER.md#import--export) for CSV format details.
 
 ### Hooks & Filters
 
