@@ -1,0 +1,205 @@
+/**
+ * Admin Styles for Product Catalog
+ *
+ * @package FS_Product_Catalog
+ */
+
+/* ==========================================================================
+   Product Admin Columns
+   ========================================================================== */
+
+/* Thumbnail column styling */
+.column-thumbnail {
+	width: 80px;
+}
+
+.column-thumbnail img {
+	display: block;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Taxonomy columns */
+.column-product_categories,
+.column-product_brands,
+.column-product_types,
+.column-product_tags {
+	width: 15%;
+}
+
+/* ==========================================================================
+   Taxonomy Image Columns
+   ========================================================================== */
+
+/* Image column in taxonomy lists */
+.column-image {
+	width: 70px;
+	text-align: center;
+}
+
+.column-image img {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/* Placeholder for missing images */
+.column-image .dashicons {
+	font-size: 24px;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+}
+
+/* ==========================================================================
+   ACF Field Styling
+   ========================================================================== */
+
+/* Product name field (read-only) styling */
+.acf-field[data-name="product_name"] input[readonly] {
+	background-color: #f5f5f5;
+	cursor: not-allowed;
+	color: #666;
+}
+
+/* Tab styling improvements */
+.acf-tab-wrap .acf-tab-group {
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 20px;
+}
+
+/* Repeater field styling */
+.acf-repeater .acf-row {
+	border: 1px solid #e5e5e5;
+	margin-bottom: 10px;
+	border-radius: 3px;
+}
+
+.acf-repeater .acf-row:hover {
+	border-color: #ccc;
+}
+
+/* ==========================================================================
+   Taxonomy Edit Screen
+   ========================================================================== */
+
+/* Image field on taxonomy edit screens */
+.term-php .acf-field[data-type="image"],
+.edit-tags-php .acf-field[data-type="image"] {
+	margin-top: 20px;
+}
+
+.term-php .acf-field[data-type="image"] .acf-label,
+.edit-tags-php .acf-field[data-type="image"] .acf-label {
+	font-weight: 600;
+	margin-bottom: 10px;
+}
+
+/* Image preview in taxonomy forms */
+.acf-image-uploader .image-wrap {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	overflow: hidden;
+}
+
+.acf-image-uploader .image-wrap img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+/* ==========================================================================
+   Product Edit Screen
+   ========================================================================== */
+
+/* Seamless style adjustments */
+.acf-field-group-seamless > .acf-field {
+	padding: 15px 12px;
+}
+
+.acf-field-group-seamless > .acf-field:first-child {
+	padding-top: 0;
+}
+
+/* WYSIWYG editor improvements */
+.acf-field[data-type="wysiwyg"] {
+	margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+	/* Stack columns on mobile */
+	.column-product_categories,
+	.column-product_brands,
+	.column-product_types,
+	.column-product_tags {
+		width: auto;
+	}
+	
+	/* Adjust thumbnail size on mobile */
+	.column-thumbnail {
+		width: 60px;
+	}
+	
+	.column-thumbnail img {
+		max-width: 50px;
+		height: auto;
+	}
+	
+	/* Adjust taxonomy image column on mobile */
+	.column-image {
+		width: 60px;
+	}
+	
+	.column-image img {
+		max-width: 40px;
+		height: auto;
+	}
+}
+
+/* ==========================================================================
+   Admin List Table Improvements
+   ========================================================================== */
+
+/* Better spacing for product list */
+.post-type-fs-products .wp-list-table {
+	border: 1px solid #ddd;
+}
+
+.post-type-fs-products .wp-list-table th,
+.post-type-fs-products .wp-list-table td {
+	vertical-align: middle;
+}
+
+/* Taxonomy list improvements */
+.taxonomy-fs-product-category .wp-list-table,
+.taxonomy-fs-product-brand .wp-list-table,
+.taxonomy-fs-product-type .wp-list-table {
+	border: 1px solid #ddd;
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+/* Helper for centering content */
+.fs-product-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Helper for image placeholders */
+.fs-product-placeholder {
+	background: #f0f0f0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 3px;
+}
+
+.fs-product-placeholder .dashicons {
+	color: #ccc;
+}
