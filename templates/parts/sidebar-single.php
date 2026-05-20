@@ -37,13 +37,8 @@ $product_id = get_the_ID();
 
 			<!-- Categories -->
 			<?php
-			$categories = get_terms(
-				array(
-					'taxonomy'   => 'fs-product-category',
-					'hide_empty' => true,
-				)
-			);
-			if ( ! empty( $categories ) && ! is_wp_error( $categories ) && apply_filters( 'fs_single_sidebar_show_categories', true ) ) :
+			$categories = FS_Product_Frontend::get_cached_terms( 'fs-product-category' );
+			if ( ! empty( $categories ) && apply_filters( 'fs_single_sidebar_show_categories', true ) ) :
 				?>
 				<div class="fs-filter-group fs-filter-categories">
 					<h4 class="fs-filter-title"><?php esc_html_e( 'Categories', 'fs-product-catalog' ); ?></h4>
@@ -62,13 +57,8 @@ $product_id = get_the_ID();
 
 			<!-- Brands -->
 			<?php
-			$brands = get_terms(
-				array(
-					'taxonomy'   => 'fs-product-brand',
-					'hide_empty' => true,
-				)
-			);
-			if ( ! empty( $brands ) && ! is_wp_error( $brands ) && apply_filters( 'fs_single_sidebar_show_brands', true ) ) :
+			$brands = FS_Product_Frontend::get_cached_terms( 'fs-product-brand' );
+			if ( ! empty( $brands ) && apply_filters( 'fs_single_sidebar_show_brands', true ) ) :
 				?>
 				<div class="fs-filter-group fs-filter-brands">
 					<h4 class="fs-filter-title"><?php esc_html_e( 'Brands', 'fs-product-catalog' ); ?></h4>
@@ -87,13 +77,8 @@ $product_id = get_the_ID();
 
 			<!-- Types -->
 			<?php
-			$types = get_terms(
-				array(
-					'taxonomy'   => 'fs-product-type',
-					'hide_empty' => true,
-				)
-			);
-			if ( ! empty( $types ) && ! is_wp_error( $types ) && apply_filters( 'fs_single_sidebar_show_types', true ) ) :
+			$types = FS_Product_Frontend::get_cached_terms( 'fs-product-type' );
+			if ( ! empty( $types ) && apply_filters( 'fs_single_sidebar_show_types', true ) ) :
 				?>
 				<div class="fs-filter-group fs-filter-types">
 					<h4 class="fs-filter-title"><?php esc_html_e( 'Types', 'fs-product-catalog' ); ?></h4>
@@ -112,13 +97,8 @@ $product_id = get_the_ID();
 
 			<!-- Tags -->
 			<?php
-			$tags = get_terms(
-				array(
-					'taxonomy'   => 'fs-product-tag',
-					'hide_empty' => true,
-				)
-			);
-			if ( ! empty( $tags ) && ! is_wp_error( $tags ) && apply_filters( 'fs_single_sidebar_show_tags', true ) ) :
+			$tags = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
+			if ( ! empty( $tags ) && apply_filters( 'fs_single_sidebar_show_tags', true ) ) :
 				?>
 				<div class="fs-filter-group fs-filter-tags">
 					<h4 class="fs-filter-title"><?php esc_html_e( 'Tags', 'fs-product-catalog' ); ?></h4>

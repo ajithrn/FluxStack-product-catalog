@@ -30,6 +30,11 @@ class FS_Product_Frontend {
 
 		// Modify main query.
 		add_action( 'pre_get_posts', array( __CLASS__, 'modify_main_query' ) );
+
+		// Flush term caches when terms change.
+		add_action( 'created_term', array( __CLASS__, 'flush_term_cache' ), 10, 3 );
+		add_action( 'edited_term', array( __CLASS__, 'flush_term_cache' ), 10, 3 );
+		add_action( 'delete_term', array( __CLASS__, 'flush_term_cache' ), 10, 3 );
 	}
 
 	/**
@@ -366,5 +371,57 @@ class FS_Product_Frontend {
 	 */
 	public static function get_gallery_thumbnail_size() {
 		return apply_filters( 'fs_product_gallery_thumbnail_size', 'thumbnail' );
+	}
+
+	/**
+	 * Get cached taxonomy terms for sidebar display.
+	 *
+	 * Uses transients to avoid repeated DB queries on every page load.
+	 * Cache is automatically busted when terms are created, edited, or deleted.
+	 *
+	 * @param string $taxonomy Taxonomy name.
+	 * @return array Array of term objects, or empty array.
+	 */
+	public static function get_cached_terms( $taxonomy ) {
+		$transient_key = 'fs_sidebar_terms_' . sanitize_key( $taxonomy );
+		$terms         = get_transient( $transient_key );
+
+		if ( false === $terms ) {
+			$terms = get_terms(
+				array(
+					'taxonomy'   => $taxonomy,
+					'hide_empty' => true,
+				)
+			);
+
+			if ( is_wp_error( $terms ) ) {
+				return array();
+			}
+
+			// Cache for 1 hour.
+			set_transient( $transient_key, $terms, HOUR_IN_SECONDS );
+		}
+
+		return $terms;
+	}
+
+	/**
+	 * Flush sidebar term caches when terms change.
+	 *
+	 * @param int    $term_id Term ID.
+	 * @param int    $tt_id Term taxonomy ID.
+	 * @param string $taxonomy Taxonomy slug.
+	 */
+	public static function flush_term_cache( $term_id, $tt_id, $taxonomy ) {
+		$product_taxonomies = array(
+			'fs-product-category',
+			'fs-product-brand',
+			'fs-product-type',
+			'fs-product-tag',
+		);
+
+		if ( in_array( $taxonomy, $product_taxonomies, true ) ) {
+			delete_transient( 'fs_sidebar_terms_' . sanitize_key( $taxonomy ) );
+		}
 	}
 }

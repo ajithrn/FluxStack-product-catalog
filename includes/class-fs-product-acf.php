@@ -46,8 +46,13 @@ class FS_Product_ACF {
 	 * @return string
 	 */
 	public static function set_acf_json_save_point( $path ) {
+		// Only modify save path in admin for users with proper capabilities.
+		if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+			return $path;
+		}
+
 		// Check if we're saving a product field group.
-		if ( isset( $_POST['acf_field_group']['key'] ) && strpos( $_POST['acf_field_group']['key'], 'group_fs_product' ) === 0 ) {
+		if ( isset( $_POST['acf_field_group']['key'] ) && strpos( sanitize_text_field( wp_unslash( $_POST['acf_field_group']['key'] ) ), 'group_fs_product' ) === 0 ) {
 			return FS_PRODUCT_CATALOG_PLUGIN_DIR . 'acf-json';
 		}
 		return $path;

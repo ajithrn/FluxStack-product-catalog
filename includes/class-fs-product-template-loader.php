@@ -99,11 +99,6 @@ class FS_Product_Template_Loader {
 		// Allow filtering of template parts.
 		$templates = apply_filters( 'fs_product_get_template_part', $templates, $slug, $name );
 
-		// Extract args to make them available in template.
-		if ( ! empty( $args ) && is_array( $args ) ) {
-			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
-		}
-
 		foreach ( $templates as $template ) {
 			// Check theme directory.
 			$theme_template = locate_template( 'fs-product-catalog/parts/' . $template );
@@ -132,10 +127,6 @@ class FS_Product_Template_Loader {
 	 * @param string $default_path Default path (optional).
 	 */
 	public static function get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
-		if ( ! empty( $args ) && is_array( $args ) ) {
-			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
-		}
-
 		$located = self::locate_template( $template_name );
 
 		if ( ! file_exists( $located ) ) {

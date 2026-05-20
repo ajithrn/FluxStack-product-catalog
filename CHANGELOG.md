@@ -5,6 +5,31 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-05-20
+
+### Security
+- **Fixed query injection in `load_more_products()`**: Removed unsafe `array_merge` with client-supplied `query_vars`. Now uses the same whitelisted parameter approach as `filter_products()`.
+- **Capped `per_page` parameter**: Both AJAX handlers now limit to max 100 items per request to prevent DoS via large queries.
+- **Secured ACF JSON save point**: Added `is_admin()` and `current_user_can('manage_options')` checks before modifying the save path. Input is now sanitized.
+
+### Fixed
+- **Removed broken taxonomy column sorting**: Taxonomy columns in admin were registered as sortable but the sort logic was incorrect (sorted by post title instead of term). Removed fake sortable behavior.
+- **Removed `extract()` usage**: Template loader no longer uses `extract()` to pass args. Eliminates variable pollution risk and PHPCS warnings.
+
+### Added
+- **Transient caching for sidebar taxonomy queries**: New `FS_Product_Frontend::get_cached_terms()` method caches `get_terms()` results for 1 hour. Cache auto-busts on term create/edit/delete.
+- **`uninstall.php`**: Cleans up plugin options and transients when plugin is deleted. Does not remove user content (posts, terms, ACF data).
+
+### Technical
+- Updated `includes/class-fs-product-ajax.php`: Rewrote `load_more_products()` with safe parameter handling, capped `per_page` in both handlers
+- Updated `includes/class-fs-product-acf.php`: Added capability and admin checks to save point filter
+- Updated `includes/class-fs-product-template-loader.php`: Removed `extract()` from `get_template_part()` and `get_template()`
+- Updated `includes/class-fs-product-cpt.php`: Removed broken sortable columns and sort handler
+- Updated `includes/class-fs-product-frontend.php`: Added `get_cached_terms()`, `flush_term_cache()`, and cache invalidation hooks
+- Updated `templates/parts/sidebar-single.php`: Uses cached term queries
+- Updated `templates/parts/sidebar-filters.php`: Uses cached term queries
+- Added `uninstall.php`
+
 ## [1.2.0] - 2025-05-20
 
 ### Added
@@ -224,6 +249,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **1.3.0** (2025-05-20): Security fixes, transient caching, removed extract(), uninstall handler
 - **1.2.0** (2025-05-20): Responsive tables, content typography, shared CSS architecture, single sidebar enabled by default
 - **1.1.1** (2025-01-27): Bug fixes, single product sidebar, display filters, styling improvements
 - **1.1.0** (2025-01-27): Frontend template system, AJAX filtering, infinite scroll

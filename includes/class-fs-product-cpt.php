@@ -206,9 +206,8 @@ class FS_Product_CPT {
 	 * @return array
 	 */
 	public static function register_sortable_columns( $columns ) {
-		$columns['product_categories'] = 'product_categories';
-		$columns['product_brands']     = 'product_brands';
-		$columns['product_types']      = 'product_types';
+		// Taxonomy columns are not reliably sortable via WP_Query.
+		// Remove them from sortable to avoid broken sorting behavior.
 		return $columns;
 	}
 
@@ -218,21 +217,8 @@ class FS_Product_CPT {
 	 * @param WP_Query $query The WordPress query object.
 	 */
 	public static function sort_admin_columns( $query ) {
-		if ( ! is_admin() || ! $query->is_main_query() || 'fs-products' !== $query->get( 'post_type' ) ) {
-			return;
-		}
-
-		$orderby = $query->get( 'orderby' );
-
-		$taxonomy_map = array(
-			'product_categories' => 'fs-product-category',
-			'product_brands'     => 'fs-product-brand',
-			'product_types'      => 'fs-product-type',
-		);
-
-		if ( isset( $taxonomy_map[ $orderby ] ) ) {
-			$query->set( 'orderby', 'name' );
-		}
+		// No custom sorting needed since taxonomy columns are not sortable.
+		return;
 	}
 
 	/**

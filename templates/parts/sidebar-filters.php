@@ -12,34 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Get all taxonomies.
-$categories = get_terms(
-	array(
-		'taxonomy'   => 'fs-product-category',
-		'hide_empty' => true,
-	)
-);
-
-$brands = get_terms(
-	array(
-		'taxonomy'   => 'fs-product-brand',
-		'hide_empty' => true,
-	)
-);
-
-$types = get_terms(
-	array(
-		'taxonomy'   => 'fs-product-type',
-		'hide_empty' => true,
-	)
-);
-
-$tags = get_terms(
-	array(
-		'taxonomy'   => 'fs-product-tag',
-		'hide_empty' => true,
-	)
-);
+// Get all taxonomies (cached).
+$categories = FS_Product_Frontend::get_cached_terms( 'fs-product-category' );
+$brands     = FS_Product_Frontend::get_cached_terms( 'fs-product-brand' );
+$types      = FS_Product_Frontend::get_cached_terms( 'fs-product-type' );
+$tags       = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
 ?>
 
 <div class="fs-filters-wrap">

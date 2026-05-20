@@ -44,7 +44,7 @@ class FS_Product_Ajax {
 		$types      = isset( $_POST['types'] ) ? array_map( 'absint', (array) $_POST['types'] ) : array();
 		$tags       = isset( $_POST['tags'] ) ? array_map( 'absint', (array) $_POST['tags'] ) : array();
 		$paged      = isset( $_POST['paged'] ) ? absint( $_POST['paged'] ) : 1;
-		$per_page   = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 12;
+		$per_page   = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 12;
 
 		// Build query args.
 		$args = array(
@@ -146,13 +146,14 @@ class FS_Product_Ajax {
 
 		// Get parameters.
 		$paged    = isset( $_POST['paged'] ) ? absint( $_POST['paged'] ) : 1;
-		$per_page = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 12;
-		$query_vars = isset( $_POST['query_vars'] ) ? json_decode( wp_unslash( $_POST['query_vars'] ), true ) : array();
+		$per_page = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 12;
 
-		// Sanitize query vars.
-		if ( ! empty( $query_vars ) && is_array( $query_vars ) ) {
-			$query_vars = array_map( 'sanitize_text_field', $query_vars );
-		}
+		// Get filter parameters (same as filter_products).
+		$search     = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$categories = isset( $_POST['categories'] ) ? array_map( 'absint', (array) $_POST['categories'] ) : array();
+		$brands     = isset( $_POST['brands'] ) ? array_map( 'absint', (array) $_POST['brands'] ) : array();
+		$types      = isset( $_POST['types'] ) ? array_map( 'absint', (array) $_POST['types'] ) : array();
+		$tags       = isset( $_POST['tags'] ) ? array_map( 'absint', (array) $_POST['tags'] ) : array();
 
 		// Build query args.
 		$args = array(
@@ -164,9 +165,51 @@ class FS_Product_Ajax {
 			'order'          => 'ASC',
 		);
 
-		// Merge with query vars if available.
-		if ( ! empty( $query_vars ) ) {
-			$args = array_merge( $args, $query_vars );
+		// Add search.
+		if ( ! empty( $search ) ) {
+			$args['s'] = $search;
+		}
+
+		// Build tax query.
+		$tax_query = array();
+
+		if ( ! empty( $categories ) ) {
+			$tax_query[] = array(
+				'taxonomy' => 'fs-product-category',
+				'field'    => 'term_id',
+				'terms'    => $categories,
+			);
+		}
+
+		if ( ! empty( $brands ) ) {
+			$tax_query[] = array(
+				'taxonomy' => 'fs-product-brand',
+				'field'    => 'term_id',
+				'terms'    => $brands,
+			);
+		}
+
+		if ( ! empty( $types ) ) {
+			$tax_query[] = array(
+				'taxonomy' => 'fs-product-type',
+				'field'    => 'term_id',
+				'terms'    => $types,
+			);
+		}
+
+		if ( ! empty( $tags ) ) {
+			$tax_query[] = array(
+				'taxonomy' => 'fs-product-tag',
+				'field'    => 'term_id',
+				'terms'    => $tags,
+			);
+		}
+
+		if ( ! empty( $tax_query ) ) {
+			if ( count( $tax_query ) > 1 ) {
+				$tax_query['relation'] = 'AND';
+			}
+			$args['tax_query'] = $tax_query;
 		}
 
 		// Allow filtering of query args.
