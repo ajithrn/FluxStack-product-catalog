@@ -207,6 +207,7 @@ class FS_Product_REST_API {
 		$response = new WP_REST_Response( $products, 200 );
 		$response->header( 'X-WP-Total', $query->found_posts );
 		$response->header( 'X-WP-TotalPages', $query->max_num_pages );
+		$response->header( 'Cache-Control', 'public, max-age=300' );
 
 		return $response;
 	}
@@ -225,7 +226,10 @@ class FS_Product_REST_API {
 			return new WP_Error( 'not_found', __( 'Product not found.', 'fs-product-catalog' ), array( 'status' => 404 ) );
 		}
 
-		return new WP_REST_Response( self::format_product( $post_id, true ), 200 );
+		$response = new WP_REST_Response( self::format_product( $post_id, true ), 200 );
+		$response->header( 'Cache-Control', 'public, max-age=300' );
+
+		return $response;
 	}
 
 	/**
@@ -267,7 +271,10 @@ class FS_Product_REST_API {
 			$data[] = $term_data;
 		}
 
-		return new WP_REST_Response( $data, 200 );
+		$response = new WP_REST_Response( $data, 200 );
+		$response->header( 'Cache-Control', 'public, max-age=600' );
+
+		return $response;
 	}
 
 	/**

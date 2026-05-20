@@ -585,6 +585,7 @@
 	border-radius: var(--fs-border-radius);
 	overflow: hidden;
 	transition: all var(--fs-transition);
+	will-change: box-shadow;
 }
 
 .fs-product-card:hover {

@@ -518,7 +518,7 @@
 .fs-product-content thead,
 .fs-spec-content thead,
 .fs-info-item-content thead {
-	background: var(--fs-bg-alt);
+	/* No forced background — respect inline styles from WYSIWYG content */
 }
 
 .fs-product-content th,
@@ -526,7 +526,6 @@
 .fs-info-item-content th {
 	font-weight: 600;
 	text-align: left;
-	color: var(--fs-text);
 }
 
 .fs-product-content th,
@@ -540,17 +539,9 @@
 	vertical-align: top;
 }
 
-.fs-product-content tr:nth-child(even),
-.fs-spec-content tr:nth-child(even),
-.fs-info-item-content tr:nth-child(even) {
-	background: var(--fs-bg-alt);
-}
+/* Removed: alternating row colors and hover — conflicts with WYSIWYG inline styles */
 
-.fs-product-content tr:hover,
-.fs-spec-content tr:hover,
-.fs-info-item-content tr:hover {
-	background: rgba(0, 123, 255, 0.03);
-}
+/* Table hover and header overrides removed — let WYSIWYG content styles take precedence */
 
 /* Lists inside content */
 .fs-product-content ul,

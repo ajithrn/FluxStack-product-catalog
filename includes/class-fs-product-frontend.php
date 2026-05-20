@@ -39,6 +39,9 @@ class FS_Product_Frontend {
 		// Schema.org structured data.
 		add_action( 'wp_head', array( __CLASS__, 'output_product_schema' ) );
 
+		// Preload LCP image on single product pages.
+		add_action( 'wp_head', array( __CLASS__, 'preload_lcp_image' ), 1 );
+
 		// Product search results template.
 		add_filter( 'template_include', array( __CLASS__, 'search_results_template' ), 99 );
 	}
@@ -389,15 +392,39 @@ class FS_Product_Frontend {
 	/**
 	 * Get cached taxonomy terms for sidebar display.
 	 *
-	 * Uses transients to avoid repeated DB queries on every page load.
+	 * Uses object cache (if persistent) or transients to avoid repeated DB queries.
 	 * Cache is automatically busted when terms are created, edited, or deleted.
 	 *
 	 * @param string $taxonomy Taxonomy name.
 	 * @return array Array of term objects, or empty array.
 	 */
 	public static function get_cached_terms( $taxonomy ) {
-		$transient_key = 'fs_sidebar_terms_' . sanitize_key( $taxonomy );
-		$terms         = get_transient( $transient_key );
+		$cache_key = 'fs_sidebar_terms_' . sanitize_key( $taxonomy );
+
+		// Prefer object cache if a persistent backend is available.
+		if ( wp_using_ext_object_cache() ) {
+			$terms = wp_cache_get( $cache_key, 'fs_product_catalog' );
+			if ( false !== $terms ) {
+				return $terms;
+			}
+
+			$terms = get_terms(
+				array(
+					'taxonomy'   => $taxonomy,
+					'hide_empty' => true,
+				)
+			);
+
+			if ( is_wp_error( $terms ) ) {
+				return array();
+			}
+
+			wp_cache_set( $cache_key, $terms, 'fs_product_catalog', HOUR_IN_SECONDS );
+			return $terms;
+		}
+
+		// Fallback to transients.
+		$terms = get_transient( $cache_key );
 
 		if ( false === $terms ) {
 			$terms = get_terms(
@@ -411,8 +438,7 @@ class FS_Product_Frontend {
 				return array();
 			}
 
-			// Cache for 1 hour.
-			set_transient( $transient_key, $terms, HOUR_IN_SECONDS );
+			set_transient( $cache_key, $terms, HOUR_IN_SECONDS );
 		}
 
 		return $terms;
@@ -434,7 +460,12 @@ class FS_Product_Frontend {
 		);
 
 		if ( in_array( $taxonomy, $product_taxonomies, true ) ) {
-			delete_transient( 'fs_sidebar_terms_' . sanitize_key( $taxonomy ) );
+			$cache_key = 'fs_sidebar_terms_' . sanitize_key( $taxonomy );
+			delete_transient( $cache_key );
+
+			if ( wp_using_ext_object_cache() ) {
+				wp_cache_delete( $cache_key, 'fs_product_catalog' );
+			}
 		}
 	}
 
@@ -488,6 +519,39 @@ class FS_Product_Frontend {
 		$schema = apply_filters( 'fs_product_schema', $schema, $product_id );
 
 		echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
+	}
+
+	/**
+	 * Preload the LCP (Largest Contentful Paint) image on single product pages.
+	 * Outputs a <link rel="preload"> tag for the featured image.
+	 */
+	public static function preload_lcp_image() {
+		if ( ! is_singular( 'fs-products' ) ) {
+			return;
+		}
+
+		$thumbnail_id = get_post_thumbnail_id();
+		if ( ! $thumbnail_id ) {
+			return;
+		}
+
+		$image_src = wp_get_attachment_image_src( $thumbnail_id, 'large' );
+		if ( ! $image_src ) {
+			return;
+		}
+
+		$srcset = wp_get_attachment_image_srcset( $thumbnail_id, 'large' );
+		$sizes  = wp_get_attachment_image_sizes( $thumbnail_id, 'large' );
+
+		echo '<link rel="preload" as="image" href="' . esc_url( $image_src[0] ) . '"';
+		if ( $srcset ) {
+			echo ' imagesrcset="' . esc_attr( $srcset ) . '"';
+		}
+		if ( $sizes ) {
+			echo ' imagesizes="' . esc_attr( $sizes ) . '"';
+		}
+		echo ' fetchpriority="high"';
+		echo " />\n";
 	}
 
 	/**

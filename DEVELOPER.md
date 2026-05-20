@@ -1250,11 +1250,34 @@ check_ajax_referer('fs_product_filter_nonce', 'nonce');
 **Issue**: Slow page load
 
 **Solution**:
-1. Enable object caching
-2. Optimize images
-3. Limit products per page
+1. Enable object caching (Redis/Memcached) — the plugin automatically uses `wp_cache_*` when a persistent cache is detected
+2. Optimize images — the plugin adds `loading="lazy"` to gallery thumbnails and `fetchpriority="high"` to the main image
+3. Limit products per page via Settings > General
 4. Use CDN for assets
-5. Enable lazy loading
+5. LCP preload is automatic — the plugin outputs `<link rel="preload">` for the featured image on single product pages
+
+### Performance Architecture (v1.9.0)
+
+**Caching Strategy:**
+- Sidebar taxonomy queries are cached (1 hour TTL)
+- Uses `wp_using_ext_object_cache()` to detect persistent cache (Redis, Memcached)
+- Falls back to transients when no persistent cache is available
+- Cache auto-busts when terms are created, edited, or deleted
+
+**Image Loading:**
+- Main gallery image: `loading="eager"` + `fetchpriority="high"`
+- Gallery thumbnails: `loading="lazy"`
+- Product cards: WordPress core handles `srcset`/`sizes` automatically
+- Single product pages: `<link rel="preload" as="image">` with `imagesrcset` in `<head>`
+
+**REST API Caching:**
+- Product endpoints: `Cache-Control: public, max-age=300` (5 minutes)
+- Terms endpoints: `Cache-Control: public, max-age=600` (10 minutes)
+- CDNs and browsers can cache responses without additional configuration
+
+**CSS:**
+- `will-change: box-shadow` on product cards for GPU-accelerated hover transitions
+- Table styles respect WYSIWYG inline styles — no forced overrides that conflict with content
 
 ---
 

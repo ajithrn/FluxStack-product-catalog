@@ -5,6 +5,24 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2025-05-20
+
+### Added
+- **LCP Image Preload**: Single product pages output `<link rel="preload">` for the featured image with `imagesrcset` and `fetchpriority="high"` for faster Largest Contentful Paint
+- **REST API Cache Headers**: All API responses include `Cache-Control: public, max-age=300` (products) or `max-age=600` (terms)
+
+### Changed
+- **Object Caching**: `get_cached_terms()` now checks `wp_using_ext_object_cache()` and uses `wp_cache_*` functions when a persistent object cache (Redis, Memcached) is available, falling back to transients otherwise
+- **Cache Invalidation**: `flush_term_cache()` now clears both object cache and transients
+- **CSS Performance**: Added `will-change: box-shadow` to product cards for smoother hover transitions
+- **Table Styles**: Removed forced `thead` background, alternating row colors, and hover effects that were overriding WYSIWYG inline styles — tables now respect content-authored colors
+
+### Technical
+- Updated `includes/class-fs-product-frontend.php`: Object cache support, LCP preload, dual cache invalidation
+- Updated `includes/class-fs-product-rest-api.php`: Cache-Control headers on all responses
+- Updated `assets/css/frontend-common.css`: `will-change` hint on product cards
+- Updated `assets/css/frontend-single.css`: Removed forced table colors (thead bg, alternating rows, hover, th color) to respect WYSIWYG inline styles
+
 ## [1.8.0] - 2025-05-20
 
 ### Added
@@ -414,6 +432,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **1.9.0** (2025-05-20): Object caching, LCP preload, REST API cache headers, CSS performance hints
 - **1.8.0** (2025-05-20): REST API endpoints, CSV import/export with admin UI
 - **1.6.0** (2025-05-20): Sorting dropdown, related products, pagination, Schema.org markup, lazy loading, search integration
 - **1.5.0** (2025-05-20): Card-based sidebar, item limits, collapsible sections, active filters at top, separate archive/single limits

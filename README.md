@@ -162,6 +162,7 @@ For complete hooks reference, see [DEVELOPER.md](DEVELOPER.md#hooks--filters-ref
 - **Accessibility**: ARIA labels, keyboard navigation, screen reader support
 - **Performance**: Conditional asset loading, transient caching, optimized queries
 - **Theme Neutral**: Load More button and UI elements inherit theme styles via CSS variables
+- **Performance**: Object caching support, LCP image preload, REST API cache headers, lazy loading
 - **Browser Support**: Modern browsers (no IE11 — uses CSS `:has()` selector)
 - **Standards Compliant**: Follows WordPress PHP, JavaScript, and CSS coding standards
 
