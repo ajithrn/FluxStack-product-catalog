@@ -7,17 +7,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_REST_API
+ * Class RestAPI
  *
  * Provides REST API endpoints under fs-catalog/v1 namespace.
  */
-class FS_Product_REST_API {
+class RestAPI {
 
 	/**
 	 * API namespace.
@@ -36,7 +38,7 @@ class FS_Product_REST_API {
 	 */
 	public static function register_routes() {
 		// Check if REST API is enabled in settings.
-		if ( ! (bool) FS_Product_Settings::get( 'enable_rest_api', false ) ) {
+		if ( ! (bool) Settings::get( 'enable_rest_api', false ) ) {
 			return;
 		}
 		// Products list.
@@ -44,7 +46,7 @@ class FS_Product_REST_API {
 			self::NAMESPACE,
 			'/products',
 			array(
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( __CLASS__, 'get_products' ),
 				'permission_callback' => '__return_true',
 				'args'                => self::get_products_args(),
@@ -56,7 +58,7 @@ class FS_Product_REST_API {
 			self::NAMESPACE,
 			'/products/(?P<id>\d+)',
 			array(
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( __CLASS__, 'get_product' ),
 				'permission_callback' => '__return_true',
 				'args'                => array(
@@ -74,7 +76,7 @@ class FS_Product_REST_API {
 			self::NAMESPACE,
 			'/terms/(?P<taxonomy>[a-z\-]+)',
 			array(
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( __CLASS__, 'get_terms' ),
 				'permission_callback' => '__return_true',
 				'args'                => array(
@@ -195,7 +197,7 @@ class FS_Product_REST_API {
 			$args['tax_query'] = $tax_query;
 		}
 
-		$query = new WP_Query( $args );
+		$query = new \WP_Query( $args );
 
 		$products = array();
 		while ( $query->have_posts() ) {
@@ -204,7 +206,7 @@ class FS_Product_REST_API {
 		}
 		wp_reset_postdata();
 
-		$response = new WP_REST_Response( $products, 200 );
+		$response = new \WP_REST_Response( $products, 200 );
 		$response->header( 'X-WP-Total', $query->found_posts );
 		$response->header( 'X-WP-TotalPages', $query->max_num_pages );
 		$response->header( 'Cache-Control', 'public, max-age=300' );
@@ -223,10 +225,10 @@ class FS_Product_REST_API {
 		$post    = get_post( $post_id );
 
 		if ( ! $post || 'fs-products' !== $post->post_type || 'publish' !== $post->post_status ) {
-			return new WP_Error( 'not_found', __( 'Product not found.', 'fs-product-catalog' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'not_found', __( 'Product not found.', 'fs-product-catalog' ), array( 'status' => 404 ) );
 		}
 
-		$response = new WP_REST_Response( self::format_product( $post_id, true ), 200 );
+		$response = new \WP_REST_Response( self::format_product( $post_id, true ), 200 );
 		$response->header( 'Cache-Control', 'public, max-age=300' );
 
 		return $response;
@@ -250,7 +252,7 @@ class FS_Product_REST_API {
 		);
 
 		if ( is_wp_error( $terms ) ) {
-			return new WP_Error( 'invalid_taxonomy', __( 'Invalid taxonomy.', 'fs-product-catalog' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'invalid_taxonomy', __( 'Invalid taxonomy.', 'fs-product-catalog' ), array( 'status' => 400 ) );
 		}
 
 		$data = array();
@@ -271,7 +273,7 @@ class FS_Product_REST_API {
 			$data[] = $term_data;
 		}
 
-		$response = new WP_REST_Response( $data, 200 );
+		$response = new \WP_REST_Response( $data, 200 );
 		$response->header( 'Cache-Control', 'public, max-age=600' );
 
 		return $response;

@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 $product_id      = get_the_ID();
 $thumbnail_id    = get_post_thumbnail_id( $product_id );
 $gallery_images  = get_field( 'product_gallery', $product_id );
-$thumbnail_size  = FS_Product_Frontend::get_thumbnail_size();
-$gallery_thumb_size = FS_Product_Frontend::get_gallery_thumbnail_size();
+$thumbnail_size  = \FSProductCatalog\Frontend::get_thumbnail_size();
+$gallery_thumb_size = \FSProductCatalog\Frontend::get_gallery_thumbnail_size();
 
 // Combine featured image with gallery images.
 $all_images = array();

@@ -75,7 +75,7 @@ $columns = min( $related_count, 4 );
 		<?php
 		while ( $related_query->have_posts() ) :
 			$related_query->the_post();
-			FS_Product_Template_Loader::get_template_part( 'loop/product-card' );
+			\FSProductCatalog\TemplateLoader::get_template_part( 'loop/product-card' );
 		endwhile;
 		?>
 	</div>

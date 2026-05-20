@@ -28,14 +28,14 @@ do_action( 'fs_product_before_main_content' );
 
 		<?php
 		// Breadcrumbs.
-		if ( FS_Product_Frontend::show_breadcrumbs() ) {
-			FS_Product_Template_Loader::get_template_part( 'breadcrumbs' );
+		if ( \FSProductCatalog\Frontend::show_breadcrumbs() ) {
+			\FSProductCatalog\TemplateLoader::get_template_part( 'breadcrumbs' );
 		}
 		?>
 
-		<div class="fs-product-single-layout <?php echo esc_attr( 'sidebar-' . FS_Product_Frontend::get_single_sidebar_position() ); ?>">
-			<?php if ( FS_Product_Frontend::show_single_sidebar() ) : ?>
-				<?php FS_Product_Template_Loader::get_template_part( 'sidebar-single' ); ?>
+		<div class="fs-product-single-layout <?php echo esc_attr( 'sidebar-' . \FSProductCatalog\Frontend::get_single_sidebar_position() ); ?>">
+			<?php if ( \FSProductCatalog\Frontend::show_single_sidebar() ) : ?>
+				<?php \FSProductCatalog\TemplateLoader::get_template_part( 'sidebar-single' ); ?>
 			<?php endif; ?>
 
 			<article id="product-<?php the_ID(); ?>" <?php post_class( 'fs-product-single' ); ?>>
@@ -49,31 +49,31 @@ do_action( 'fs_product_before_main_content' );
 
 				<?php
 				// Product header (title).
-				FS_Product_Template_Loader::get_template_part( 'product-header' );
+				\FSProductCatalog\TemplateLoader::get_template_part( 'product-header' );
 				?>
 
 				<?php
 				// Product content.
-				FS_Product_Template_Loader::get_template_part( 'product-content' );
+				\FSProductCatalog\TemplateLoader::get_template_part( 'product-content' );
 				?>
 
 				<div class="fs-product-main">
 					<div class="fs-product-main-inner">
 						<?php
 						// Product image gallery (left side).
-						FS_Product_Template_Loader::get_template_part( 'product-image-gallery' );
+						\FSProductCatalog\TemplateLoader::get_template_part( 'product-image-gallery' );
 						?>
 
 						<?php
 						// Product info items (right side).
-						FS_Product_Template_Loader::get_template_part( 'product-info-items' );
+						\FSProductCatalog\TemplateLoader::get_template_part( 'product-info-items' );
 						?>
 					</div>
 				</div>
 
 				<?php
 				// Product specifications.
-				FS_Product_Template_Loader::get_template_part( 'product-specifications' );
+				\FSProductCatalog\TemplateLoader::get_template_part( 'product-specifications' );
 				?>
 
 				<?php
@@ -85,7 +85,7 @@ do_action( 'fs_product_before_main_content' );
 
 				<?php
 				// Related products.
-				FS_Product_Template_Loader::get_template_part( 'related-products' );
+				\FSProductCatalog\TemplateLoader::get_template_part( 'related-products' );
 				?>
 
 			</article>

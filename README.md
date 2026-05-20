@@ -13,6 +13,7 @@ A custom WordPress product catalog plugin without e-commerce. Products with cate
 
 ```bash
 cd wp-content/plugins/fs-product-catalog
+composer install
 npm install && npm run build
 ```
 

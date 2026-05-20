@@ -5,17 +5,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_Taxonomies
+ * Class Taxonomies
  *
  * Handles the registration and management of product taxonomies.
  */
-class FS_Product_Taxonomies {
+class Taxonomies {
 	/**
 	 * Initialize the class
 	 */

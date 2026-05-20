@@ -7,17 +7,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_Ajax
+ * Class Ajax
  *
  * Manages AJAX functionality for product filtering and loading.
  */
-class FS_Product_Ajax {
+class Ajax {
 	/**
 	 * Initialize the class
 	 */
@@ -113,7 +115,7 @@ class FS_Product_Ajax {
 		$args = apply_filters( 'fs_product_ajax_query_args', $args );
 
 		// Execute query.
-		$query = new WP_Query( $args );
+		$query = new \WP_Query( $args );
 
 		// Prepare response.
 		$response = array(
@@ -128,13 +130,13 @@ class FS_Product_Ajax {
 			ob_start();
 			while ( $query->have_posts() ) {
 				$query->the_post();
-				FS_Product_Template_Loader::get_template_part( 'loop/product-card' );
+				TemplateLoader::get_template_part( 'loop/product-card' );
 			}
 			$response['html'] = ob_get_clean();
 			wp_reset_postdata();
 		} else {
 			ob_start();
-			FS_Product_Template_Loader::get_template_part( 'loop/no-products' );
+			TemplateLoader::get_template_part( 'loop/no-products' );
 			$response['html'] = ob_get_clean();
 		}
 
@@ -224,7 +226,7 @@ class FS_Product_Ajax {
 		$args = apply_filters( 'fs_product_load_more_query_args', $args );
 
 		// Execute query.
-		$query = new WP_Query( $args );
+		$query = new \WP_Query( $args );
 
 		// Prepare response.
 		$response = array(
@@ -239,7 +241,7 @@ class FS_Product_Ajax {
 			ob_start();
 			while ( $query->have_posts() ) {
 				$query->the_post();
-				FS_Product_Template_Loader::get_template_part( 'loop/product-card' );
+				TemplateLoader::get_template_part( 'loop/product-card' );
 			}
 			$response['html'] = ob_get_clean();
 			wp_reset_postdata();

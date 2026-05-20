@@ -5,17 +5,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_CPT
+ * Class CPT
  *
  * Handles the registration and management of the Products custom post type.
  */
-class FS_Product_CPT {
+class CPT {
 	/**
 	 * Initialize the class
 	 */
@@ -283,7 +285,7 @@ class FS_Product_CPT {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
-		return new WP_Query( $args );
+		return new \WP_Query( $args );
 	}
 
 	/**

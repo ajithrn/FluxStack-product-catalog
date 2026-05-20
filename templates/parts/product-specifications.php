@@ -23,10 +23,32 @@ if ( empty( $specifications ) || ! is_array( $specifications ) ) {
 <div class="fs-product-specifications">
 	<h2 class="fs-product-specs-title"><?php esc_html_e( 'Specifications', 'fs-product-catalog' ); ?></h2>
 	
-	<div class="fs-specs-tabs">
-		<div class="fs-specs-tabs-nav" role="tablist">
-			<?php foreach ( $specifications as $index => $spec ) : ?>
-				<?php if ( ! empty( $spec['tab_title'] ) ) : ?>
+	<?php
+	// Filter out specs with no content at all.
+	$valid_specs = array();
+	foreach ( $specifications as $index => $spec ) {
+		if ( ! empty( $spec['content'] ) || ! empty( $spec['tab_title'] ) ) {
+			$valid_specs[] = $spec;
+		}
+	}
+
+	if ( empty( $valid_specs ) ) {
+		return;
+	}
+
+	// If only one spec, show without tabs.
+	if ( 1 === count( $valid_specs ) ) : ?>
+		<div class="fs-spec-content">
+			<?php echo wp_kses_post( $valid_specs[0]['content'] ); ?>
+		</div>
+	<?php else : ?>
+		<div class="fs-specs-tabs">
+			<div class="fs-specs-tabs-nav" role="tablist">
+				<?php foreach ( $valid_specs as $index => $spec ) :
+					$tab_title = ! empty( $spec['tab_title'] )
+						? $spec['tab_title']
+						: sprintf( __( 'Tab %d', 'fs-product-catalog' ), $index + 1 );
+					?>
 					<button 
 						type="button"
 						class="fs-specs-tab-button <?php echo 0 === $index ? 'active' : ''; ?>"
@@ -36,28 +58,28 @@ if ( empty( $specifications ) || ! is_array( $specifications ) ) {
 						id="fs-spec-tab-<?php echo esc_attr( $index ); ?>"
 						data-tab="<?php echo esc_attr( $index ); ?>"
 					>
-						<?php echo esc_html( $spec['tab_title'] ); ?>
+						<?php echo esc_html( $tab_title ); ?>
 					</button>
-				<?php endif; ?>
-			<?php endforeach; ?>
-		</div>
-		
-		<div class="fs-specs-tabs-content">
-			<?php foreach ( $specifications as $index => $spec ) : ?>
-				<?php if ( ! empty( $spec['tab_title'] ) && ! empty( $spec['content'] ) ) : ?>
-					<div 
-						class="fs-specs-tab-panel <?php echo 0 === $index ? 'active' : ''; ?>"
-						role="tabpanel"
-						aria-labelledby="fs-spec-tab-<?php echo esc_attr( $index ); ?>"
-						id="fs-spec-panel-<?php echo esc_attr( $index ); ?>"
-						<?php echo 0 !== $index ? 'hidden' : ''; ?>
-					>
-						<div class="fs-spec-content">
-							<?php echo wp_kses_post( $spec['content'] ); ?>
+				<?php endforeach; ?>
+			</div>
+			
+			<div class="fs-specs-tabs-content">
+				<?php foreach ( $valid_specs as $index => $spec ) : ?>
+					<?php if ( ! empty( $spec['content'] ) ) : ?>
+						<div 
+							class="fs-specs-tab-panel <?php echo 0 === $index ? 'active' : ''; ?>"
+							role="tabpanel"
+							aria-labelledby="fs-spec-tab-<?php echo esc_attr( $index ); ?>"
+							id="fs-spec-panel-<?php echo esc_attr( $index ); ?>"
+							<?php echo 0 !== $index ? 'hidden' : ''; ?>
+						>
+							<div class="fs-spec-content">
+								<?php echo wp_kses_post( $spec['content'] ); ?>
+							</div>
 						</div>
-					</div>
-				<?php endif; ?>
-			<?php endforeach; ?>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</div>
 		</div>
-	</div>
+	<?php endif; ?>
 </div>

@@ -9,25 +9,25 @@ The plugin follows a static-class pattern with WordPress hooks. Each class handl
 | Class | File | Responsibility |
 |-------|------|----------------|
 | `FS_Product_Catalog` | `fs-product-catalog.php` | Main plugin bootstrap, dependency check, component init |
-| `FS_Product_CPT` | `includes/class-fs-product-cpt.php` | Custom post type registration, admin columns |
-| `FS_Product_Taxonomies` | `includes/class-fs-product-taxonomies.php` | Taxonomy registration, image support |
-| `FS_Product_ACF` | `includes/class-fs-product-acf.php` | ACF field groups, JSON save point |
-| `FS_Product_Template_Loader` | `includes/class-fs-product-template-loader.php` | Template hierarchy, theme overrides |
-| `FS_Product_Frontend` | `includes/class-fs-product-frontend.php` | Asset loading, body classes, query modification, schema, LCP preload |
-| `FS_Product_Ajax` | `includes/class-fs-product-ajax.php` | AJAX filter/load-more handlers |
-| `FS_Product_Settings` | `includes/class-fs-product-settings.php` | Admin settings page, option management, filter integration |
-| `FS_Product_REST_API` | `includes/class-fs-product-rest-api.php` | REST API endpoints |
-| `FS_Product_Import_Export` | `includes/class-fs-product-import-export.php` | CSV import/export |
+| `FSProductCatalog\CPT` | `includes/class-fs-product-cpt.php` | Custom post type registration, admin columns |
+| `FSProductCatalog\Taxonomies` | `includes/class-fs-product-taxonomies.php` | Taxonomy registration, image support |
+| `FSProductCatalog\ACF` | `includes/class-fs-product-acf.php` | ACF field groups, JSON save point |
+| `FSProductCatalog\TemplateLoader` | `includes/class-fs-product-template-loader.php` | Template hierarchy, theme overrides |
+| `FSProductCatalog\Frontend` | `includes/class-fs-product-frontend.php` | Asset loading, body classes, query modification, schema, LCP preload |
+| `FSProductCatalog\Ajax` | `includes/class-fs-product-ajax.php` | AJAX filter/load-more handlers |
+| `FSProductCatalog\Settings` | `includes/class-fs-product-settings.php` | Admin settings page, option management, filter integration |
+| `FSProductCatalog\RestAPI` | `includes/class-fs-product-rest-api.php` | REST API endpoints |
+| `FSProductCatalog\ImportExport` | `includes/class-fs-product-import-export.php` | CSV import/export |
 
 ## Initialization Flow
 
 ```
 fs-product-catalog.php
+  → require vendor/autoload.php (Composer classmap)
   → FS_Product_Catalog::get_instance() (singleton)
-    → load_dependencies() — require all class files
     → init_hooks()
       → plugins_loaded → init_components()
-        → Each class::init() registers its own hooks
+        → CPT::init(), Taxonomies::init(), Frontend::init(), etc.
 ```
 
 ## Data Flow
@@ -36,9 +36,9 @@ fs-product-catalog.php
 
 ```
 template_include filter
-  → FS_Product_Template_Loader::template_loader()
+  → FSProductCatalog\TemplateLoader::template_loader()
     → Checks theme override → falls back to plugin template
-      → Template calls FS_Product_Template_Loader::get_template_part()
+      → Template calls \FSProductCatalog\TemplateLoader::get_template_part()
         → Renders parts (sidebar, cards, gallery, etc.)
 ```
 
@@ -47,7 +47,7 @@ template_include filter
 ```
 User checks filter → JS Filters.applyFilters()
   → POST to admin-ajax.php (action: fs_filter_products)
-    → FS_Product_Ajax::filter_products()
+    → FSProductCatalog\Ajax::filter_products()
       → Builds WP_Query with sanitized params
       → Renders product cards via template part
       → Returns HTML + metadata as JSON
@@ -58,12 +58,12 @@ User checks filter → JS Filters.applyFilters()
 
 ```
 Admin saves settings (AJAX)
-  → FS_Product_Settings::ajax_save()
+  → FSProductCatalog\Settings::ajax_save()
     → Sanitizes all inputs
     → Saves to single wp_option: fs_product_catalog_settings
 
 On frontend load:
-  → FS_Product_Settings::register_setting_filters() (priority 5)
+  → FSProductCatalog\Settings::register_setting_filters() (priority 5)
     → Feeds DB values into existing apply_filters() hooks
     → Developer filters at priority 10 still override
 ```

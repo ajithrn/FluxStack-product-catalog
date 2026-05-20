@@ -102,12 +102,12 @@ class FS_Product_Catalog {
 - Component registration
 - ACF Pro dependency check
 
-### Custom Post Type: `FS_Product_CPT`
+### Custom Post Type: `\FSProductCatalog\CPT`
 
 **File**: `includes/class-fs-product-cpt.php`
 
 ```php
-class FS_Product_CPT {
+class \FSProductCatalog\CPT {
     public static function init() { }
     public static function register_post_type() { }
     public static function disable_block_editor() { }
@@ -122,12 +122,12 @@ class FS_Product_CPT {
 - `get_products($args)`: Query products with custom args
 - `get_products_by_taxonomy($taxonomy, $terms, $limit)`: Filter by taxonomy
 
-### Taxonomies: `FS_Product_Taxonomies`
+### Taxonomies: `\FSProductCatalog\Taxonomies`
 
 **File**: `includes/class-fs-product-taxonomies.php`
 
 ```php
-class FS_Product_Taxonomies {
+class \FSProductCatalog\Taxonomies {
     public static function init() { }
     public static function register_taxonomies() { }
     public static function register_taxonomy_image_fields() { }
@@ -141,12 +141,12 @@ class FS_Product_Taxonomies {
 - `fs-product-type` (hierarchical)
 - `fs-product-tag` (non-hierarchical)
 
-### Template Loader: `FS_Product_Template_Loader`
+### Template Loader: `\FSProductCatalog\TemplateLoader`
 
 **File**: `includes/class-fs-product-template-loader.php`
 
 ```php
-class FS_Product_Template_Loader {
+class \FSProductCatalog\TemplateLoader {
     public static function init() { }
     public static function template_loader($template) { }
     public static function locate_template($template_name) { }
@@ -159,12 +159,12 @@ class FS_Product_Template_Loader {
 1. `{theme}/fs-product-catalog/{template}.php`
 2. `{plugin}/templates/{template}.php`
 
-### Frontend Handler: `FS_Product_Frontend`
+### Frontend Handler: `\FSProductCatalog\Frontend`
 
 **File**: `includes/class-fs-product-frontend.php`
 
 ```php
-class FS_Product_Frontend {
+class \FSProductCatalog\Frontend {
     public static function init() { }
     public static function enqueue_frontend_assets() { }
     public static function is_product_page() { }
@@ -184,12 +184,12 @@ class FS_Product_Frontend {
 - Specific CSS/JS for single vs archive
 - Localized JavaScript data
 
-### Settings Manager: `FS_Product_Settings`
+### Settings Manager: `\FSProductCatalog\Settings`
 
 **File**: `includes/class-fs-product-settings.php`
 
 ```php
-class FS_Product_Settings {
+class \FSProductCatalog\Settings {
     const OPTION_NAME = 'fs_product_catalog_settings';
     
     public static function init() { }
@@ -210,10 +210,10 @@ class FS_Product_Settings {
 **Accessing Settings in Code**:
 ```php
 // Get a single setting (with fallback to default)
-$per_page = FS_Product_Settings::get('products_per_page', 12);
+$per_page = \FSProductCatalog\Settings::get('products_per_page', 12);
 
 // Get all settings merged with defaults
-$all = FS_Product_Settings::get_all();
+$all = \FSProductCatalog\Settings::get_all();
 
 // Settings are also available via the existing filter system
 $per_page = apply_filters('fs_product_posts_per_page', 12);
@@ -221,12 +221,12 @@ $per_page = apply_filters('fs_product_posts_per_page', 12);
 
 **Settings Page Location**: Products > Settings (admin submenu)
 
-### AJAX Handler: `FS_Product_Ajax`
+### AJAX Handler: `\FSProductCatalog\Ajax`
 
 **File**: `includes/class-fs-product-ajax.php`
 
 ```php
-class FS_Product_Ajax {
+class \FSProductCatalog\Ajax {
     public static function init() { }
     public static function filter_products() { }
     public static function load_more_products() { }
@@ -251,7 +251,7 @@ apply_filters('template_include', $template);
 // 2. Plugin checks if it's a product page
 if (is_singular('fs-products')) {
     // 3. Locate template (theme first, then plugin)
-    $template = FS_Product_Template_Loader::locate_template('single-product.php');
+    $template = \FSProductCatalog\TemplateLoader::locate_template('single-product.php');
 }
 
 // 4. Template is loaded
@@ -262,10 +262,10 @@ include $template;
 
 ```php
 // In your template file
-FS_Product_Template_Loader::get_template_part('product-header');
+\FSProductCatalog\TemplateLoader::get_template_part('product-header');
 
 // With arguments
-FS_Product_Template_Loader::get_template_part('product-card', '', array(
+\FSProductCatalog\TemplateLoader::get_template_part('product-card', '', array(
     'show_excerpt' => true,
     'image_size' => 'medium'
 ));
@@ -1104,7 +1104,7 @@ add_action('fs_product_after_single_product', function() {
     if ($categories) {
         $category_ids = wp_list_pluck($categories, 'term_id');
         
-        $related = FS_Product_CPT::get_products_by_taxonomy(
+        $related = \FSProductCatalog\CPT::get_products_by_taxonomy(
             'fs-product-category',
             $category_ids,
             4
@@ -1117,7 +1117,7 @@ add_action('fs_product_after_single_product', function() {
             
             while ($related->have_posts()) {
                 $related->the_post();
-                FS_Product_Template_Loader::get_template_part('loop/product-card');
+                \FSProductCatalog\TemplateLoader::get_template_part('loop/product-card');
             }
             
             echo '</div></div>';
@@ -1143,7 +1143,7 @@ add_action('fs_product_after_single_product', function() {
 2. **Use template loader for parts**:
 ```php
 // Good
-FS_Product_Template_Loader::get_template_part('product-header');
+\FSProductCatalog\TemplateLoader::get_template_part('product-header');
 
 // Avoid
 include 'product-header.php';
@@ -1151,7 +1151,7 @@ include 'product-header.php';
 
 3. **Pass data via arguments**:
 ```php
-FS_Product_Template_Loader::get_template_part('product-card', '', array(
+\FSProductCatalog\TemplateLoader::get_template_part('product-card', '', array(
     'show_price' => true,
     'image_size' => 'large'
 ));

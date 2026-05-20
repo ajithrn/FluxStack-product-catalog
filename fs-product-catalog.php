@@ -27,6 +27,19 @@ define( 'FS_PRODUCT_CATALOG_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
+// Load Composer autoloader.
+require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'vendor/autoload.php';
+
+use FSProductCatalog\CPT;
+use FSProductCatalog\Taxonomies;
+use FSProductCatalog\ACF;
+use FSProductCatalog\TemplateLoader;
+use FSProductCatalog\Frontend;
+use FSProductCatalog\Ajax;
+use FSProductCatalog\Settings;
+use FSProductCatalog\RestAPI;
+use FSProductCatalog\ImportExport;
+
 /**
  * Main Plugin Class
  */
@@ -62,15 +75,7 @@ class FS_Product_Catalog {
 	 * Load required dependencies
 	 */
 	private function load_dependencies() {
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-cpt.php';
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-taxonomies.php';
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-acf.php';
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-template-loader.php';
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-frontend.php';
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-ajax.php';
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-settings.php';
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-rest-api.php';
-		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-import-export.php';
+		// Autoloaded via Composer — no manual requires needed.
 	}
 
 	/**
@@ -147,15 +152,15 @@ class FS_Product_Catalog {
 			return;
 		}
 
-		FS_Product_CPT::init();
-		FS_Product_Taxonomies::init();
-		FS_Product_ACF::init();
-		FS_Product_Template_Loader::init();
-		FS_Product_Frontend::init();
-		FS_Product_Ajax::init();
-		FS_Product_Settings::init();
-		FS_Product_REST_API::init();
-		FS_Product_Import_Export::init();
+		CPT::init();
+		Taxonomies::init();
+		ACF::init();
+		TemplateLoader::init();
+		Frontend::init();
+		Ajax::init();
+		Settings::init();
+		RestAPI::init();
+		ImportExport::init();
 	}
 
 	/**

@@ -8,25 +8,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2025-05-20
 
 ### Added
-- **Build Process**: npm-based asset pipeline with `clean-css-cli` and `terser`
+- **PSR-4 Namespacing**: All classes now live under `FSProductCatalog\` namespace
+  - `FSProductCatalog\CPT`, `FSProductCatalog\Frontend`, `FSProductCatalog\Ajax`, etc.
+  - Composer classmap autoloader (no manual `require_once` calls)
+- **Build Process**: npm-based asset pipeline
   - `npm run build` — concatenates and minifies all CSS/JS into single files
   - `npm run watch` — auto-rebuild on source file changes
-  - Output: `assets/dist/frontend.min.css`, `assets/dist/frontend.min.js`, `assets/dist/admin.min.css`, `assets/dist/admin-settings.min.js`
-  - Build step is required — no fallback to source files
-- **`.editorconfig`**: Consistent formatting across editors (tabs, UTF-8, LF line endings)
-- **`.phpcs.xml.dist`**: PHPCS configuration for WordPress-Extra coding standards
-- **`package.json`**: Dev dependencies and build scripts
+  - Output: `assets/dist/frontend.min.css` (26KB), `assets/dist/frontend.min.js` (13KB), `assets/dist/admin.min.css`, `assets/dist/admin-settings.min.js`
+  - 2 HTTP requests per page instead of 5-6
+- **`.editorconfig`**: Consistent formatting across editors
+- **`.phpcs.xml.dist`**: PHPCS configuration for WordPress-Extra standards
+- **`composer.json`**: Autoloader configuration
+- **`package.json`**: Build scripts and dev dependencies
+- **`.gitignore`**: Excludes `node_modules/`
 
 ### Changed
-- **Asset Loading**: Plugin now loads single bundled files from `assets/dist/` instead of multiple source files
-  - Frontend: 1 CSS + 1 JS request (was 3 CSS + 2 JS)
-  - Admin: 1 CSS + 1 JS request (was 2 CSS + 1 JS)
-- **Architecture Decision**: Full PSR-4 namespacing was evaluated and deferred — breaking change without benefit at this scale
+- **All classes renamed** (namespace handles the prefix now):
+  - `FS_Product_CPT` → `FSProductCatalog\CPT`
+  - `FS_Product_Frontend` → `FSProductCatalog\Frontend`
+  - `FS_Product_Ajax` → `FSProductCatalog\Ajax`
+  - `FS_Product_Settings` → `FSProductCatalog\Settings`
+  - `FS_Product_Template_Loader` → `FSProductCatalog\TemplateLoader`
+  - `FS_Product_REST_API` → `FSProductCatalog\RestAPI`
+  - `FS_Product_Import_Export` → `FSProductCatalog\ImportExport`
+  - `FS_Product_ACF` → `FSProductCatalog\ACF`
+  - `FS_Product_Taxonomies` → `FSProductCatalog\Taxonomies`
+- **All template references updated** to use fully-qualified namespaced class names
+- **Asset loading simplified** — single bundled file per context, no fallback logic
+- **Main plugin file** uses Composer autoloader instead of manual requires
 
-### Notes
-- All planned features from the improvement roadmap are complete
-- `npm install && npm run build` is now required after cloning or updating the plugin
-- Source files remain in `assets/css/` and `assets/js/` for development
+### Breaking Changes
+- Old class names (`FS_Product_Frontend`, etc.) no longer exist — no backward compatibility aliases
+- `npm install && npm run build` is required after cloning
+- `composer install` (or `composer dump-autoload`) is required for autoloading
 
 ## [1.9.0] - 2025-05-20
 

@@ -8,6 +8,7 @@ The plugin uses a minimal npm-based build step. Source files stay readable for d
 
 ```bash
 cd wp-content/plugins/fs-product-catalog
+composer install
 npm install
 npm run build
 ```

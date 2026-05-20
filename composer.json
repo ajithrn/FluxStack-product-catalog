@@ -1,0 +1,14 @@
+{
+    "name": "fluxstack/fs-product-catalog",
+    "description": "FluxStack Product Catalog WordPress Plugin",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "classmap": [
+            "includes/"
+        ]
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}

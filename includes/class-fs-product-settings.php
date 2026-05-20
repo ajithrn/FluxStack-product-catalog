@@ -7,17 +7,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_Settings
+ * Class Settings
  *
  * Manages plugin settings with admin UI and AJAX save.
  */
-class FS_Product_Settings {
+class Settings {
 
 	/**
 	 * Option name in wp_options table.
@@ -289,106 +291,106 @@ class FS_Product_Settings {
 	public static function register_setting_filters() {
 		// General.
 		add_filter( 'fs_product_posts_per_page', function( $value ) {
-			return FS_Product_Settings::get( 'products_per_page', $value );
+			return Settings::get( 'products_per_page', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_archive_columns', function( $value ) {
-			return FS_Product_Settings::get( 'archive_columns', $value );
+			return Settings::get( 'archive_columns', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_show_breadcrumbs', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'show_breadcrumbs', $value );
+			return (bool) Settings::get( 'show_breadcrumbs', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_pagination_mode', function( $value ) {
-			return FS_Product_Settings::get( 'pagination_mode', $value );
+			return Settings::get( 'pagination_mode', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_default_orderby', function( $value ) {
-			return FS_Product_Settings::get( 'default_orderby', $value );
+			return Settings::get( 'default_orderby', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_show_sorting', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'show_sorting', $value );
+			return (bool) Settings::get( 'show_sorting', $value );
 		}, 5 );
 
 		// Single product.
 		add_filter( 'fs_product_show_single_sidebar', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'single_show_sidebar', $value );
+			return (bool) Settings::get( 'single_show_sidebar', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_show_related', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'show_related_products', $value );
+			return (bool) Settings::get( 'show_related_products', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_related_count', function( $value ) {
-			return absint( FS_Product_Settings::get( 'related_products_count', $value ) );
+			return absint( Settings::get( 'related_products_count', $value ) );
 		}, 5 );
 
 		add_filter( 'fs_product_single_sidebar_position', function( $value ) {
-			return FS_Product_Settings::get( 'single_sidebar_position', $value );
+			return Settings::get( 'single_sidebar_position', $value );
 		}, 5 );
 
 		add_filter( 'fs_single_sidebar_show_search', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'single_sidebar_search', $value );
+			return (bool) Settings::get( 'single_sidebar_search', $value );
 		}, 5 );
 
 		add_filter( 'fs_single_sidebar_show_categories', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'single_sidebar_categories', $value );
+			return (bool) Settings::get( 'single_sidebar_categories', $value );
 		}, 5 );
 
 		add_filter( 'fs_single_sidebar_show_brands', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'single_sidebar_brands', $value );
+			return (bool) Settings::get( 'single_sidebar_brands', $value );
 		}, 5 );
 
 		add_filter( 'fs_single_sidebar_show_types', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'single_sidebar_types', $value );
+			return (bool) Settings::get( 'single_sidebar_types', $value );
 		}, 5 );
 
 		add_filter( 'fs_single_sidebar_show_tags', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'single_sidebar_tags', $value );
+			return (bool) Settings::get( 'single_sidebar_tags', $value );
 		}, 5 );
 
 		// Archive.
 		add_filter( 'fs_product_show_sidebar', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'archive_show_sidebar', $value );
+			return (bool) Settings::get( 'archive_show_sidebar', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_sidebar_position', function( $value ) {
-			return FS_Product_Settings::get( 'archive_sidebar_position', $value );
+			return Settings::get( 'archive_sidebar_position', $value );
 		}, 5 );
 
 		add_filter( 'fs_archive_sidebar_show_search', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'archive_sidebar_search', $value );
+			return (bool) Settings::get( 'archive_sidebar_search', $value );
 		}, 5 );
 
 		add_filter( 'fs_archive_sidebar_show_categories', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'archive_sidebar_categories', $value );
+			return (bool) Settings::get( 'archive_sidebar_categories', $value );
 		}, 5 );
 
 		add_filter( 'fs_archive_sidebar_show_brands', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'archive_sidebar_brands', $value );
+			return (bool) Settings::get( 'archive_sidebar_brands', $value );
 		}, 5 );
 
 		add_filter( 'fs_archive_sidebar_show_types', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'archive_sidebar_types', $value );
+			return (bool) Settings::get( 'archive_sidebar_types', $value );
 		}, 5 );
 
 		add_filter( 'fs_archive_sidebar_show_tags', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'archive_sidebar_tags', $value );
+			return (bool) Settings::get( 'archive_sidebar_tags', $value );
 		}, 5 );
 
 		// Product card.
 		add_filter( 'fs_product_card_show_category', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'card_show_category', $value );
+			return (bool) Settings::get( 'card_show_category', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_card_show_excerpt', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'card_show_excerpt', $value );
+			return (bool) Settings::get( 'card_show_excerpt', $value );
 		}, 5 );
 
 		add_filter( 'fs_product_card_show_more_link', function( $value ) {
-			return (bool) FS_Product_Settings::get( 'card_show_more_link', $value );
+			return (bool) Settings::get( 'card_show_more_link', $value );
 		}, 5 );
 	}
 }

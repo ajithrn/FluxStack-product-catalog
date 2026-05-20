@@ -24,8 +24,8 @@ do_action( 'fs_product_before_main_content' );
 <div class="fs-product-archive-container">
 	<?php
 	// Breadcrumbs.
-	if ( FS_Product_Frontend::show_breadcrumbs() ) {
-		FS_Product_Template_Loader::get_template_part( 'breadcrumbs' );
+	if ( \FSProductCatalog\Frontend::show_breadcrumbs() ) {
+		\FSProductCatalog\TemplateLoader::get_template_part( 'breadcrumbs' );
 	}
 	?>
 
@@ -41,10 +41,10 @@ do_action( 'fs_product_before_main_content' );
 		</h1>
 	</header>
 
-	<div class="fs-product-archive-layout <?php echo esc_attr( 'sidebar-' . FS_Product_Frontend::get_sidebar_position() ); ?>">
-		<?php if ( FS_Product_Frontend::show_sidebar() ) : ?>
+	<div class="fs-product-archive-layout <?php echo esc_attr( 'sidebar-' . \FSProductCatalog\Frontend::get_sidebar_position() ); ?>">
+		<?php if ( \FSProductCatalog\Frontend::show_sidebar() ) : ?>
 			<aside class="fs-product-sidebar">
-				<?php FS_Product_Template_Loader::get_template_part( 'sidebar-filters' ); ?>
+				<?php \FSProductCatalog\TemplateLoader::get_template_part( 'sidebar-filters' ); ?>
 			</aside>
 		<?php endif; ?>
 
@@ -64,23 +64,23 @@ do_action( 'fs_product_before_main_content' );
 			</div>
 
 			<?php if ( have_posts() ) : ?>
-				<div class="fs-product-grid" data-columns="<?php echo esc_attr( FS_Product_Frontend::get_archive_columns() ); ?>">
+				<div class="fs-product-grid" data-columns="<?php echo esc_attr( \FSProductCatalog\Frontend::get_archive_columns() ); ?>">
 					<?php
 					while ( have_posts() ) :
 						the_post();
-						FS_Product_Template_Loader::get_template_part( 'loop/product-card' );
+						\FSProductCatalog\TemplateLoader::get_template_part( 'loop/product-card' );
 					endwhile;
 					?>
 				</div>
 
 				<?php if ( $wp_query->max_num_pages > 1 ) : ?>
 					<div class="fs-product-load-more-wrap">
-						<?php FS_Product_Template_Loader::get_template_part( 'loop/pagination' ); ?>
+						<?php \FSProductCatalog\TemplateLoader::get_template_part( 'loop/pagination' ); ?>
 					</div>
 				<?php endif; ?>
 
 			<?php else : ?>
-				<?php FS_Product_Template_Loader::get_template_part( 'loop/no-products' ); ?>
+				<?php \FSProductCatalog\TemplateLoader::get_template_part( 'loop/no-products' ); ?>
 			<?php endif; ?>
 		</div>
 	</div>

@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Get all taxonomies (cached).
-$categories  = FS_Product_Frontend::get_cached_terms( 'fs-product-category' );
-$brands      = FS_Product_Frontend::get_cached_terms( 'fs-product-brand' );
-$types       = FS_Product_Frontend::get_cached_terms( 'fs-product-type' );
-$tags        = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
-$items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Settings::get( 'archive_sidebar_items_limit', 8 ) ) );
+$categories  = \FSProductCatalog\Frontend::get_cached_terms( 'fs-product-category' );
+$brands      = \FSProductCatalog\Frontend::get_cached_terms( 'fs-product-brand' );
+$types       = \FSProductCatalog\Frontend::get_cached_terms( 'fs-product-type' );
+$tags        = \FSProductCatalog\Frontend::get_cached_terms( 'fs-product-tag' );
+$items_limit = absint( apply_filters( 'fs_sidebar_items_limit', \FSProductCatalog\Settings::get( 'archive_sidebar_items_limit', 8 ) ) );
 ?>
 
 <div class="fs-filters-wrap">
@@ -41,7 +41,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 		</div>
 
 		<!-- Search Filter -->
-		<?php if ( FS_Product_Frontend::show_archive_sidebar_search() ) : ?>
+		<?php if ( \FSProductCatalog\Frontend::show_archive_sidebar_search() ) : ?>
 			<div class="fs-filter-group fs-filter-search">
 				<h4 class="fs-filter-title fs-filter-title--collapsible">
 					<?php esc_html_e( 'Search', 'fs-product-catalog' ); ?>
@@ -61,7 +61,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 		<!-- Categories Filter -->
 		<?php
 		$cat_limit = absint( apply_filters( 'fs_sidebar_categories_limit', $items_limit ) );
-		if ( FS_Product_Frontend::show_archive_sidebar_categories() && ! empty( $categories ) && ! is_wp_error( $categories ) ) :
+		if ( \FSProductCatalog\Frontend::show_archive_sidebar_categories() && ! empty( $categories ) && ! is_wp_error( $categories ) ) :
 			$cat_count = count( $categories );
 			?>
 			<div class="fs-filter-group fs-filter-categories">
@@ -96,7 +96,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 		<!-- Brands Filter -->
 		<?php
 		$brand_limit = absint( apply_filters( 'fs_sidebar_brands_limit', $items_limit ) );
-		if ( FS_Product_Frontend::show_archive_sidebar_brands() && ! empty( $brands ) && ! is_wp_error( $brands ) ) :
+		if ( \FSProductCatalog\Frontend::show_archive_sidebar_brands() && ! empty( $brands ) && ! is_wp_error( $brands ) ) :
 			$brand_count = count( $brands );
 			?>
 			<div class="fs-filter-group fs-filter-brands">
@@ -131,7 +131,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 		<!-- Types Filter -->
 		<?php
 		$type_limit = absint( apply_filters( 'fs_sidebar_types_limit', $items_limit ) );
-		if ( FS_Product_Frontend::show_archive_sidebar_types() && ! empty( $types ) && ! is_wp_error( $types ) ) :
+		if ( \FSProductCatalog\Frontend::show_archive_sidebar_types() && ! empty( $types ) && ! is_wp_error( $types ) ) :
 			$type_count = count( $types );
 			?>
 			<div class="fs-filter-group fs-filter-types">
@@ -166,7 +166,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 		<!-- Tags Filter -->
 		<?php
 		$tag_limit = absint( apply_filters( 'fs_sidebar_tags_limit', 15 ) );
-		if ( FS_Product_Frontend::show_archive_sidebar_tags() && ! empty( $tags ) && ! is_wp_error( $tags ) ) :
+		if ( \FSProductCatalog\Frontend::show_archive_sidebar_tags() && ! empty( $tags ) && ! is_wp_error( $tags ) ) :
 			$tag_count = count( $tags );
 			?>
 			<div class="fs-filter-group fs-filter-tags">

@@ -7,17 +7,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_Import_Export
+ * Class ImportExport
  *
  * Provides CSV import/export functionality for products.
  */
-class FS_Product_Import_Export {
+class ImportExport {
 
 	/**
 	 * CSV columns for export/import.
@@ -142,7 +144,7 @@ class FS_Product_Import_Export {
 			$args['tax_query'] = $tax_query;
 		}
 
-		$query = new WP_Query( $args );
+		$query = new \WP_Query( $args );
 
 		// Build CSV.
 		$output = fopen( 'php://output', 'w' );

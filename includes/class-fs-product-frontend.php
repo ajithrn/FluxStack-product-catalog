@@ -7,17 +7,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_Frontend
+ * Class Frontend
  *
  * Manages frontend functionality and asset loading.
  */
-class FS_Product_Frontend {
+class Frontend {
 	/**
 	 * Initialize the class
 	 */
@@ -547,7 +549,7 @@ class FS_Product_Frontend {
 			return $template;
 		}
 
-		$search_template = FS_Product_Template_Loader::locate_template( 'search-products.php' );
+		$search_template = TemplateLoader::locate_template( 'search-products.php' );
 		if ( $search_template ) {
 			return $search_template;
 		}
@@ -588,7 +590,7 @@ class FS_Product_Frontend {
 	 * @return string
 	 */
 	public static function get_load_more_text() {
-		$text = FS_Product_Settings::get( 'load_more_text', '' );
+		$text = Settings::get( 'load_more_text', '' );
 		if ( empty( $text ) ) {
 			$text = __( 'Load More Products', 'fs-product-catalog' );
 		}

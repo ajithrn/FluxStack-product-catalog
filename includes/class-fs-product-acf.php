@@ -5,17 +5,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_ACF
+ * Class ACF
  *
  * Handles ACF field registration and management for products.
  */
-class FS_Product_ACF {
+class ACF {
 	/**
 	 * Initialize the class
 	 */

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $product_id  = get_the_ID();
-$items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Settings::get( 'sidebar_items_limit', 8 ) ) );
+$items_limit = absint( apply_filters( 'fs_sidebar_items_limit', \FSProductCatalog\Settings::get( 'sidebar_items_limit', 8 ) ) );
 ?>
 
 <aside class="fs-product-single-sidebar">
@@ -41,7 +41,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 
 			<!-- Categories -->
 			<?php
-			$categories    = FS_Product_Frontend::get_cached_terms( 'fs-product-category' );
+			$categories    = \FSProductCatalog\Frontend::get_cached_terms( 'fs-product-category' );
 			$cat_limit     = absint( apply_filters( 'fs_sidebar_categories_limit', $items_limit ) );
 			if ( ! empty( $categories ) && apply_filters( 'fs_single_sidebar_show_categories', true ) ) :
 				$cat_count = count( $categories );
@@ -71,7 +71,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 
 			<!-- Brands -->
 			<?php
-			$brands      = FS_Product_Frontend::get_cached_terms( 'fs-product-brand' );
+			$brands      = \FSProductCatalog\Frontend::get_cached_terms( 'fs-product-brand' );
 			$brand_limit = absint( apply_filters( 'fs_sidebar_brands_limit', $items_limit ) );
 			if ( ! empty( $brands ) && apply_filters( 'fs_single_sidebar_show_brands', true ) ) :
 				$brand_count = count( $brands );
@@ -101,7 +101,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 
 			<!-- Types -->
 			<?php
-			$types      = FS_Product_Frontend::get_cached_terms( 'fs-product-type' );
+			$types      = \FSProductCatalog\Frontend::get_cached_terms( 'fs-product-type' );
 			$type_limit = absint( apply_filters( 'fs_sidebar_types_limit', $items_limit ) );
 			if ( ! empty( $types ) && apply_filters( 'fs_single_sidebar_show_types', true ) ) :
 				$type_count = count( $types );
@@ -131,7 +131,7 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Setti
 
 			<!-- Tags -->
 			<?php
-			$tags      = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
+			$tags      = \FSProductCatalog\Frontend::get_cached_terms( 'fs-product-tag' );
 			$tag_limit = absint( apply_filters( 'fs_sidebar_tags_limit', 15 ) );
 			if ( ! empty( $tags ) && apply_filters( 'fs_single_sidebar_show_tags', true ) ) :
 				$tag_count = count( $tags );

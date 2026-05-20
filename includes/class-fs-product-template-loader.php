@@ -7,17 +7,19 @@
  * @package FS_Product_Catalog
  */
 
+namespace FSProductCatalog;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class FS_Product_Template_Loader
+ * Class TemplateLoader
  *
  * Loads templates from plugin or theme directory.
  */
-class FS_Product_Template_Loader {
+class TemplateLoader {
 	/**
 	 * Initialize the class
 	 */
