@@ -576,6 +576,22 @@ Shared components (like the sidebar/filter panel) are defined once in `frontend-
 .fs-product-card--large { }
 ```
 
+### Responsive Tables
+
+Tables from the WYSIWYG editor are automatically wrapped in a scroll container with a toolbar. The CSS classes involved:
+
+```css
+.fs-table-responsive-wrap { }    /* Outer wrapper with border */
+.fs-table-toolbar { }            /* Top bar with hint + buttons */
+.fs-table-toolbar-hint { }       /* "← Scroll to view more →" text */
+.fs-table-scroll-btn { }         /* Left/right arrow buttons */
+.fs-table-responsive { }         /* Scrollable table container */
+```
+
+State classes (added via JS):
+- `.is-scrollable` — table is wider than container, shows toolbar
+- `.is-scrolled-end` — scrolled to the right edge, hides fade gradient
+
 ---
 
 ## JavaScript Modules
@@ -620,6 +636,27 @@ const Tabs = {
     switchTab: function(tabIndex, tabButtons) { }
 };
 ```
+
+### Responsive Tables Module
+
+```javascript
+const ResponsiveTables = {
+    scrollStep: 200,
+    
+    init: function() { },
+    wrapTable: function(table) { },
+    updateState: function(outerWrap, tableWrap) { }
+};
+```
+
+**Behavior**:
+- Automatically wraps all `<table>` elements inside `.fs-product-content`, `.fs-spec-content`, and `.fs-info-item-content`
+- Creates a toolbar with hint text ("← Scroll to view more →") and left/right arrow buttons
+- Toolbar only appears when the table is wider than its container
+- Buttons scroll the table by 200px per click with smooth animation
+- Buttons are disabled at scroll boundaries
+- Right-edge fade gradient disappears when scrolled to end
+- Recalculates on window resize
 
 ### Filters Module
 
@@ -974,4 +1011,4 @@ When contributing code:
 ---
 
 **Last Updated**: 2025-05-20
-**Version**: 1.1.2
+**Version**: 1.2.0

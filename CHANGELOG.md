@@ -5,7 +5,26 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.2] - 2025-05-20
+## [1.2.0] - 2025-05-20
+
+### Added
+- **Responsive Tables**: Tables in product content, specifications, and info sections are now responsive
+  - Auto-wrapped in scrollable containers with a toolbar UI
+  - Toolbar shows "← Scroll to view more →" hint text with left/right arrow buttons
+  - Right-edge fade gradient indicates more content is available
+  - Buttons disable at scroll boundaries
+  - Toolbar only appears when table overflows its container
+  - Touch/swipe scrolling supported on mobile
+- **Content Typography**: Added comprehensive styles for WYSIWYG content
+  - Tables: borders, alternating row backgrounds, hover highlight
+  - Lists (ul/ol): proper indentation and spacing
+  - Headings (h2-h4): relative sizing within content areas
+  - Blockquotes: left border accent with background
+  - Images: responsive max-width with border radius
+- **Missing CSS**: Added styles for previously unstyled template classes
+  - `.fs-product-archive-main`, `.fs-toggle-icon`, `.fs-filter-toggle-icon`
+  - `.fs-specs-tabs`, `.fs-specs-tabs-content`, `.fs-card-thumbnail`
+  - `.fs-lightbox-current`, `.fs-lightbox-total`, `.fs-product-loading-text`
 
 ### Changed
 - **Single Product Sidebar**: Now enabled by default (`fs_product_show_single_sidebar` defaults to `true`)
@@ -18,11 +37,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Navigation links instead of checkboxes (browse vs filter)
 - **Grid Layout**: Single product layout uses CSS `:has()` selector for sidebar detection
   - Falls back to single column when sidebar is disabled via filter
+- **Grid Overflow Fix**: Added `min-width: 0` and `overflow-x: hidden` to prevent wide tables from blowing out the grid layout
 
 ### Technical
-- Updated `assets/css/frontend-common.css`: Added shared sidebar/filter component styles and responsive behavior
-- Updated `assets/css/frontend-single.css`: Removed duplicated sidebar styles, kept only single-specific overrides
-- Updated `assets/css/frontend-archive.css`: Removed duplicated sidebar styles, kept only archive-specific layout rules
+- Updated `assets/css/frontend-common.css`: Added shared sidebar/filter component styles, toggle icons, responsive behavior
+- Updated `assets/css/frontend-single.css`: Added content typography, responsive table wrapper, removed duplicated sidebar styles
+- Updated `assets/css/frontend-archive.css`: Added `.fs-product-archive-main`, `.fs-product-loading-text`, removed duplicated sidebar styles
+- Updated `assets/js/frontend-single.js`: Added `ResponsiveTables` module for auto-wrapping tables with scroll toolbar
 - Updated `templates/parts/sidebar-single.php`: Rewritten with shared component structure
 - Updated `includes/class-fs-product-frontend.php`: Changed `fs_product_show_single_sidebar` default from `false` to `true`
 
@@ -203,7 +224,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-- **1.1.2** (2025-05-20): Shared CSS architecture, single sidebar enabled by default, visual consistency
+- **1.2.0** (2025-05-20): Responsive tables, content typography, shared CSS architecture, single sidebar enabled by default
 - **1.1.1** (2025-01-27): Bug fixes, single product sidebar, display filters, styling improvements
 - **1.1.0** (2025-01-27): Frontend template system, AJAX filtering, infinite scroll
 - **1.0.0** (2025-01-27): Initial release with custom post type and admin features

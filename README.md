@@ -13,6 +13,7 @@ A custom WordPress product catalog plugin without e-commerce functionality. Crea
 - **Responsive Design**: Mobile-first approach with collapsible filters
 - **Lightbox Gallery**: Custom lightweight image gallery with keyboard navigation
 - **Specification Tabs**: Organized product specifications with tabbed interface
+- **Responsive Tables**: Wide tables get a scroll toolbar with arrow buttons and visual hints
 - **Breadcrumb Navigation**: SEO-friendly breadcrumbs
 - **Template Override System**: Easy customization via theme directory
 

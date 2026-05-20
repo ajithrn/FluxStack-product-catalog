@@ -234,16 +234,156 @@
 	};
 
 	/**
+	 * Responsive Tables Module
+	 * Wraps tables with a toolbar containing scroll buttons
+	 */
+	const ResponsiveTables = {
+		scrollStep: 200,
+
+		/**
+		 * Initialize responsive tables
+		 */
+		init: function() {
+			var self = this;
+			var contentAreas = document.querySelectorAll(
+				'.fs-product-content, .fs-spec-content, .fs-info-item-content'
+			);
+
+			contentAreas.forEach(function(area) {
+				var tables = area.querySelectorAll('table');
+				tables.forEach(function(table) {
+					// Skip if already wrapped
+					if (table.parentNode.classList.contains('fs-table-responsive')) {
+						return;
+					}
+
+					self.wrapTable(table);
+				});
+			});
+
+			// Recheck on resize
+			window.addEventListener('resize', function() {
+				var wrappers = document.querySelectorAll('.fs-table-responsive-wrap');
+				wrappers.forEach(function(outerWrap) {
+					var tableWrap = outerWrap.querySelector('.fs-table-responsive');
+					self.updateState(outerWrap, tableWrap);
+				});
+			});
+		},
+
+		/**
+		 * Wrap a table with toolbar and scroll container
+		 */
+		wrapTable: function(table) {
+			var self = this;
+
+			// Create outer wrapper
+			var outerWrap = document.createElement('div');
+			outerWrap.className = 'fs-table-responsive-wrap';
+
+			// Create toolbar
+			var toolbar = document.createElement('div');
+			toolbar.className = 'fs-table-toolbar';
+
+			var hint = document.createElement('span');
+			hint.className = 'fs-table-toolbar-hint';
+			hint.textContent = '← Scroll to view more →';
+
+			var controls = document.createElement('div');
+			controls.className = 'fs-table-toolbar-controls';
+
+			var btnLeft = document.createElement('button');
+			btnLeft.type = 'button';
+			btnLeft.className = 'fs-table-scroll-btn fs-table-scroll-left';
+			btnLeft.innerHTML = '‹';
+			btnLeft.setAttribute('aria-label', 'Scroll left');
+
+			var btnRight = document.createElement('button');
+			btnRight.type = 'button';
+			btnRight.className = 'fs-table-scroll-btn fs-table-scroll-right';
+			btnRight.innerHTML = '›';
+			btnRight.setAttribute('aria-label', 'Scroll right');
+
+			controls.appendChild(btnLeft);
+			controls.appendChild(btnRight);
+			toolbar.appendChild(hint);
+			toolbar.appendChild(controls);
+
+			// Create table wrapper
+			var tableWrap = document.createElement('div');
+			tableWrap.className = 'fs-table-responsive';
+
+			// Assemble
+			table.parentNode.insertBefore(outerWrap, table);
+			outerWrap.appendChild(toolbar);
+			outerWrap.appendChild(tableWrap);
+			tableWrap.appendChild(table);
+
+			// Button click handlers
+			btnLeft.addEventListener('click', function() {
+				tableWrap.scrollLeft -= self.scrollStep;
+			});
+
+			btnRight.addEventListener('click', function() {
+				tableWrap.scrollLeft += self.scrollStep;
+			});
+
+			// Update state on scroll
+			tableWrap.addEventListener('scroll', function() {
+				self.updateState(outerWrap, tableWrap);
+			});
+
+			// Initial state
+			self.updateState(outerWrap, tableWrap);
+		},
+
+		/**
+		 * Update scrollable state and button disabled states
+		 */
+		updateState: function(outerWrap, tableWrap) {
+			var isScrollable = tableWrap.scrollWidth > tableWrap.clientWidth;
+			var scrollLeft = tableWrap.scrollLeft;
+			var maxScroll = tableWrap.scrollWidth - tableWrap.clientWidth;
+
+			if (isScrollable) {
+				outerWrap.classList.add('is-scrollable');
+			} else {
+				outerWrap.classList.remove('is-scrollable');
+			}
+
+			// Update button states
+			var btnLeft = outerWrap.querySelector('.fs-table-scroll-left');
+			var btnRight = outerWrap.querySelector('.fs-table-scroll-right');
+
+			if (btnLeft) {
+				btnLeft.disabled = scrollLeft <= 0;
+			}
+			if (btnRight) {
+				btnRight.disabled = scrollLeft >= maxScroll - 2;
+			}
+
+			// Update fade
+			if (scrollLeft >= maxScroll - 2) {
+				outerWrap.classList.add('is-scrolled-end');
+			} else {
+				outerWrap.classList.remove('is-scrolled-end');
+			}
+		}
+	};
+
+	/**
 	 * Initialize on DOM ready
 	 */
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function() {
 			Gallery.init();
 			Tabs.init();
+			ResponsiveTables.init();
 		});
 	} else {
 		Gallery.init();
 		Tabs.init();
+		ResponsiveTables.init();
 	}
 
 })();

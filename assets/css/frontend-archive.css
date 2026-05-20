@@ -105,7 +105,8 @@
 	overflow: hidden;
 }
 
-.fs-product-card-image img {
+.fs-product-card-image img,
+.fs-product-card-image .fs-card-thumbnail {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -194,6 +195,10 @@
 	color: var(--fs-text-light);
 }
 
+.fs-product-loading-text {
+	font-size: var(--fs-font-size-sm);
+}
+
 .fs-product-spinner {
 	width: 20px;
 	height: 20px;
@@ -235,6 +240,10 @@
 }
 
 /* Sidebar Filters (archive-specific) */
+.fs-product-archive-main {
+	min-width: 0;
+}
+
 .fs-product-archive-layout.sidebar-right .fs-product-sidebar {
 	order: 2;
 }

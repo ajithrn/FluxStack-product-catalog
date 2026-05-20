@@ -32,6 +32,13 @@
 	gap: 0;
 }
 
+/* Single Product Main Content Area */
+.fs-product-single {
+	min-width: 0;
+	overflow-x: hidden;
+	overflow-y: visible;
+}
+
 /* Product Header */
 .fs-product-header {
 	margin-bottom: var(--fs-gap);
@@ -259,6 +266,11 @@
 	font-size: var(--fs-font-size-sm);
 }
 
+.fs-lightbox-current,
+.fs-lightbox-total {
+	font-weight: 600;
+}
+
 /* Product Info */
 .fs-product-info {
 	background: var(--fs-bg-alt);
@@ -302,12 +314,17 @@
 /* Product Specifications */
 .fs-product-specifications {
 	margin-top: var(--fs-gap-lg);
+	min-width: 0;
 }
 
 .fs-product-specs-title {
 	font-size: var(--fs-h2);
 	margin: 0 0 var(--fs-gap);
 	color: var(--fs-text);
+}
+
+.fs-specs-tabs {
+	background: var(--fs-bg);
 }
 
 .fs-specs-tabs-nav {
@@ -340,6 +357,10 @@
 	border-bottom-color: var(--fs-primary);
 }
 
+.fs-specs-tabs-content {
+	padding: 0;
+}
+
 .fs-specs-tab-panel {
 	display: none;
 }
@@ -351,6 +372,292 @@
 .fs-spec-content {
 	line-height: var(--fs-line-height);
 	color: var(--fs-text);
+}
+
+/* Content Typography (tables, lists, etc. from WYSIWYG editor) */
+.fs-product-content,
+.fs-spec-content,
+.fs-info-item-content {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	min-width: 0;
+}
+
+.fs-product-content table,
+.fs-spec-content table,
+.fs-info-item-content table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin-bottom: var(--fs-gap);
+	font-size: var(--fs-font-size-sm);
+	table-layout: auto;
+}
+
+/* Responsive table wrapper (added via JS) */
+.fs-table-responsive-wrap {
+	max-width: 100%;
+	margin-bottom: var(--fs-gap);
+	border: 1px solid var(--fs-border);
+	border-radius: var(--fs-border-radius);
+	position: relative;
+}
+
+/* Top scroll toolbar */
+.fs-table-toolbar {
+	display: none;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.4rem 0.75rem;
+	background: var(--fs-bg-alt);
+	border-bottom: 1px solid var(--fs-border);
+	border-radius: var(--fs-border-radius) var(--fs-border-radius) 0 0;
+	user-select: none;
+}
+
+.fs-table-responsive-wrap.is-scrollable .fs-table-toolbar {
+	display: flex;
+}
+
+.fs-table-toolbar-hint {
+	font-size: var(--fs-font-size-xs);
+	color: var(--fs-text-lighter);
+}
+
+.fs-table-toolbar-controls {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.fs-table-scroll-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	background: var(--fs-bg);
+	border: 1px solid var(--fs-border);
+	border-radius: var(--fs-border-radius);
+	cursor: pointer;
+	color: var(--fs-text-light);
+	font-size: 14px;
+	font-weight: 600;
+	transition: all var(--fs-transition-fast);
+	padding: 0;
+	line-height: 1;
+}
+
+.fs-table-scroll-btn:hover {
+	background: var(--fs-primary);
+	border-color: var(--fs-primary);
+	color: var(--fs-bg);
+}
+
+.fs-table-scroll-btn:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
+	background: var(--fs-bg);
+	border-color: var(--fs-border);
+	color: var(--fs-text-lighter);
+}
+
+/* Table scroll area */
+.fs-table-responsive {
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	scroll-behavior: smooth;
+}
+
+/* Hide the bottom native scrollbar when toolbar is active */
+.fs-table-responsive-wrap.is-scrollable .fs-table-responsive {
+	scrollbar-width: none;
+}
+
+.fs-table-responsive-wrap.is-scrollable .fs-table-responsive::-webkit-scrollbar {
+	display: none;
+}
+
+/* Fade hint on right edge */
+.fs-table-responsive-wrap::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 30px;
+	background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.85));
+	pointer-events: none;
+	border-radius: 0 var(--fs-border-radius) var(--fs-border-radius) 0;
+	opacity: 1;
+	transition: opacity var(--fs-transition-fast);
+}
+
+.fs-table-responsive-wrap.is-scrolled-end::after {
+	opacity: 0;
+}
+
+.fs-table-responsive table {
+	margin-bottom: 0;
+	border: none;
+	min-width: 600px;
+}
+
+.fs-table-responsive td,
+.fs-table-responsive th {
+	border-left: none;
+	border-right: none;
+}
+
+.fs-table-responsive tr:last-child td,
+.fs-table-responsive tr:last-child th {
+	border-bottom: none;
+}
+
+.fs-product-content thead,
+.fs-spec-content thead,
+.fs-info-item-content thead {
+	background: var(--fs-bg-alt);
+}
+
+.fs-product-content th,
+.fs-spec-content th,
+.fs-info-item-content th {
+	font-weight: 600;
+	text-align: left;
+	color: var(--fs-text);
+}
+
+.fs-product-content th,
+.fs-product-content td,
+.fs-spec-content th,
+.fs-spec-content td,
+.fs-info-item-content th,
+.fs-info-item-content td {
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--fs-border);
+	vertical-align: top;
+}
+
+.fs-product-content tr:nth-child(even),
+.fs-spec-content tr:nth-child(even),
+.fs-info-item-content tr:nth-child(even) {
+	background: var(--fs-bg-alt);
+}
+
+.fs-product-content tr:hover,
+.fs-spec-content tr:hover,
+.fs-info-item-content tr:hover {
+	background: rgba(0, 123, 255, 0.03);
+}
+
+/* Lists inside content */
+.fs-product-content ul,
+.fs-product-content ol,
+.fs-spec-content ul,
+.fs-spec-content ol,
+.fs-info-item-content ul,
+.fs-info-item-content ol {
+	margin: 0 0 var(--fs-gap) 1.5rem;
+	padding: 0;
+}
+
+.fs-product-content li,
+.fs-spec-content li,
+.fs-info-item-content li {
+	margin-bottom: 0.25rem;
+}
+
+/* Headings inside content */
+.fs-product-content h2,
+.fs-product-content h3,
+.fs-product-content h4,
+.fs-spec-content h2,
+.fs-spec-content h3,
+.fs-spec-content h4,
+.fs-info-item-content h2,
+.fs-info-item-content h3,
+.fs-info-item-content h4 {
+	margin-top: var(--fs-gap);
+	margin-bottom: var(--fs-gap-sm);
+	color: var(--fs-text);
+	line-height: var(--fs-line-height-tight);
+}
+
+.fs-product-content h2,
+.fs-spec-content h2,
+.fs-info-item-content h2 {
+	font-size: var(--fs-h3);
+}
+
+.fs-product-content h3,
+.fs-spec-content h3,
+.fs-info-item-content h3 {
+	font-size: var(--fs-h4);
+}
+
+.fs-product-content h4,
+.fs-spec-content h4,
+.fs-info-item-content h4 {
+	font-size: var(--fs-h5);
+}
+
+/* Paragraphs inside content */
+.fs-product-content p,
+.fs-spec-content p,
+.fs-info-item-content p {
+	margin: 0 0 var(--fs-gap-sm);
+}
+
+.fs-product-content p:last-child,
+.fs-spec-content p:last-child,
+.fs-info-item-content p:last-child {
+	margin-bottom: 0;
+}
+
+/* Images inside content */
+.fs-product-content img,
+.fs-spec-content img,
+.fs-info-item-content img {
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--fs-border-radius);
+}
+
+/* Blockquotes */
+.fs-product-content blockquote,
+.fs-spec-content blockquote,
+.fs-info-item-content blockquote {
+	margin: 0 0 var(--fs-gap);
+	padding: var(--fs-gap-sm) var(--fs-gap);
+	border-left: 4px solid var(--fs-primary);
+	background: var(--fs-bg-alt);
+	font-style: italic;
+	color: var(--fs-text-light);
+}
+
+/* Responsive table wrapper */
+@media (max-width: 768px) {
+	.fs-product-content table,
+	.fs-spec-content table,
+	.fs-info-item-content table {
+		font-size: var(--fs-font-size-xs);
+	}
+
+	.fs-product-content th,
+	.fs-product-content td,
+	.fs-spec-content th,
+	.fs-spec-content td,
+	.fs-info-item-content th,
+	.fs-info-item-content td {
+		padding: 0.375rem 0.5rem;
+	}
+
+	/* Scroll hint shadow */
+	.fs-table-responsive-wrap::after {
+		width: 20px;
+	}
 }
 
 /* Responsive */
