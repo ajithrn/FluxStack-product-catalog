@@ -139,16 +139,54 @@
 	};
 
 	/**
+	 * Conditional Fields Module
+	 * Shows/hides fields based on another field's value.
+	 */
+	const ConditionalFields = {
+		init: function() {
+			var fields = document.querySelectorAll('.fs-settings-field--conditional');
+			if (!fields.length) return;
+
+			var self = this;
+			fields.forEach(function(field) {
+				var dependsOn = field.dataset.dependsOn;
+				var showWhen = (field.dataset.showWhen || '').split(',');
+				var source = document.getElementById(dependsOn);
+
+				if (!source) return;
+
+				// Initial state.
+				self.toggle(field, source, showWhen);
+
+				// Listen for changes.
+				source.addEventListener('change', function() {
+					self.toggle(field, source, showWhen);
+				});
+			});
+		},
+
+		toggle: function(field, source, showWhen) {
+			if (showWhen.indexOf(source.value) !== -1) {
+				field.style.display = '';
+			} else {
+				field.style.display = 'none';
+			}
+		}
+	};
+
+	/**
 	 * Initialize on DOM ready.
 	 */
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function() {
 			Tabs.init();
 			Save.init();
+			ConditionalFields.init();
 		});
 	} else {
 		Tabs.init();
 		Save.init();
+		ConditionalFields.init();
 	}
 
 })();

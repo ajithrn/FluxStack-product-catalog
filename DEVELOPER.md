@@ -399,6 +399,60 @@ apply_filters('fs_product_thumbnail_size', 'large');
 apply_filters('fs_product_gallery_thumbnail_size', 'thumbnail');
 ```
 
+#### Sorting & Pagination Filters (v1.6.0)
+
+```php
+// Default sort order (default: 'menu_order')
+// Options: 'menu_order', 'date', 'title'
+apply_filters('fs_product_default_orderby', 'menu_order');
+
+// Show sorting dropdown on archive (default: true)
+apply_filters('fs_product_show_sorting', true);
+
+// Pagination mode (default: 'load-more')
+// Options: 'load-more', 'infinite-scroll', 'pagination'
+apply_filters('fs_product_pagination_mode', 'load-more');
+
+// Custom load more button text (default: 'Load More Products')
+apply_filters('fs_product_load_more_text', $text);
+```
+
+#### Related Products Filters (v1.6.0)
+
+```php
+// Show related products on single pages (default: true)
+apply_filters('fs_product_show_related', true, $product_id);
+
+// Number of related products to show (default: 4, max: 8)
+apply_filters('fs_product_related_count', 4, $product_id);
+
+// Modify related products query args
+apply_filters('fs_product_related_query_args', $args, $product_id);
+```
+
+#### Schema.org Filters (v1.6.0)
+
+```php
+// Modify product schema data before output
+apply_filters('fs_product_schema', $schema, $product_id);
+```
+
+**Schema Usage Example**:
+```php
+// Add price to schema
+add_filter('fs_product_schema', function($schema, $product_id) {
+    $price = get_field('product_price', $product_id);
+    if ($price) {
+        $schema['offers'] = array(
+            '@type'         => 'Offer',
+            'price'         => $price,
+            'priceCurrency' => 'USD',
+        );
+    }
+    return $schema;
+}, 10, 2);
+```
+
 #### Query Filters
 
 ```php

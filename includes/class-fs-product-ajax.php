@@ -45,6 +45,10 @@ class FS_Product_Ajax {
 		$tags       = isset( $_POST['tags'] ) ? array_map( 'absint', (array) $_POST['tags'] ) : array();
 		$paged      = isset( $_POST['paged'] ) ? absint( $_POST['paged'] ) : 1;
 		$per_page   = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 12;
+		$orderby    = isset( $_POST['orderby'] ) ? sanitize_text_field( wp_unslash( $_POST['orderby'] ) ) : 'menu_order';
+
+		// Parse orderby into orderby + order.
+		$order_params = self::parse_orderby( $orderby );
 
 		// Build query args.
 		$args = array(
@@ -52,8 +56,8 @@ class FS_Product_Ajax {
 			'posts_per_page' => $per_page,
 			'paged'          => $paged,
 			'post_status'    => 'publish',
-			'orderby'        => 'menu_order',
-			'order'          => 'ASC',
+			'orderby'        => $order_params['orderby'],
+			'order'          => $order_params['order'],
 		);
 
 		// Add search.
@@ -154,6 +158,10 @@ class FS_Product_Ajax {
 		$brands     = isset( $_POST['brands'] ) ? array_map( 'absint', (array) $_POST['brands'] ) : array();
 		$types      = isset( $_POST['types'] ) ? array_map( 'absint', (array) $_POST['types'] ) : array();
 		$tags       = isset( $_POST['tags'] ) ? array_map( 'absint', (array) $_POST['tags'] ) : array();
+		$orderby    = isset( $_POST['orderby'] ) ? sanitize_text_field( wp_unslash( $_POST['orderby'] ) ) : 'menu_order';
+
+		// Parse orderby into orderby + order.
+		$order_params = self::parse_orderby( $orderby );
 
 		// Build query args.
 		$args = array(
@@ -161,8 +169,8 @@ class FS_Product_Ajax {
 			'posts_per_page' => $per_page,
 			'paged'          => $paged,
 			'post_status'    => 'publish',
-			'orderby'        => 'menu_order',
-			'order'          => 'ASC',
+			'orderby'        => $order_params['orderby'],
+			'order'          => $order_params['order'],
 		);
 
 		// Add search.
@@ -264,5 +272,27 @@ class FS_Product_Ajax {
 		}
 
 		return $counts;
+	}
+
+	/**
+	 * Parse orderby string into WP_Query orderby and order params.
+	 *
+	 * @param string $orderby Combined orderby value (e.g. 'title_asc', 'date_desc', 'menu_order').
+	 * @return array Array with 'orderby' and 'order' keys.
+	 */
+	private static function parse_orderby( $orderby ) {
+		$allowed = array(
+			'menu_order' => array( 'orderby' => 'menu_order', 'order' => 'ASC' ),
+			'title_asc'  => array( 'orderby' => 'title', 'order' => 'ASC' ),
+			'title_desc' => array( 'orderby' => 'title', 'order' => 'DESC' ),
+			'date_desc'  => array( 'orderby' => 'date', 'order' => 'DESC' ),
+			'date_asc'   => array( 'orderby' => 'date', 'order' => 'ASC' ),
+		);
+
+		if ( isset( $allowed[ $orderby ] ) ) {
+			return $allowed[ $orderby ];
+		}
+
+		return $allowed['menu_order'];
 	}
 }

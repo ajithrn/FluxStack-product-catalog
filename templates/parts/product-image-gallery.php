@@ -53,6 +53,8 @@ if ( ! empty( $gallery_images ) && is_array( $gallery_images ) ) {
 					array(
 						'class'         => 'fs-gallery-main-image',
 						'data-full-url' => esc_url( $first_image['url'] ),
+						'loading'       => 'eager',
+						'fetchpriority' => 'high',
 					)
 				);
 				?>
@@ -73,7 +75,10 @@ if ( ! empty( $gallery_images ) && is_array( $gallery_images ) ) {
 								$image['id'],
 								$gallery_thumb_size,
 								false,
-								array( 'class' => 'fs-thumbnail-image' )
+								array(
+									'class'   => 'fs-thumbnail-image',
+									'loading' => 0 === $index ? 'eager' : 'lazy',
+								)
 							);
 							?>
 						</button>

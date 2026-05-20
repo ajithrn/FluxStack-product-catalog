@@ -558,6 +558,106 @@
 	text-decoration: underline;
 }
 
+/* Product Grid (shared — used on archive, search, and single product related) */
+.fs-product-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--fs-gap);
+	margin-bottom: var(--fs-gap);
+}
+
+.fs-product-grid[data-columns="1"] {
+	grid-template-columns: 1fr;
+}
+
+.fs-product-grid[data-columns="2"] {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.fs-product-grid[data-columns="4"] {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+/* Product Card (shared) */
+.fs-product-card {
+	background: var(--fs-bg);
+	border: 1px solid var(--fs-border);
+	border-radius: var(--fs-border-radius);
+	overflow: hidden;
+	transition: all var(--fs-transition);
+}
+
+.fs-product-card:hover {
+	box-shadow: var(--fs-shadow);
+}
+
+.fs-product-card-link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+
+.fs-product-card-image {
+	position: relative;
+	padding-top: 100%;
+	background: var(--fs-bg-alt);
+	overflow: hidden;
+}
+
+.fs-product-card-image img,
+.fs-product-card-image .fs-card-thumbnail {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.fs-card-no-image {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	min-height: 0;
+}
+
+.fs-product-card-content {
+	padding: var(--fs-gap-sm);
+}
+
+.fs-product-card-title {
+	font-size: var(--fs-h5);
+	margin: 0 0 0.5rem;
+	color: var(--fs-text);
+	line-height: var(--fs-line-height-tight);
+}
+
+.fs-product-card-category {
+	display: none;
+}
+
+.fs-product-card-excerpt {
+	font-size: var(--fs-font-size-sm);
+	color: var(--fs-text-light);
+	line-height: 1.5;
+	margin-bottom: 0.75rem;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.fs-product-card-more {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: var(--fs-font-size-sm);
+	color: var(--fs-primary);
+	font-weight: 500;
+}
+
 /* Responsive Breakpoints */
 @media (max-width: 1200px) {
 	:root {
@@ -590,6 +690,10 @@
 	.fs-filters-wrap.active .fs-filters-content {
 		display: flex;
 	}
+
+	.fs-product-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
 }
 
 @media (max-width: 768px) {
@@ -621,5 +725,13 @@
 		--fs-gap-sm: 0.75rem;
 		--fs-gap: 1rem;
 		--fs-gap-lg: 1.5rem;
+	}
+
+	.fs-product-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.fs-product-card-content {
+		padding: var(--fs-gap-sm);
 	}
 }

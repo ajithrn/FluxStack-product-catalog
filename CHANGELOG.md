@@ -5,6 +5,69 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2025-05-20
+
+### Added
+- **Product Sorting Dropdown**: Sort products on archive pages by name (A-Z/Z-A), date (newest/oldest), or default (menu order)
+  - Dropdown placed in results bar next to product count
+  - Triggers AJAX filter with `orderby` parameter
+  - Persists sort selection across filter changes and load more
+  - Visibility configurable via Settings > Archive > "Show Sorting Dropdown" toggle
+  - Filter: `fs_product_show_sorting`
+- **Related Products**: Shows products from the same category on single product pages
+  - Displays 4 related products by default (configurable 1–8)
+  - Excludes current product, randomized order
+  - New template part: `templates/parts/related-products.php`
+  - Filters: `fs_product_show_related`, `fs_product_related_count`, `fs_product_related_query_args`
+  - Settings: toggle and count in Single Product tab
+- **Three Pagination Modes**: Configurable in Settings > General > Pagination
+  - **Load More** (default): Manual button click to append more products
+  - **Infinite Scroll**: Auto-loads via IntersectionObserver when scrolling near bottom
+  - **Numbered Pages**: Traditional pagination with page numbers, prev/next arrows, and SEO `<link rel="next/prev">` tags
+  - Custom "Load More Button Text" field (shown only for Load More / Infinite Scroll modes)
+  - Filter: `fs_product_pagination_mode`
+  - New template part: `templates/parts/loop/pagination.php`
+- **Schema.org Product Markup**: JSON-LD structured data on single product pages
+  - Outputs name, description, image, brand, category, and URL
+  - Hooked to `wp_head` for proper placement
+  - Filter: `fs_product_schema` for extending/customizing the schema data
+- **Lazy Loading for Gallery Images**: Performance optimization for image-heavy pages
+  - Thumbnail images use `loading="lazy"`
+  - Main image uses `loading="eager"` + `fetchpriority="high"` for LCP
+- **Product Search Results Integration**: Sidebar search now uses product archive layout
+  - New template: `templates/search-products.php`
+  - Overrides default WP search when `post_type=fs-products`
+  - Includes sidebar, grid layout, and pagination
+  - Archive assets (CSS/JS) load on product search pages
+- **Conditional Settings Fields**: Admin settings fields can now show/hide based on another field's value (used for pagination mode → button text)
+
+### Changed
+- **AJAX Handlers**: Both `filter_products()` and `load_more_products()` now accept `orderby` parameter
+  - New `parse_orderby()` helper validates and maps sort values
+  - Allowed values: `menu_order`, `title_asc`, `title_desc`, `date_desc`, `date_asc`
+- **Frontend Class**: `is_product_archive()` now returns true for product search results
+- **Localized JS Data**: Added `paginationMode` and custom `loadMore` text to `fsProductCatalog` object
+- **Removed Infinite Scroll as default**: Load More button is now manual-click only by default; infinite scroll is opt-in via settings
+- **Load More Button**: Restyled to neutral/theme-inheriting design (transparent background, border-based, inherits font-family) instead of hardcoded primary color — blends with any theme
+- **Product Grid & Card CSS**: Moved from `frontend-archive.css` to `frontend-common.css` so cards render correctly on single product pages (related products) and search results
+
+### Technical
+- New file: `templates/parts/related-products.php` — Related products grid
+- New file: `templates/parts/loop/pagination.php` — Numbered pagination with SEO tags
+- New file: `templates/search-products.php` — Product search results template
+- Updated `templates/archive-product.php`: Added sort dropdown (conditional), pagination mode support, custom button text
+- Updated `templates/single-product.php`: Added related products after main content
+- Updated `templates/parts/product-image-gallery.php`: Added lazy/eager loading attributes
+- Updated `templates/admin/settings-page.php`: Added pagination section, related products section, sorting toggle, conditional field attributes
+- Updated `includes/class-fs-product-frontend.php`: Added schema output, search template, `show_sorting()`, `get_load_more_text()`, `get_pagination_mode()` helpers
+- Updated `includes/class-fs-product-ajax.php`: Added orderby support, `parse_orderby()` method
+- Updated `includes/class-fs-product-settings.php`: Added `pagination_mode`, `load_more_text`, `show_sorting`, `show_related_products`, `related_products_count` settings with sanitization and filter registration
+- Updated `assets/js/frontend-archive.js`: Sort dropdown binding, orderby in AJAX, LoadMore module with optional IntersectionObserver
+- Updated `assets/js/admin-settings.js`: Added `ConditionalFields` module for dependent field visibility
+- Updated `assets/css/frontend-common.css`: Moved product grid and card styles here (shared across all pages)
+- Updated `assets/css/frontend-archive.css`: Removed duplicated grid/card styles, added sort dropdown, pagination, neutral load more button
+- Updated `assets/css/frontend-single.css`: Related products section styles with responsive grid
+
 ## [1.5.0] - 2025-05-20
 
 ### Added
@@ -323,6 +386,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **1.6.0** (2025-05-20): Sorting dropdown, related products, pagination, Schema.org markup, lazy loading, search integration
 - **1.5.0** (2025-05-20): Card-based sidebar, item limits, collapsible sections, active filters at top, separate archive/single limits
 - **1.4.0** (2025-05-20): Admin settings page with tabbed UI, AJAX save, all options configurable from dashboard
 - **1.3.0** (2025-05-20): Security fixes, transient caching, removed extract(), uninstall handler

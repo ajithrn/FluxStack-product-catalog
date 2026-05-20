@@ -18,6 +18,7 @@
 	const Filters = {
 		isFiltering: false,
 		searchTimeout: null,
+		currentOrderby: 'menu_order',
 
 		/**
 		 * Initialize filters
@@ -80,6 +81,15 @@
 					}
 				});
 			});
+
+			// Sort dropdown
+			const sortSelect = document.getElementById('fs-sort-select');
+			if (sortSelect) {
+				sortSelect.addEventListener('change', function() {
+					self.currentOrderby = this.value;
+					self.applyFilters();
+				});
+			}
 		},
 
 		/**
@@ -108,6 +118,7 @@
 		formData.append('search', data.search);
 		formData.append('paged', data.paged);
 		formData.append('per_page', data.per_page);
+		formData.append('orderby', data.orderby);
 		
 		// Append arrays properly
 		data.categories.forEach(function(value) {
@@ -186,7 +197,8 @@
 				types: [],
 				tags: [],
 				paged: 1,
-				per_page: config.perPage || 12
+				per_page: config.perPage || 12,
+				orderby: this.currentOrderby || 'menu_order'
 			};
 
 			// Search
@@ -284,14 +296,15 @@
 	};
 
 	/**
-	 * Infinite Scroll Module
+	 * Load More Module
+	 * Supports both manual "Load More" button and optional infinite scroll
 	 */
-	const InfiniteScroll = {
+	const LoadMore = {
 		isLoading: false,
 		observer: null,
 
 		/**
-		 * Initialize infinite scroll
+		 * Initialize load more
 		 */
 		init: function() {
 			const loadMoreBtn = document.querySelector('.fs-product-load-more');
@@ -300,11 +313,15 @@
 			}
 
 			this.bindEvents(loadMoreBtn);
-			this.setupIntersectionObserver(loadMoreBtn);
+
+			// Enable infinite scroll if configured
+			if (config.paginationMode === 'infinite-scroll') {
+				this.setupInfiniteScroll(loadMoreBtn);
+			}
 		},
 
 		/**
-		 * Bind events
+		 * Bind click event on Load More button
 		 */
 		bindEvents: function(loadMoreBtn) {
 			const self = this;
@@ -315,29 +332,31 @@
 		},
 
 		/**
-		 * Setup intersection observer for infinite scroll
+		 * Setup IntersectionObserver for infinite scroll mode
 		 */
-		setupIntersectionObserver: function(loadMoreBtn) {
+		setupInfiniteScroll: function(loadMoreBtn) {
 			const self = this;
 
-			if ('IntersectionObserver' in window) {
-				this.observer = new IntersectionObserver(function(entries) {
-					entries.forEach(function(entry) {
-						if (entry.isIntersecting && !self.isLoading) {
-							const currentPage = parseInt(loadMoreBtn.dataset.page, 10);
-							const maxPages = parseInt(loadMoreBtn.dataset.maxPages, 10);
-							
-							if (currentPage < maxPages) {
-								self.loadMore(loadMoreBtn);
-							}
-						}
-					});
-				}, {
-					rootMargin: '200px'
-				});
-
-				this.observer.observe(loadMoreBtn);
+			if (!('IntersectionObserver' in window)) {
+				return;
 			}
+
+			this.observer = new IntersectionObserver(function(entries) {
+				entries.forEach(function(entry) {
+					if (entry.isIntersecting && !self.isLoading) {
+						const currentPage = parseInt(loadMoreBtn.dataset.page, 10);
+						const maxPages = parseInt(loadMoreBtn.dataset.maxPages, 10);
+
+						if (currentPage < maxPages) {
+							self.loadMore(loadMoreBtn);
+						}
+					}
+				});
+			}, {
+				rootMargin: '300px'
+			});
+
+			this.observer.observe(loadMoreBtn);
 		},
 
 		/**
@@ -378,6 +397,7 @@
 		formData.append('search', filterData.search);
 		formData.append('paged', filterData.paged);
 		formData.append('per_page', filterData.per_page);
+		formData.append('orderby', filterData.orderby);
 		
 		// Append arrays properly
 		filterData.categories.forEach(function(value) {
@@ -493,12 +513,12 @@
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function() {
 			Filters.init();
-			InfiniteScroll.init();
+			LoadMore.init();
 			Sidebar.init();
 		});
 	} else {
 		Filters.init();
-		InfiniteScroll.init();
+		LoadMore.init();
 		Sidebar.init();
 	}
 

@@ -96,6 +96,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 			</div>
 		</section>
+
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Pagination', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Controls how additional products are loaded on archive pages.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Pagination Mode', 'fs-product-catalog' ); ?></label>
+					<select class="fs-settings-field__select" name="fs_settings[pagination_mode]" id="fs-pagination-mode">
+						<option value="load-more" <?php selected( $settings['pagination_mode'], 'load-more' ); ?>><?php esc_html_e( 'Load More button — click to append more products', 'fs-product-catalog' ); ?></option>
+						<option value="infinite-scroll" <?php selected( $settings['pagination_mode'], 'infinite-scroll' ); ?>><?php esc_html_e( 'Infinite scroll — auto-loads when scrolling near bottom', 'fs-product-catalog' ); ?></option>
+						<option value="pagination" <?php selected( $settings['pagination_mode'], 'pagination' ); ?>><?php esc_html_e( 'Numbered pages — traditional pagination with page numbers', 'fs-product-catalog' ); ?></option>
+					</select>
+					<span class="fs-settings-field__help"><?php esc_html_e( '"Load More" gives users control. "Infinite scroll" loads automatically. "Numbered pages" is best for SEO and bookmarking.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field fs-settings-field--conditional" data-show-when="load-more,infinite-scroll" data-depends-on="fs-pagination-mode">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Load More Button Text', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[load_more_text]" value="<?php echo esc_attr( $settings['load_more_text'] ); ?>" placeholder="<?php esc_attr_e( 'Load More Products', 'fs-product-catalog' ); ?>">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Custom text for the Load More button. Leave empty to use the default.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
 	</div>
 
 	<!-- Single Product Tab -->
@@ -156,10 +179,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 			</div>
 		</section>
+
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Related Products', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Shows a grid of products from the same category at the bottom of the product page. Encourages visitors to explore more.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[show_related_products]" value="1" <?php checked( $settings['show_related_products'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Show Related Products', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Displays products from the same category below the product content.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Number of Products', 'fs-product-catalog' ); ?></label>
+					<input type="number" class="fs-settings-field__input fs-settings-field__input--small" name="fs_settings[related_products_count]" value="<?php echo esc_attr( $settings['related_products_count'] ); ?>" min="1" max="8">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'How many related products to show (1–8). Uses the same card layout as the archive grid.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
 	</div>
 
 	<!-- Archive Tab -->
 	<div class="fs-settings-panel" data-panel="archive">
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Sorting & Display', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Controls the sorting dropdown and results bar on archive pages. The dropdown lets visitors re-order products without reloading the page.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[show_sorting]" value="1" <?php checked( $settings['show_sorting'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Show Sorting Dropdown', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Displays a "Sort by" dropdown in the results bar. Options: Default, Name A–Z, Name Z–A, Newest, Oldest.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+
 		<section class="fs-settings-section">
 			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Filter Sidebar', 'fs-product-catalog' ); ?></h2>
 			<p class="fs-settings-section__desc"><?php esc_html_e( 'The filter sidebar lets visitors narrow down products using checkboxes. Filters apply instantly via AJAX — no page reload. Appears on the main products page and all taxonomy archives.', 'fs-product-catalog' ); ?></p>

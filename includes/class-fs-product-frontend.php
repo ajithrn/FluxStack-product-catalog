@@ -35,6 +35,12 @@ class FS_Product_Frontend {
 		add_action( 'created_term', array( __CLASS__, 'flush_term_cache' ), 10, 3 );
 		add_action( 'edited_term', array( __CLASS__, 'flush_term_cache' ), 10, 3 );
 		add_action( 'delete_term', array( __CLASS__, 'flush_term_cache' ), 10, 3 );
+
+		// Schema.org structured data.
+		add_action( 'wp_head', array( __CLASS__, 'output_product_schema' ) );
+
+		// Product search results template.
+		add_filter( 'template_include', array( __CLASS__, 'search_results_template' ), 99 );
 	}
 
 	/**
@@ -107,12 +113,13 @@ class FS_Product_Frontend {
 				'fs-product-catalog-archive',
 				'fsProductCatalog',
 				array(
-					'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-					'nonce'      => wp_create_nonce( 'fs_product_filter_nonce' ),
-					'perPage'    => self::get_products_per_page(),
-					'i18n'       => array(
+					'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+					'nonce'          => wp_create_nonce( 'fs_product_filter_nonce' ),
+					'perPage'        => self::get_products_per_page(),
+					'paginationMode' => self::get_pagination_mode(),
+					'i18n'           => array(
 						'loading'      => esc_html__( 'Loading...', 'fs-product-catalog' ),
-						'loadMore'     => esc_html__( 'Load More Products', 'fs-product-catalog' ),
+						'loadMore'     => esc_html( self::get_load_more_text() ),
 						'noMore'       => esc_html__( 'No more products to load', 'fs-product-catalog' ),
 						'noResults'    => esc_html__( 'No products found', 'fs-product-catalog' ),
 						'clearFilters' => esc_html__( 'Clear All Filters', 'fs-product-catalog' ),
@@ -141,14 +148,20 @@ class FS_Product_Frontend {
 	 * @return bool
 	 */
 	public static function is_product_archive() {
-		return is_post_type_archive( 'fs-products' ) || is_tax(
-			array(
-				'fs-product-category',
-				'fs-product-brand',
-				'fs-product-type',
-				'fs-product-tag',
-			)
-		);
+		if ( is_post_type_archive( 'fs-products' ) ) {
+			return true;
+		}
+
+		if ( is_tax( array( 'fs-product-category', 'fs-product-brand', 'fs-product-type', 'fs-product-tag' ) ) ) {
+			return true;
+		}
+
+		// Product search results.
+		if ( is_search() && 'fs-products' === get_query_var( 'post_type' ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -423,5 +436,121 @@ class FS_Product_Frontend {
 		if ( in_array( $taxonomy, $product_taxonomies, true ) ) {
 			delete_transient( 'fs_sidebar_terms_' . sanitize_key( $taxonomy ) );
 		}
+	}
+
+	/**
+	 * Output Schema.org Product JSON-LD on single product pages.
+	 */
+	public static function output_product_schema() {
+		if ( ! is_singular( 'fs-products' ) ) {
+			return;
+		}
+
+		$product_id  = get_the_ID();
+		$schema      = array(
+			'@context'    => 'https://schema.org',
+			'@type'       => 'Product',
+			'name'        => get_the_title( $product_id ),
+			'description' => wp_strip_all_tags( get_the_excerpt( $product_id ) ),
+			'url'         => get_permalink( $product_id ),
+		);
+
+		// Image.
+		$thumbnail_id = get_post_thumbnail_id( $product_id );
+		if ( $thumbnail_id ) {
+			$image_url = wp_get_attachment_image_url( $thumbnail_id, 'full' );
+			if ( $image_url ) {
+				$schema['image'] = $image_url;
+			}
+		}
+
+		// Brand.
+		$brands = get_the_terms( $product_id, 'fs-product-brand' );
+		if ( ! empty( $brands ) && ! is_wp_error( $brands ) ) {
+			$schema['brand'] = array(
+				'@type' => 'Brand',
+				'name'  => $brands[0]->name,
+			);
+		}
+
+		// Category.
+		$categories = get_the_terms( $product_id, 'fs-product-category' );
+		if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+			$schema['category'] = $categories[0]->name;
+		}
+
+		/**
+		 * Filter the product schema data.
+		 *
+		 * @param array $schema     Schema.org data array.
+		 * @param int   $product_id Product post ID.
+		 */
+		$schema = apply_filters( 'fs_product_schema', $schema, $product_id );
+
+		echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
+	}
+
+	/**
+	 * Override search template when searching for products.
+	 *
+	 * @param string $template Current template path.
+	 * @return string
+	 */
+	public static function search_results_template( $template ) {
+		if ( ! is_search() ) {
+			return $template;
+		}
+
+		$post_type = get_query_var( 'post_type' );
+		if ( 'fs-products' !== $post_type ) {
+			return $template;
+		}
+
+		$search_template = FS_Product_Template_Loader::locate_template( 'search-products.php' );
+		if ( $search_template ) {
+			return $search_template;
+		}
+
+		return $template;
+	}
+
+	/**
+	 * Get the default sort order setting.
+	 *
+	 * @return string
+	 */
+	public static function get_default_orderby() {
+		return apply_filters( 'fs_product_default_orderby', 'menu_order' );
+	}
+
+	/**
+	 * Check if sorting dropdown should be shown.
+	 *
+	 * @return bool
+	 */
+	public static function show_sorting() {
+		return apply_filters( 'fs_product_show_sorting', true );
+	}
+
+	/**
+	 * Get the pagination mode.
+	 *
+	 * @return string One of: load-more, pagination, infinite-scroll.
+	 */
+	public static function get_pagination_mode() {
+		return apply_filters( 'fs_product_pagination_mode', 'load-more' );
+	}
+
+	/**
+	 * Get custom load more button text.
+	 *
+	 * @return string
+	 */
+	public static function get_load_more_text() {
+		$text = FS_Product_Settings::get( 'load_more_text', '' );
+		if ( empty( $text ) ) {
+			$text = __( 'Load More Products', 'fs-product-catalog' );
+		}
+		return apply_filters( 'fs_product_load_more_text', $text );
 	}
 }

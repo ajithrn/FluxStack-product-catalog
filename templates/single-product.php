@@ -83,6 +83,11 @@ do_action( 'fs_product_before_main_content' );
 				do_action( 'fs_product_after_single_product' );
 				?>
 
+				<?php
+				// Related products.
+				FS_Product_Template_Loader::get_template_part( 'related-products' );
+				?>
+
 			</article>
 		</div>
 

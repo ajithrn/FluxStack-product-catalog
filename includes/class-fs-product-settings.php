@@ -35,6 +35,8 @@ class FS_Product_Settings {
 		'archive_columns'      => 3,
 		'default_orderby'      => 'menu_order',
 		'show_breadcrumbs'     => true,
+		'pagination_mode'      => 'load-more',
+		'load_more_text'       => '',
 
 		// Single Product.
 		'single_show_sidebar'  => true,
@@ -45,6 +47,8 @@ class FS_Product_Settings {
 		'single_sidebar_types'     => true,
 		'single_sidebar_tags'      => true,
 		'sidebar_items_limit'      => 8,
+		'show_related_products'    => true,
+		'related_products_count'   => 4,
 
 		// Archive.
 		'archive_show_sidebar'  => true,
@@ -55,6 +59,7 @@ class FS_Product_Settings {
 		'archive_sidebar_brands'    => true,
 		'archive_sidebar_types'     => true,
 		'archive_sidebar_tags'      => true,
+		'show_sorting'             => true,
 
 		// Product Card.
 		'card_show_category'   => false,
@@ -200,6 +205,17 @@ class FS_Product_Settings {
 		$sanitized['card_image_ratio'] = isset( $input['card_image_ratio'] ) && in_array( $input['card_image_ratio'], array( '1:1', '3:4', '16:9' ), true )
 			? $input['card_image_ratio'] : '1:1';
 
+		$sanitized['pagination_mode'] = isset( $input['pagination_mode'] ) && in_array( $input['pagination_mode'], array( 'load-more', 'pagination', 'infinite-scroll' ), true )
+			? $input['pagination_mode'] : 'load-more';
+
+		// Text fields.
+		$sanitized['load_more_text'] = isset( $input['load_more_text'] )
+			? sanitize_text_field( wp_unslash( $input['load_more_text'] ) ) : '';
+
+		// Integers: related products count.
+		$sanitized['related_products_count'] = isset( $input['related_products_count'] )
+			? max( 1, min( absint( $input['related_products_count'] ), 8 ) ) : 4;
+
 		// Toggles (booleans).
 		$toggles = array(
 			'show_breadcrumbs',
@@ -218,6 +234,8 @@ class FS_Product_Settings {
 			'card_show_category',
 			'card_show_excerpt',
 			'card_show_more_link',
+			'show_related_products',
+			'show_sorting',
 		);
 
 		foreach ( $toggles as $toggle ) {
@@ -278,9 +296,29 @@ class FS_Product_Settings {
 			return (bool) FS_Product_Settings::get( 'show_breadcrumbs', $value );
 		}, 5 );
 
+		add_filter( 'fs_product_pagination_mode', function( $value ) {
+			return FS_Product_Settings::get( 'pagination_mode', $value );
+		}, 5 );
+
+		add_filter( 'fs_product_default_orderby', function( $value ) {
+			return FS_Product_Settings::get( 'default_orderby', $value );
+		}, 5 );
+
+		add_filter( 'fs_product_show_sorting', function( $value ) {
+			return (bool) FS_Product_Settings::get( 'show_sorting', $value );
+		}, 5 );
+
 		// Single product.
 		add_filter( 'fs_product_show_single_sidebar', function( $value ) {
 			return (bool) FS_Product_Settings::get( 'single_show_sidebar', $value );
+		}, 5 );
+
+		add_filter( 'fs_product_show_related', function( $value ) {
+			return (bool) FS_Product_Settings::get( 'show_related_products', $value );
+		}, 5 );
+
+		add_filter( 'fs_product_related_count', function( $value ) {
+			return absint( FS_Product_Settings::get( 'related_products_count', $value ) );
 		}, 5 );
 
 		add_filter( 'fs_product_single_sidebar_position', function( $value ) {

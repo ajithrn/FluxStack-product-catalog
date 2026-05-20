@@ -672,6 +672,29 @@
 	}
 }
 
+/* Related Products */
+.fs-related-products {
+	margin-top: var(--fs-gap-xl);
+	padding-top: var(--fs-gap-lg);
+	border-top: 1px solid var(--fs-border);
+}
+
+.fs-related-products-title {
+	font-size: var(--fs-h3);
+	margin: 0 0 var(--fs-gap);
+	color: var(--fs-text);
+}
+
+.fs-related-grid {
+	margin-bottom: 0;
+}
+
+@media (max-width: 992px) {
+	.fs-related-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
 @media (max-width: 768px) {
 	.fs-product-info {
 		padding: var(--fs-gap-sm);

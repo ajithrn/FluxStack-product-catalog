@@ -9,13 +9,18 @@ A custom WordPress product catalog plugin without e-commerce functionality. Crea
 - **ACF Integration**: Product information fields, specifications, and gallery
 - **Frontend Templates**: Fully customizable template system
 - **AJAX Filtering**: Real-time product filtering without page reload
-- **Infinite Scroll**: Automatic loading with load more button fallback
+- **Product Sorting**: Dropdown to sort by name, date, or custom order
+- **Flexible Pagination**: Load More button, infinite scroll, or numbered pages
+- **Related Products**: Automatic related product suggestions from same category
+- **Schema.org Markup**: JSON-LD structured data for SEO
 - **Responsive Design**: Mobile-first approach with collapsible filters
 - **Lightbox Gallery**: Custom lightweight image gallery with keyboard navigation
 - **Specification Tabs**: Organized product specifications with tabbed interface
 - **Responsive Tables**: Wide tables get a scroll toolbar with arrow buttons and visual hints
 - **Breadcrumb Navigation**: SEO-friendly breadcrumbs
+- **Product Search**: Dedicated search results page with archive layout
 - **Template Override System**: Easy customization via theme directory
+- **Admin Settings**: Full settings UI with no code required
 
 ## Requirements
 
@@ -47,9 +52,9 @@ Visit the product archive at: `yoursite.com/product/`
 
 Most display options can be configured from **Products > Settings** in the WordPress admin:
 
-- **General**: Products per page, grid columns, sort order, breadcrumbs
-- **Single Product**: Sidebar on/off, position, visible sections, items limit
-- **Archive**: Filter sidebar on/off, position, visible filter groups
+- **General**: Products per page, grid columns, sort order, breadcrumbs, pagination mode (load more / infinite scroll / numbered pages), custom button text
+- **Single Product**: Sidebar on/off, position, visible sections, items limit, related products toggle and count
+- **Archive**: Sorting dropdown on/off, filter sidebar on/off, position, visible filter groups
 - **Product Card**: Category label, excerpt, "View Details" link, image ratio
 
 All settings can also be overridden via PHP filters for developers (see below).
@@ -125,10 +130,14 @@ For complete hooks reference, see [DEVELOPER.md](DEVELOPER.md#hooks--filters-ref
 ## Technical Features
 
 - **AJAX Filtering**: Real-time search and filtering without page reload
-- **Infinite Scroll**: Automatic loading with Intersection Observer API
+- **Flexible Pagination**: Load More button, infinite scroll (IntersectionObserver), or traditional numbered pages
+- **Product Sorting**: AJAX-powered sort dropdown with whitelisted orderby values
+- **Schema.org**: JSON-LD Product markup on single pages (extensible via filter)
+- **Lazy Loading**: Gallery thumbnails use `loading="lazy"`, main image uses `fetchpriority="high"`
 - **Accessibility**: ARIA labels, keyboard navigation, screen reader support
-- **Performance**: Conditional asset loading, optimized queries
-- **Browser Support**: Modern browsers with IE11 graceful degradation
+- **Performance**: Conditional asset loading, transient caching, optimized queries
+- **Theme Neutral**: Load More button and UI elements inherit theme styles via CSS variables
+- **Browser Support**: Modern browsers (no IE11 — uses CSS `:has()` selector)
 - **Standards Compliant**: Follows WordPress PHP, JavaScript, and CSS coding standards
 
 ## Documentation
