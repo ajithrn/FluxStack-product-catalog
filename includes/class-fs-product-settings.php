@@ -113,14 +113,14 @@ class Settings {
 			'fs-product-settings',
 			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/dist/admin.min.css',
 			array(),
-			FS_PRODUCT_CATALOG_VERSION
+			FS_PRODUCT_CATALOG_ASSET_VERSION
 		);
 
 		wp_enqueue_script(
 			'fs-product-settings',
 			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/dist/admin-settings.min.js',
 			array(),
-			FS_PRODUCT_CATALOG_VERSION,
+			FS_PRODUCT_CATALOG_ASSET_VERSION,
 			true
 		);
 

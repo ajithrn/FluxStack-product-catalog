@@ -273,26 +273,36 @@
 
 /* Product Info */
 .fs-product-info {
-	background: var(--fs-bg-alt);
-	padding: var(--fs-gap);
-	border-radius: var(--fs-border-radius);
+	background: var(--fs-bg);
+	border: 1px solid var(--fs-border);
+	border-radius: var(--fs-border-radius-lg);
+	overflow: hidden;
 }
 
 .fs-product-info-title {
-	font-size: var(--fs-h3);
-	margin: 0 0 var(--fs-gap);
+	font-size: var(--fs-h4);
+	font-weight: 600;
+	margin: 0;
+	padding: var(--fs-gap-sm) var(--fs-gap);
 	color: var(--fs-text);
+	background: var(--fs-bg-alt);
+	border-bottom: 1px solid var(--fs-border);
 }
 
 .fs-product-info-items {
 	display: flex;
 	flex-direction: column;
-	gap: var(--fs-gap);
+	gap: 0;
+	padding: var(--fs-gap-sm) var(--fs-gap);
 }
 
 .fs-product-info-item {
-	padding-bottom: var(--fs-gap);
+	padding: var(--fs-gap-sm) 0;
 	border-bottom: 1px solid var(--fs-border-light);
+}
+
+.fs-product-info-item:first-child {
+	padding-top: 0;
 }
 
 .fs-product-info-item:last-child {
@@ -301,13 +311,18 @@
 }
 
 .fs-info-item-title {
-	font-size: var(--fs-h6);
-	margin: 0 0 0.5rem;
-	color: var(--fs-text);
+	font-size: var(--fs-font-size-xs);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin: 0 0 0.6rem;
+	padding-bottom: 0.4rem;
+	color: var(--fs-text-lighter);
+	border-bottom: 1px solid var(--fs-border-light);
 }
 
 .fs-info-item-content {
-	color: var(--fs-text-light);
+	color: var(--fs-text);
 	line-height: var(--fs-line-height);
 }
 
@@ -315,12 +330,20 @@
 .fs-product-specifications {
 	margin-top: var(--fs-gap-lg);
 	min-width: 0;
+	background: var(--fs-bg);
+	border: 1px solid var(--fs-border);
+	border-radius: var(--fs-border-radius-lg);
+	overflow: hidden;
 }
 
 .fs-product-specs-title {
-	font-size: var(--fs-h2);
-	margin: 0 0 var(--fs-gap);
+	font-size: var(--fs-h4);
+	font-weight: 600;
+	margin: 0;
+	padding: var(--fs-gap-sm) var(--fs-gap);
 	color: var(--fs-text);
+	background: var(--fs-bg-alt);
+	border-bottom: 1px solid var(--fs-border);
 }
 
 .fs-specs-tabs {
@@ -329,36 +352,38 @@
 
 .fs-specs-tabs-nav {
 	display: flex;
-	gap: 0.5rem;
-	border-bottom: 2px solid var(--fs-border);
-	margin-bottom: var(--fs-gap);
+	gap: 0;
+	border-bottom: 1px solid var(--fs-border);
 	flex-wrap: wrap;
+	background: var(--fs-bg-alt);
 }
 
 .fs-specs-tab-button {
 	background: none;
 	border: none;
-	padding: 0.75rem 1.5rem;
-	font-size: var(--fs-font-size);
+	padding: 0.75rem 1.25rem;
+	font-size: var(--fs-font-size-sm);
 	color: var(--fs-text-light);
 	cursor: pointer;
 	border-bottom: 2px solid transparent;
-	margin-bottom: -2px;
+	margin-bottom: -1px;
 	transition: all var(--fs-transition-fast);
 	font-weight: 500;
 }
 
 .fs-specs-tab-button:hover {
-	color: var(--fs-primary);
+	color: var(--fs-text);
+	background: var(--fs-bg);
 }
 
 .fs-specs-tab-button.active {
 	color: var(--fs-primary);
+	background: var(--fs-bg);
 	border-bottom-color: var(--fs-primary);
 }
 
 .fs-specs-tabs-content {
-	padding: 0;
+	padding: var(--fs-gap);
 }
 
 .fs-specs-tab-panel {

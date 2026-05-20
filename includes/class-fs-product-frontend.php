@@ -62,7 +62,7 @@ class Frontend {
 			'fs-product-catalog',
 			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/dist/frontend.min.css',
 			array(),
-			FS_PRODUCT_CATALOG_VERSION
+			FS_PRODUCT_CATALOG_ASSET_VERSION
 		);
 
 		// Single bundled JS for all frontend pages.
@@ -70,7 +70,7 @@ class Frontend {
 			'fs-product-catalog',
 			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/dist/frontend.min.js',
 			array(),
-			FS_PRODUCT_CATALOG_VERSION,
+			FS_PRODUCT_CATALOG_ASSET_VERSION,
 			true
 		);
 

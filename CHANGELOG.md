@@ -5,6 +5,16 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-05-21
+
+### Added
+- **Asset Cache Busting**: Uses `filemtime()` on built files instead of version string — every `npm run build` auto-busts browser cache without manual version bumps
+
+### Changed
+- **Product Info section**: Card-based layout with gray header bar, section labels now have bottom borders for clear visual separation between items
+- **Specifications section**: Contained card with gray tab navigation bar, active tab gets white background + blue accent, content area has proper padding
+- **Section labels**: Smaller, lighter, wider letter-spacing with underline — reads as metadata dividers, not content
+
 ## [2.0.0] - 2025-05-20
 
 ### Added
@@ -21,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`composer.json`**: Autoloader configuration
 - **`package.json`**: Build scripts and dev dependencies
 - **`.gitignore`**: Excludes `node_modules/`
+- **Asset Cache Busting**: Uses `filemtime()` on built files instead of version string — every `npm run build` auto-busts browser cache
 
 ### Changed
 - **All classes renamed** (namespace handles the prefix now):
@@ -469,6 +480,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **2.1.0** (2025-05-21): Cache busting via filemtime, improved product info and specs section styling
 - **2.0.0** (2025-05-20): Feature-complete milestone, editorconfig, PHPCS config, architecture decision documented
 - **1.9.0** (2025-05-20): Object caching, LCP preload, REST API cache headers, CSS performance hints
 - **1.8.0** (2025-05-20): REST API endpoints, CSV import/export with admin UI
