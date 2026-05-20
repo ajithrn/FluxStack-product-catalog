@@ -5,6 +5,34 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-05-20
+
+### Added
+- **Admin Settings Page**: Full settings UI under Products > Settings
+  - Tabbed interface: General, Single Product, Archive, Product Card
+  - AJAX save with toast notifications (no page reload)
+  - Ctrl+S / Cmd+S keyboard shortcut to save
+  - Settings link on the plugins page
+  - FluxStack-style UI: rounded cards, pill tabs, toggle switches, custom checkboxes
+  - Contextual help text on every field explaining what it does and when to use it
+  - Grouped checkboxes for sidebar sections and card elements
+- **Settings Integration**: Settings feed into existing filter system at priority 5
+  - Developer filters (priority 10) still override settings page values
+  - All existing `apply_filters()` hooks continue to work as before
+- **New Settings Options**:
+  - Products per page, archive columns, default sort order
+  - Sidebar visibility and position (single + archive)
+  - Sidebar section toggles (search, categories, brands, types, tags)
+  - Sidebar items limit per section
+  - Product card elements (category, excerpt, more link, image ratio)
+
+### Technical
+- New file: `includes/class-fs-product-settings.php` — Settings class with AJAX save, sanitization, defaults
+- New file: `templates/admin/settings-page.php` — Tabbed settings page template with contextual descriptions
+- New file: `assets/css/admin-settings.css` — FluxStack-style admin UI (cards, tabs, toggles, checkboxes, toast)
+- New file: `assets/js/admin-settings.js` — Tab switching, AJAX save, Ctrl+S shortcut, toast feedback
+- Updated `fs-product-catalog.php`: Load settings class, add settings link on plugins page
+
 ## [1.3.0] - 2025-05-20
 
 ### Security
@@ -249,6 +277,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **1.4.0** (2025-05-20): Admin settings page with tabbed UI, AJAX save, all options configurable from dashboard
 - **1.3.0** (2025-05-20): Security fixes, transient caching, removed extract(), uninstall handler
 - **1.2.0** (2025-05-20): Responsive tables, content typography, shared CSS architecture, single sidebar enabled by default
 - **1.1.1** (2025-01-27): Bug fixes, single product sidebar, display filters, styling improvements

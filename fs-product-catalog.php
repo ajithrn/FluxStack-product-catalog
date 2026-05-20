@@ -3,7 +3,7 @@
  * Plugin Name: FluxStack Product Catalog
  * Plugin URI: https://ajithrn.com
  * Description: A custom product catalog system without e-commerce functionality. Creates a custom post type for products with categories, brands, tags, and types.
- * Version: 1.3.0
+ * Version: 1.4.0
  * Author: Ajith R N
  * Author URI: https://ajithrn.com
  * Text Domain: fs-product-catalog
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'FS_PRODUCT_CATALOG_VERSION', '1.3.0' );
+define( 'FS_PRODUCT_CATALOG_VERSION', '1.4.0' );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -68,6 +68,7 @@ class FS_Product_Catalog {
 		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-template-loader.php';
 		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-frontend.php';
 		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-ajax.php';
+		require_once FS_PRODUCT_CATALOG_PLUGIN_DIR . 'includes/class-fs-product-settings.php';
 	}
 
 	/**
@@ -90,6 +91,9 @@ class FS_Product_Catalog {
 
 		// Enqueue admin assets.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
+
+		// Add settings link on plugins page.
+		add_filter( 'plugin_action_links_' . FS_PRODUCT_CATALOG_PLUGIN_BASENAME, array( $this, 'add_settings_link' ) );
 	}
 
 	/**
@@ -147,6 +151,7 @@ class FS_Product_Catalog {
 		FS_Product_Template_Loader::init();
 		FS_Product_Frontend::init();
 		FS_Product_Ajax::init();
+		FS_Product_Settings::init();
 	}
 
 	/**
@@ -211,6 +216,22 @@ class FS_Product_Catalog {
 			array(),
 			FS_PRODUCT_CATALOG_VERSION
 		);
+	}
+
+	/**
+	 * Add settings link on plugins page.
+	 *
+	 * @param array $links Existing plugin action links.
+	 * @return array
+	 */
+	public function add_settings_link( $links ) {
+		$settings_link = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( admin_url( 'edit.php?post_type=fs-products&page=fs-product-settings' ) ),
+			esc_html__( 'Settings', 'fs-product-catalog' )
+		);
+		array_unshift( $links, $settings_link );
+		return $links;
 	}
 }
 

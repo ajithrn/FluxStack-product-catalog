@@ -26,14 +26,18 @@ This document provides detailed technical information for developers working wit
 ```
 fs-product-catalog/
 ├── fs-product-catalog.php          # Main plugin file
+├── uninstall.php                    # Cleanup on plugin delete
 ├── includes/                        # PHP classes
 │   ├── class-fs-product-cpt.php
 │   ├── class-fs-product-taxonomies.php
 │   ├── class-fs-product-acf.php
 │   ├── class-fs-product-template-loader.php
 │   ├── class-fs-product-frontend.php
-│   └── class-fs-product-ajax.php
+│   ├── class-fs-product-ajax.php
+│   └── class-fs-product-settings.php
 ├── templates/                       # Frontend templates
+│   ├── admin/
+│   │   └── settings-page.php
 │   ├── single-product.php
 │   ├── archive-product.php
 │   ├── taxonomy-*.php
@@ -48,10 +52,12 @@ fs-product-catalog/
 ├── assets/
 │   ├── css/
 │   │   ├── admin.css
+│   │   ├── admin-settings.css
 │   │   ├── frontend-common.css
 │   │   ├── frontend-single.css
 │   │   └── frontend-archive.css
 │   └── js/
+│       ├── admin-settings.js
 │       ├── frontend-single.js
 │       └── frontend-archive.js
 ├── acf-json/                        # ACF field definitions
@@ -163,6 +169,8 @@ class FS_Product_Frontend {
     public static function get_archive_columns() { }
     public static function show_breadcrumbs() { }
     public static function show_sidebar() { }
+    public static function get_cached_terms($taxonomy) { }
+    public static function flush_term_cache($term_id, $tt_id, $taxonomy) { }
 }
 ```
 
@@ -171,6 +179,43 @@ class FS_Product_Frontend {
 - Common CSS for all product pages
 - Specific CSS/JS for single vs archive
 - Localized JavaScript data
+
+### Settings Manager: `FS_Product_Settings`
+
+**File**: `includes/class-fs-product-settings.php`
+
+```php
+class FS_Product_Settings {
+    const OPTION_NAME = 'fs_product_catalog_settings';
+    
+    public static function init() { }
+    public static function get($key, $default = null) { }
+    public static function get_all() { }
+    public static function ajax_save() { }
+    public static function register_setting_filters() { }
+}
+```
+
+**How Settings Work**:
+- All settings stored in a single `wp_options` row: `fs_product_catalog_settings`
+- Settings register as filters at **priority 5** via `register_setting_filters()`
+- Developer `add_filter()` calls run at default priority 10, so they **always override** settings page values
+- Admin page uses AJAX save (no page reload) with nonce + capability check
+- All inputs are sanitized: numbers bounded, selects whitelisted, booleans cast
+
+**Accessing Settings in Code**:
+```php
+// Get a single setting (with fallback to default)
+$per_page = FS_Product_Settings::get('products_per_page', 12);
+
+// Get all settings merged with defaults
+$all = FS_Product_Settings::get_all();
+
+// Settings are also available via the existing filter system
+$per_page = apply_filters('fs_product_posts_per_page', 12);
+```
+
+**Settings Page Location**: Products > Settings (admin submenu)
 
 ### AJAX Handler: `FS_Product_Ajax`
 
@@ -1011,4 +1056,4 @@ When contributing code:
 ---
 
 **Last Updated**: 2025-05-20
-**Version**: 1.3.0
+**Version**: 1.4.0

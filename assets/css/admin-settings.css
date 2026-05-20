@@ -1,0 +1,429 @@
+/**
+ * Admin Settings Page Styles
+ * Matches FluxStack admin UI pattern
+ *
+ * @package FS_Product_Catalog
+ */
+
+:root {
+	--fsp-primary: #4f46e5;
+	--fsp-primary-hover: #4338ca;
+	--fsp-primary-light: #eef2ff;
+	--fsp-success: #10b981;
+	--fsp-error: #ef4444;
+	--fsp-bg: #f1f5f9;
+	--fsp-card: #ffffff;
+	--fsp-border: #e2e8f0;
+	--fsp-text: #1e293b;
+	--fsp-text-muted: #64748b;
+	--fsp-radius: 12px;
+	--fsp-radius-sm: 8px;
+	--fsp-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+	--fsp-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* App Container */
+.fs-settings-app {
+	max-width: 900px;
+	margin: 20px auto 40px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Hide WP notices on settings page */
+.fs-products_page_fs-product-settings .notice:not(.fs-settings-toast) {
+	display: none !important;
+}
+
+.fs-products_page_fs-product-settings #wpcontent {
+	padding-left: 20px;
+}
+
+/* Header */
+.fs-settings-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1.25rem 1.5rem;
+	background: var(--fsp-card);
+	border: 1px solid var(--fsp-border);
+	border-radius: var(--fsp-radius);
+	margin-bottom: 1rem;
+	box-shadow: var(--fsp-shadow);
+}
+
+.fs-settings-header__left {
+	display: flex;
+	align-items: baseline;
+	gap: 0.75rem;
+}
+
+.fs-settings-header__title {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--fsp-text);
+}
+
+.fs-settings-header__version {
+	font-size: 0.75rem;
+	color: var(--fsp-text-muted);
+	background: var(--fsp-bg);
+	padding: 3px 10px;
+	border-radius: 20px;
+}
+
+/* Save Button */
+.fs-settings-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.6rem 1.25rem;
+	border: none;
+	border-radius: var(--fsp-radius-sm);
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.fs-settings-btn--primary {
+	background: var(--fsp-primary);
+	color: #fff;
+}
+
+.fs-settings-btn--primary:hover {
+	background: var(--fsp-primary-hover);
+	transform: translateY(-1px);
+	box-shadow: var(--fsp-shadow-lg);
+}
+
+.fs-settings-btn--primary:disabled {
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+.fs-settings-btn--primary.is-saving {
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+.fs-settings-btn .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+}
+
+/* Toast Notification */
+.fs-settings-toast {
+	position: fixed;
+	top: 40px;
+	right: 20px;
+	z-index: 99999;
+	padding: 0.75rem 1.25rem;
+	border-radius: var(--fsp-radius-sm);
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: #fff;
+	box-shadow: var(--fsp-shadow-lg);
+	animation: fspSlideIn 0.3s ease;
+}
+
+.fs-settings-toast[hidden] {
+	display: none;
+}
+
+.fs-settings-toast--success {
+	background: var(--fsp-success);
+}
+
+.fs-settings-toast--error {
+	background: var(--fsp-error);
+}
+
+@keyframes fspSlideIn {
+	from { transform: translateX(100%); opacity: 0; }
+	to { transform: translateX(0); opacity: 1; }
+}
+
+/* Tabs */
+.fs-settings-tabs {
+	display: flex;
+	gap: 0;
+	background: var(--fsp-card);
+	border: 1px solid var(--fsp-border);
+	border-radius: var(--fsp-radius);
+	padding: 4px;
+	margin-bottom: 1.5rem;
+	box-shadow: var(--fsp-shadow);
+	flex-wrap: wrap;
+}
+
+.fs-settings-tabs__tab {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.6rem 1.1rem;
+	border: none;
+	background: transparent;
+	border-radius: var(--fsp-radius-sm);
+	font-size: 0.825rem;
+	font-weight: 500;
+	color: var(--fsp-text-muted);
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.fs-settings-tabs__tab:hover {
+	color: var(--fsp-text);
+	background: var(--fsp-bg);
+}
+
+.fs-settings-tabs__tab.is-active {
+	background: var(--fsp-primary);
+	color: #fff;
+	box-shadow: var(--fsp-shadow);
+}
+
+.fs-settings-tabs__tab .dashicons {
+	font-size: 15px;
+	width: 15px;
+	height: 15px;
+	line-height: 15px;
+}
+
+/* Panels */
+.fs-settings-panel {
+	display: none;
+}
+
+.fs-settings-panel.is-active {
+	display: block;
+}
+
+/* Sections */
+.fs-settings-section {
+	background: var(--fsp-card);
+	border: 1px solid var(--fsp-border);
+	border-radius: var(--fsp-radius);
+	padding: 2rem;
+	margin-bottom: 1.5rem;
+	box-shadow: var(--fsp-shadow);
+}
+
+.fs-settings-section__title {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--fsp-text);
+	margin: 0 0 0.25rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--fsp-border);
+}
+
+.fs-settings-section__desc {
+	color: var(--fsp-text-muted);
+	font-size: 0.8rem;
+	margin: 0.75rem 0 0;
+	line-height: 1.5;
+}
+
+.fs-settings-section__title + .fs-settings-form {
+	margin-top: 1.5rem;
+}
+
+.fs-settings-section__desc + .fs-settings-form {
+	margin-top: 1.25rem;
+}
+
+/* Form Grid */
+.fs-settings-form {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 1.5rem 1.75rem;
+}
+
+/* Fields */
+.fs-settings-field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.fs-settings-field--wide {
+	grid-column: 1 / -1;
+}
+
+.fs-settings-field__label {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--fsp-text);
+}
+
+.fs-settings-field__input,
+.fs-settings-field__select {
+	padding: 0.75rem 1rem;
+	border: 1px solid var(--fsp-border);
+	border-radius: var(--fsp-radius-sm);
+	font-size: 0.875rem;
+	color: var(--fsp-text);
+	background: var(--fsp-bg);
+	transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: inherit;
+}
+
+.fs-settings-field__input--small {
+	max-width: 120px;
+}
+
+.fs-settings-field__input:focus,
+.fs-settings-field__select:focus {
+	outline: none;
+	border-color: var(--fsp-primary);
+	box-shadow: 0 0 0 3px var(--fsp-primary-light);
+	background: #fff;
+}
+
+.fs-settings-field__select {
+	appearance: none;
+	-webkit-appearance: none;
+	padding-right: 2.5rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 0.9rem center;
+	cursor: pointer;
+}
+
+.fs-settings-field__help {
+	font-size: 0.7rem;
+	color: var(--fsp-text-muted);
+	line-height: 1.4;
+}
+
+/* Toggle Switch */
+.fs-settings-field__toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	cursor: pointer;
+	user-select: none;
+}
+
+.fs-settings-field__toggle input[type="checkbox"] {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.fs-settings-field__toggle-slider {
+	position: relative;
+	width: 36px;
+	height: 20px;
+	background: #d1d5db;
+	border-radius: 20px;
+	transition: all 0.3s;
+	flex-shrink: 0;
+}
+
+.fs-settings-field__toggle-slider::after {
+	content: "";
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	left: 3px;
+	bottom: 3px;
+	background: #fff;
+	border-radius: 50%;
+	transition: transform 0.3s;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.fs-settings-field__toggle input:checked + .fs-settings-field__toggle-slider {
+	background: var(--fsp-primary);
+}
+
+.fs-settings-field__toggle input:checked + .fs-settings-field__toggle-slider::after {
+	transform: translateX(16px);
+}
+
+.fs-settings-field__toggle-label {
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: var(--fsp-text);
+}
+
+/* Checkbox Group */
+.fs-settings-checkbox-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+}
+
+.fs-settings-checkbox {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	cursor: pointer;
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: var(--fsp-text);
+}
+
+.fs-settings-checkbox input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 16px;
+	height: 16px;
+	border: 1.5px solid #cbd5e1;
+	border-radius: 4px;
+	background: var(--fsp-bg);
+	cursor: pointer;
+	transition: all 0.2s;
+	flex-shrink: 0;
+	position: relative;
+}
+
+.fs-settings-checkbox input[type="checkbox"]:checked {
+	background: var(--fsp-primary);
+	border-color: var(--fsp-primary);
+}
+
+.fs-settings-checkbox input[type="checkbox"]:checked::after {
+	content: "";
+	position: absolute;
+	left: 4.5px;
+	top: 1.5px;
+	width: 4px;
+	height: 8px;
+	border: solid #fff;
+	border-width: 0 1.5px 1.5px 0;
+	transform: rotate(45deg);
+}
+
+.fs-settings-checkbox input[type="checkbox"]:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--fsp-primary-light);
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+	.fs-settings-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.75rem;
+	}
+
+	.fs-settings-tabs {
+		overflow-x: auto;
+	}
+
+	.fs-settings-section {
+		padding: 1.25rem;
+	}
+
+	.fs-settings-form {
+		grid-template-columns: 1fr;
+	}
+}

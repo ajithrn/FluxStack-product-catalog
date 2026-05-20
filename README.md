@@ -37,10 +37,22 @@ After installation:
 3. Add product information and specifications using ACF fields
 4. Assign categories, brands, types, or tags
 5. View your product on the frontend
+6. Configure display options under **Products > Settings**
 
 Visit the product archive at: `yoursite.com/product/`
 
 ## Customization
+
+### Admin Settings
+
+Most display options can be configured from **Products > Settings** in the WordPress admin:
+
+- **General**: Products per page, grid columns, sort order, breadcrumbs
+- **Single Product**: Sidebar on/off, position, visible sections, items limit
+- **Archive**: Filter sidebar on/off, position, visible filter groups
+- **Product Card**: Category label, excerpt, "View Details" link, image ratio
+
+All settings can also be overridden via PHP filters for developers (see below).
 
 ### Template Override System
 
