@@ -1056,4 +1056,4 @@ When contributing code:
 ---
 
 **Last Updated**: 2025-05-20
-**Version**: 1.4.0
+**Version**: 1.5.0

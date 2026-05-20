@@ -182,6 +182,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</select>
 				</div>
 
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Items Per Section', 'fs-product-catalog' ); ?></label>
+					<input type="number" class="fs-settings-field__input fs-settings-field__input--small" name="fs_settings[archive_sidebar_items_limit]" value="<?php echo esc_attr( $settings['archive_sidebar_items_limit'] ); ?>" min="3" max="50">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Max filter options visible per section before "Show more" appears. Set to 50 to show all.', 'fs-product-catalog' ); ?></span>
+				</div>
+
 				<div class="fs-settings-field fs-settings-field--wide">
 					<label class="fs-settings-field__label"><?php esc_html_e( 'Filter Sections', 'fs-product-catalog' ); ?></label>
 					<div class="fs-settings-checkbox-group">

@@ -372,6 +372,58 @@
 	};
 
 	/**
+	 * Sidebar Module
+	 * Handles show more/less and collapsible sections
+	 */
+	const Sidebar = {
+		/**
+		 * Initialize sidebar interactions
+		 */
+		init: function() {
+			this.bindShowMore();
+			this.bindCollapsible();
+		},
+
+		/**
+		 * Bind show more/less toggle buttons
+		 */
+		bindShowMore: function() {
+			var buttons = document.querySelectorAll('.fs-filter-show-more');
+			buttons.forEach(function(button) {
+				button.addEventListener('click', function() {
+					var group = this.closest('.fs-filter-group');
+					if (!group) return;
+
+					var isExpanded = group.classList.contains('is-expanded');
+					group.classList.toggle('is-expanded');
+
+					if (isExpanded) {
+						var hiddenCount = this.dataset.more || 0;
+						this.textContent = 'Show more (' + hiddenCount + ')';
+					} else {
+						this.textContent = 'Show less';
+					}
+				});
+			});
+		},
+
+		/**
+		 * Bind collapsible section headers
+		 */
+		bindCollapsible: function() {
+			var titles = document.querySelectorAll('.fs-filter-title--collapsible');
+			titles.forEach(function(title) {
+				title.addEventListener('click', function() {
+					var group = this.closest('.fs-filter-group');
+					if (group) {
+						group.classList.toggle('is-collapsed');
+					}
+				});
+			});
+		}
+	};
+
+	/**
 	 * Initialize on DOM ready
 	 */
 	if (document.readyState === 'loading') {
@@ -379,11 +431,13 @@
 			Gallery.init();
 			Tabs.init();
 			ResponsiveTables.init();
+			Sidebar.init();
 		});
 	} else {
 		Gallery.init();
 		Tabs.init();
 		ResponsiveTables.init();
+		Sidebar.init();
 	}
 
 })();

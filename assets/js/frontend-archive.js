@@ -262,9 +262,12 @@
 				checkedFilters.forEach(function(checkbox) {
 					const label = checkbox.closest('label').querySelector('.fs-filter-label, .fs-tag-label');
 					if (label) {
+						const text = label.querySelector('.fs-filter-label') 
+							? label.childNodes[0].textContent.trim() 
+							: label.textContent.trim();
 						const filterItem = document.createElement('span');
 						filterItem.className = 'fs-active-filter-item';
-						filterItem.innerHTML = label.textContent.trim() + ' <button type="button" class="fs-active-filter-remove" aria-label="Remove filter">×</button>';
+						filterItem.innerHTML = text + ' <button type="button" class="fs-active-filter-remove" aria-label="Remove filter">&times;</button>';
 						
 						filterItem.querySelector('.fs-active-filter-remove').addEventListener('click', function() {
 							checkbox.checked = false;
@@ -433,16 +436,70 @@
 	};
 
 	/**
+	 * Sidebar Module
+	 * Handles show more/less and collapsible sections
+	 */
+	const Sidebar = {
+		/**
+		 * Initialize sidebar interactions
+		 */
+		init: function() {
+			this.bindShowMore();
+			this.bindCollapsible();
+		},
+
+		/**
+		 * Bind show more/less toggle buttons
+		 */
+		bindShowMore: function() {
+			var buttons = document.querySelectorAll('.fs-filter-show-more');
+			buttons.forEach(function(button) {
+				button.addEventListener('click', function() {
+					var group = this.closest('.fs-filter-group');
+					if (!group) return;
+
+					var isExpanded = group.classList.contains('is-expanded');
+					group.classList.toggle('is-expanded');
+
+					if (isExpanded) {
+						var hiddenCount = this.dataset.more || 0;
+						this.textContent = 'Show more (' + hiddenCount + ')';
+					} else {
+						this.textContent = 'Show less';
+					}
+				});
+			});
+		},
+
+		/**
+		 * Bind collapsible section headers
+		 */
+		bindCollapsible: function() {
+			var titles = document.querySelectorAll('.fs-filter-title--collapsible');
+			titles.forEach(function(title) {
+				title.addEventListener('click', function() {
+					var group = this.closest('.fs-filter-group');
+					if (group) {
+						group.classList.toggle('is-collapsed');
+					}
+				});
+			});
+		}
+	};
+
+	/**
 	 * Initialize on DOM ready
 	 */
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function() {
 			Filters.init();
 			InfiniteScroll.init();
+			Sidebar.init();
 		});
 	} else {
 		Filters.init();
 		InfiniteScroll.init();
+		Sidebar.init();
 	}
 
 })();

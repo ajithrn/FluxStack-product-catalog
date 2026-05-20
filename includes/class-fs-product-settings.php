@@ -49,6 +49,7 @@ class FS_Product_Settings {
 		// Archive.
 		'archive_show_sidebar'  => true,
 		'archive_sidebar_position' => 'left',
+		'archive_sidebar_items_limit' => 8,
 		'archive_sidebar_search'   => true,
 		'archive_sidebar_categories' => true,
 		'archive_sidebar_brands'    => true,
@@ -182,6 +183,9 @@ class FS_Product_Settings {
 
 		$sanitized['sidebar_items_limit'] = isset( $input['sidebar_items_limit'] )
 			? max( 3, min( absint( $input['sidebar_items_limit'] ), 50 ) ) : 8;
+
+		$sanitized['archive_sidebar_items_limit'] = isset( $input['archive_sidebar_items_limit'] )
+			? max( 3, min( absint( $input['archive_sidebar_items_limit'] ), 50 ) ) : 8;
 
 		// Select fields (whitelist values).
 		$sanitized['default_orderby'] = isset( $input['default_orderby'] ) && in_array( $input['default_orderby'], array( 'menu_order', 'date', 'title' ), true )

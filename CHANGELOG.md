@@ -5,6 +5,52 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-05-20
+
+### Added
+- **Sidebar Item Limits**: Sections with many items now show only the first N items (configurable, default: 8)
+  - "Show more (24)" button reveals hidden items
+  - "Show less" collapses back to the limit
+  - Tags section defaults to 15 items
+  - Separate "Items Per Section" setting for single and archive sidebars
+  - Configurable via settings page or filters
+- **Collapsible Section Headers**: All sidebar section titles are now clickable to collapse/expand
+  - Chevron icon indicates open/closed state
+  - Hover highlight on header bar
+  - Collapsed cards lose shadow for "inactive" feel
+- **Per-section item limit filters**:
+  - `fs_sidebar_items_limit` — global default (8)
+  - `fs_sidebar_categories_limit` — override for categories
+  - `fs_sidebar_brands_limit` — override for brands
+  - `fs_sidebar_types_limit` — override for types
+  - `fs_sidebar_tags_limit` — override for tags (default: 15)
+
+### Changed
+- **Sidebar Layout**: Each section is now its own card instead of one monolithic container
+  - Individual border, border-radius, and box shadow per section
+  - Cards separated by gap (no more divider lines)
+  - Hover shadow effect on cards
+- **Sidebar Header**: Dark background with white text for clear visual hierarchy
+- **Section Titles**: Uppercase, smaller font, gray background bar — acts as card header
+- **Filter Items**: Added padding, border-radius, and hover background highlight per row
+- **Active Filters**: Moved from bottom to top of sidebar
+  - Appears between header and first filter section
+  - Card with primary-colored border
+  - Header row with title + "Clear All" link (red text)
+  - Filter pills: light gray with border, × remove button
+  - Compact, non-dominant design
+- **Search Input**: Added focus ring with primary color glow
+- **Archive sidebar**: Separate "Items Per Section" setting independent from single sidebar
+
+### Technical
+- Updated `templates/parts/sidebar-single.php`: Item limit logic, collapsible titles, show more buttons
+- Updated `templates/parts/sidebar-filters.php`: Same + moved active filters to top with new HTML structure
+- Updated `assets/css/frontend-common.css`: Card-based sidebar layout, improved filter styles, active filters redesign
+- Updated `assets/js/frontend-single.js`: Added `Sidebar` module (show more + collapsible)
+- Updated `assets/js/frontend-archive.js`: Added `Sidebar` module + updated `updateActiveFilters()` for new structure
+- Updated `includes/class-fs-product-settings.php`: Added `archive_sidebar_items_limit` setting
+- Updated `templates/admin/settings-page.php`: Added "Items Per Section" field to Archive tab
+
 ## [1.4.0] - 2025-05-20
 
 ### Added
@@ -277,6 +323,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **1.5.0** (2025-05-20): Card-based sidebar, item limits, collapsible sections, active filters at top, separate archive/single limits
 - **1.4.0** (2025-05-20): Admin settings page with tabbed UI, AJAX save, all options configurable from dashboard
 - **1.3.0** (2025-05-20): Security fixes, transient caching, removed extract(), uninstall handler
 - **1.2.0** (2025-05-20): Responsive tables, content typography, shared CSS architecture, single sidebar enabled by default

@@ -13,10 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Get all taxonomies (cached).
-$categories = FS_Product_Frontend::get_cached_terms( 'fs-product-category' );
-$brands     = FS_Product_Frontend::get_cached_terms( 'fs-product-brand' );
-$types      = FS_Product_Frontend::get_cached_terms( 'fs-product-type' );
-$tags       = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
+$categories  = FS_Product_Frontend::get_cached_terms( 'fs-product-category' );
+$brands      = FS_Product_Frontend::get_cached_terms( 'fs-product-brand' );
+$types       = FS_Product_Frontend::get_cached_terms( 'fs-product-type' );
+$tags        = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
+$items_limit = absint( apply_filters( 'fs_sidebar_items_limit', FS_Product_Settings::get( 'archive_sidebar_items_limit', 8 ) ) );
 ?>
 
 <div class="fs-filters-wrap">
@@ -28,10 +29,24 @@ $tags       = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
 	</div>
 	
 	<div class="fs-filters-content">
+		<!-- Active Filters (shown at top when filters are applied) -->
+		<div class="fs-active-filters" style="display: none;">
+			<div class="fs-active-filters-header">
+				<h4 class="fs-active-filters-title"><?php esc_html_e( 'Active Filters', 'fs-product-catalog' ); ?></h4>
+				<button type="button" class="fs-clear-filters">
+					<?php esc_html_e( 'Clear All', 'fs-product-catalog' ); ?>
+				</button>
+			</div>
+			<div class="fs-active-filters-list"></div>
+		</div>
+
 		<!-- Search Filter -->
 		<?php if ( FS_Product_Frontend::show_archive_sidebar_search() ) : ?>
 			<div class="fs-filter-group fs-filter-search">
-				<h4 class="fs-filter-title"><?php esc_html_e( 'Search', 'fs-product-catalog' ); ?></h4>
+				<h4 class="fs-filter-title fs-filter-title--collapsible">
+					<?php esc_html_e( 'Search', 'fs-product-catalog' ); ?>
+					<span class="fs-filter-collapse-icon"></span>
+				</h4>
 				<div class="fs-filter-content">
 					<input 
 						type="search" 
@@ -44,17 +59,19 @@ $tags       = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
 		<?php endif; ?>
 		
 		<!-- Categories Filter -->
-		<?php if ( FS_Product_Frontend::show_archive_sidebar_categories() && ! empty( $categories ) && ! is_wp_error( $categories ) ) : ?>
+		<?php
+		$cat_limit = absint( apply_filters( 'fs_sidebar_categories_limit', $items_limit ) );
+		if ( FS_Product_Frontend::show_archive_sidebar_categories() && ! empty( $categories ) && ! is_wp_error( $categories ) ) :
+			$cat_count = count( $categories );
+			?>
 			<div class="fs-filter-group fs-filter-categories">
-				<h4 class="fs-filter-title">
+				<h4 class="fs-filter-title fs-filter-title--collapsible">
 					<?php esc_html_e( 'Categories', 'fs-product-catalog' ); ?>
-					<button type="button" class="fs-filter-toggle" aria-label="<?php esc_attr_e( 'Toggle categories', 'fs-product-catalog' ); ?>">
-						<span class="fs-filter-toggle-icon"></span>
-					</button>
+					<span class="fs-filter-collapse-icon"></span>
 				</h4>
 				<div class="fs-filter-content">
-					<?php foreach ( $categories as $category ) : ?>
-						<label class="fs-filter-option">
+					<?php foreach ( $categories as $index => $category ) : ?>
+						<label class="fs-filter-option <?php echo $index >= $cat_limit ? 'fs-filter-item--hidden' : ''; ?>">
 							<input 
 								type="checkbox" 
 								name="fs_category[]" 
@@ -67,22 +84,29 @@ $tags       = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
 							</span>
 						</label>
 					<?php endforeach; ?>
+					<?php if ( $cat_count > $cat_limit ) : ?>
+						<button type="button" class="fs-filter-show-more" data-more="<?php echo esc_attr( $cat_count - $cat_limit ); ?>">
+							<?php printf( esc_html__( 'Show more (%d)', 'fs-product-catalog' ), $cat_count - $cat_limit ); ?>
+						</button>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php endif; ?>
 		
 		<!-- Brands Filter -->
-		<?php if ( FS_Product_Frontend::show_archive_sidebar_brands() && ! empty( $brands ) && ! is_wp_error( $brands ) ) : ?>
+		<?php
+		$brand_limit = absint( apply_filters( 'fs_sidebar_brands_limit', $items_limit ) );
+		if ( FS_Product_Frontend::show_archive_sidebar_brands() && ! empty( $brands ) && ! is_wp_error( $brands ) ) :
+			$brand_count = count( $brands );
+			?>
 			<div class="fs-filter-group fs-filter-brands">
-				<h4 class="fs-filter-title">
+				<h4 class="fs-filter-title fs-filter-title--collapsible">
 					<?php esc_html_e( 'Brands', 'fs-product-catalog' ); ?>
-					<button type="button" class="fs-filter-toggle" aria-label="<?php esc_attr_e( 'Toggle brands', 'fs-product-catalog' ); ?>">
-						<span class="fs-filter-toggle-icon"></span>
-					</button>
+					<span class="fs-filter-collapse-icon"></span>
 				</h4>
 				<div class="fs-filter-content">
-					<?php foreach ( $brands as $brand ) : ?>
-						<label class="fs-filter-option">
+					<?php foreach ( $brands as $index => $brand ) : ?>
+						<label class="fs-filter-option <?php echo $index >= $brand_limit ? 'fs-filter-item--hidden' : ''; ?>">
 							<input 
 								type="checkbox" 
 								name="fs_brand[]" 
@@ -95,22 +119,29 @@ $tags       = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
 							</span>
 						</label>
 					<?php endforeach; ?>
+					<?php if ( $brand_count > $brand_limit ) : ?>
+						<button type="button" class="fs-filter-show-more" data-more="<?php echo esc_attr( $brand_count - $brand_limit ); ?>">
+							<?php printf( esc_html__( 'Show more (%d)', 'fs-product-catalog' ), $brand_count - $brand_limit ); ?>
+						</button>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php endif; ?>
 		
 		<!-- Types Filter -->
-		<?php if ( FS_Product_Frontend::show_archive_sidebar_types() && ! empty( $types ) && ! is_wp_error( $types ) ) : ?>
+		<?php
+		$type_limit = absint( apply_filters( 'fs_sidebar_types_limit', $items_limit ) );
+		if ( FS_Product_Frontend::show_archive_sidebar_types() && ! empty( $types ) && ! is_wp_error( $types ) ) :
+			$type_count = count( $types );
+			?>
 			<div class="fs-filter-group fs-filter-types">
-				<h4 class="fs-filter-title">
+				<h4 class="fs-filter-title fs-filter-title--collapsible">
 					<?php esc_html_e( 'Types', 'fs-product-catalog' ); ?>
-					<button type="button" class="fs-filter-toggle" aria-label="<?php esc_attr_e( 'Toggle types', 'fs-product-catalog' ); ?>">
-						<span class="fs-filter-toggle-icon"></span>
-					</button>
+					<span class="fs-filter-collapse-icon"></span>
 				</h4>
 				<div class="fs-filter-content">
-					<?php foreach ( $types as $type ) : ?>
-						<label class="fs-filter-option">
+					<?php foreach ( $types as $index => $type ) : ?>
+						<label class="fs-filter-option <?php echo $index >= $type_limit ? 'fs-filter-item--hidden' : ''; ?>">
 							<input 
 								type="checkbox" 
 								name="fs_type[]" 
@@ -123,23 +154,30 @@ $tags       = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
 							</span>
 						</label>
 					<?php endforeach; ?>
+					<?php if ( $type_count > $type_limit ) : ?>
+						<button type="button" class="fs-filter-show-more" data-more="<?php echo esc_attr( $type_count - $type_limit ); ?>">
+							<?php printf( esc_html__( 'Show more (%d)', 'fs-product-catalog' ), $type_count - $type_limit ); ?>
+						</button>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php endif; ?>
 		
 		<!-- Tags Filter -->
-		<?php if ( FS_Product_Frontend::show_archive_sidebar_tags() && ! empty( $tags ) && ! is_wp_error( $tags ) ) : ?>
+		<?php
+		$tag_limit = absint( apply_filters( 'fs_sidebar_tags_limit', 15 ) );
+		if ( FS_Product_Frontend::show_archive_sidebar_tags() && ! empty( $tags ) && ! is_wp_error( $tags ) ) :
+			$tag_count = count( $tags );
+			?>
 			<div class="fs-filter-group fs-filter-tags">
-				<h4 class="fs-filter-title">
+				<h4 class="fs-filter-title fs-filter-title--collapsible">
 					<?php esc_html_e( 'Tags', 'fs-product-catalog' ); ?>
-					<button type="button" class="fs-filter-toggle" aria-label="<?php esc_attr_e( 'Toggle tags', 'fs-product-catalog' ); ?>">
-						<span class="fs-filter-toggle-icon"></span>
-					</button>
+					<span class="fs-filter-collapse-icon"></span>
 				</h4>
 				<div class="fs-filter-content">
 					<div class="fs-filter-tags-list">
-						<?php foreach ( $tags as $tag ) : ?>
-							<label class="fs-filter-tag">
+						<?php foreach ( $tags as $index => $tag ) : ?>
+							<label class="fs-filter-tag <?php echo $index >= $tag_limit ? 'fs-filter-item--hidden' : ''; ?>">
 								<input 
 									type="checkbox" 
 									name="fs_tag[]" 
@@ -150,17 +188,14 @@ $tags       = FS_Product_Frontend::get_cached_terms( 'fs-product-tag' );
 							</label>
 						<?php endforeach; ?>
 					</div>
+					<?php if ( $tag_count > $tag_limit ) : ?>
+						<button type="button" class="fs-filter-show-more" data-more="<?php echo esc_attr( $tag_count - $tag_limit ); ?>">
+							<?php printf( esc_html__( 'Show more (%d)', 'fs-product-catalog' ), $tag_count - $tag_limit ); ?>
+						</button>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php endif; ?>
 		
-		<!-- Active Filters -->
-		<div class="fs-active-filters" style="display: none;">
-			<h4 class="fs-active-filters-title"><?php esc_html_e( 'Active Filters', 'fs-product-catalog' ); ?></h4>
-			<div class="fs-active-filters-list"></div>
-			<button type="button" class="fs-clear-filters">
-				<?php esc_html_e( 'Clear All Filters', 'fs-product-catalog' ); ?>
-			</button>
-		</div>
 	</div>
 </div>
