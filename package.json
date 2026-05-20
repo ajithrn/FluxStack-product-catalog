@@ -1,0 +1,21 @@
+{
+  "name": "fs-product-catalog",
+  "version": "2.0.0",
+  "description": "Build tools for FluxStack Product Catalog plugin",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "npm run build:css:frontend && npm run build:css:admin",
+    "build:css:frontend": "cat assets/css/frontend-common.css assets/css/frontend-archive.css assets/css/frontend-single.css | cleancss -o assets/dist/frontend.min.css",
+    "build:css:admin": "cat assets/css/admin.css assets/css/admin-settings.css | cleancss -o assets/dist/admin.min.css",
+    "build:js": "npm run build:js:frontend && npm run build:js:admin",
+    "build:js:frontend": "cat assets/js/frontend-archive.js assets/js/frontend-single.js | terser -o assets/dist/frontend.min.js -c -m",
+    "build:js:admin": "terser assets/js/admin-settings.js -o assets/dist/admin-settings.min.js -c -m",
+    "watch": "chokidar 'assets/css/*.css' 'assets/js/*.js' --ignore 'assets/dist' -c 'npm run build'"
+  },
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.31.0",
+    "chokidar-cli": "^3.0.0"
+  }
+}

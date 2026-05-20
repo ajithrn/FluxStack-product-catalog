@@ -55,34 +55,27 @@ class FS_Product_Frontend {
 			return;
 		}
 
-		// Common styles (loaded on all product pages).
+		// Single bundled CSS for all frontend pages.
 		wp_enqueue_style(
-			'fs-product-catalog-common',
-			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/css/frontend-common.css',
+			'fs-product-catalog',
+			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/dist/frontend.min.css',
 			array(),
 			FS_PRODUCT_CATALOG_VERSION
 		);
 
-		// Single product page.
+		// Single bundled JS for all frontend pages.
+		wp_enqueue_script(
+			'fs-product-catalog',
+			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/dist/frontend.min.js',
+			array(),
+			FS_PRODUCT_CATALOG_VERSION,
+			true
+		);
+
+		// Single product page localizations.
 		if ( is_singular( 'fs-products' ) ) {
-			wp_enqueue_style(
-				'fs-product-catalog-single',
-				FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/css/frontend-single.css',
-				array( 'fs-product-catalog-common' ),
-				FS_PRODUCT_CATALOG_VERSION
-			);
-
-			wp_enqueue_script(
-				'fs-product-catalog-single',
-				FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/js/frontend-single.js',
-				array(),
-				FS_PRODUCT_CATALOG_VERSION,
-				true
-			);
-
-			// Localize script for single product.
 			wp_localize_script(
-				'fs-product-catalog-single',
+				'fs-product-catalog',
 				'fsProductSingle',
 				array(
 					'i18n' => array(
@@ -94,26 +87,10 @@ class FS_Product_Frontend {
 			);
 		}
 
-		// Archive/taxonomy pages.
+		// Archive page localizations.
 		if ( self::is_product_archive() ) {
-			wp_enqueue_style(
-				'fs-product-catalog-archive',
-				FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/css/frontend-archive.css',
-				array( 'fs-product-catalog-common' ),
-				FS_PRODUCT_CATALOG_VERSION
-			);
-
-			wp_enqueue_script(
-				'fs-product-catalog-archive',
-				FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/js/frontend-archive.js',
-				array(),
-				FS_PRODUCT_CATALOG_VERSION,
-				true
-			);
-
-			// Localize script for AJAX.
 			wp_localize_script(
-				'fs-product-catalog-archive',
+				'fs-product-catalog',
 				'fsProductCatalog',
 				array(
 					'ajaxUrl'        => admin_url( 'admin-ajax.php' ),

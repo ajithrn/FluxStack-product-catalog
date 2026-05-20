@@ -109,14 +109,14 @@ class FS_Product_Settings {
 
 		wp_enqueue_style(
 			'fs-product-settings',
-			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/css/admin-settings.css',
+			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/dist/admin.min.css',
 			array(),
 			FS_PRODUCT_CATALOG_VERSION
 		);
 
 		wp_enqueue_script(
 			'fs-product-settings',
-			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/js/admin-settings.js',
+			FS_PRODUCT_CATALOG_PLUGIN_URL . 'assets/dist/admin-settings.min.js',
 			array(),
 			FS_PRODUCT_CATALOG_VERSION,
 			true

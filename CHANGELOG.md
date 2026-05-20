@@ -5,6 +5,29 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-05-20
+
+### Added
+- **Build Process**: npm-based asset pipeline with `clean-css-cli` and `terser`
+  - `npm run build` — concatenates and minifies all CSS/JS into single files
+  - `npm run watch` — auto-rebuild on source file changes
+  - Output: `assets/dist/frontend.min.css`, `assets/dist/frontend.min.js`, `assets/dist/admin.min.css`, `assets/dist/admin-settings.min.js`
+  - Build step is required — no fallback to source files
+- **`.editorconfig`**: Consistent formatting across editors (tabs, UTF-8, LF line endings)
+- **`.phpcs.xml.dist`**: PHPCS configuration for WordPress-Extra coding standards
+- **`package.json`**: Dev dependencies and build scripts
+
+### Changed
+- **Asset Loading**: Plugin now loads single bundled files from `assets/dist/` instead of multiple source files
+  - Frontend: 1 CSS + 1 JS request (was 3 CSS + 2 JS)
+  - Admin: 1 CSS + 1 JS request (was 2 CSS + 1 JS)
+- **Architecture Decision**: Full PSR-4 namespacing was evaluated and deferred — breaking change without benefit at this scale
+
+### Notes
+- All planned features from the improvement roadmap are complete
+- `npm install && npm run build` is now required after cloning or updating the plugin
+- Source files remain in `assets/css/` and `assets/js/` for development
+
 ## [1.9.0] - 2025-05-20
 
 ### Added
@@ -432,6 +455,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **2.0.0** (2025-05-20): Feature-complete milestone, editorconfig, PHPCS config, architecture decision documented
 - **1.9.0** (2025-05-20): Object caching, LCP preload, REST API cache headers, CSS performance hints
 - **1.8.0** (2025-05-20): REST API endpoints, CSV import/export with admin UI
 - **1.6.0** (2025-05-20): Sorting dropdown, related products, pagination, Schema.org markup, lazy loading, search integration
