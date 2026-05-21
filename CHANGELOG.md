@@ -5,6 +5,55 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-05-21
+
+### Added
+- **Product Inquiry Section**: "Request a Quote" box on single product pages
+  - Quantity input with +/− buttons (all 44px height, aligned)
+  - "Request a Quote" button links to quote form with product name, ID, category, and quantity pre-filled via URL params
+  - "Contact Us" secondary button
+  - Configurable placement: below product info (right column) or full-width above specs
+  - Individual toggle for each button (quote, contact, quantity)
+  - All settings in new **Inquiry** tab in Products > Settings
+  - Settings: `inquiry_enabled`, `inquiry_placement`, `inquiry_show_quantity`, `inquiry_show_quote_btn`, `inquiry_show_contact_btn`, `inquiry_button_text`, `inquiry_form_url`, `inquiry_contact_text`, `inquiry_contact_url`
+- **Common JS Module** (`assets/js/frontend-common.js`): Refactored sidebar interactions into shared module
+  - Single source of truth for toggle, collapsible, and show-more logic
+  - Prevents double-binding when archive + single JS both load
+  - Uses `data-bound` attribute guards
+- **Clickable Filter Header**: Entire "Filter Products" / "Browse Products" bar is now clickable (not just the icon)
+  - `+`/`−` icon as visual indicator (replaces hamburger)
+  - Hover state on the bar
+- **Section Collapse Icons**: Replaced chevron arrows with `+`/`−` text characters for clarity
+- **Single Sidebar Toggle**: Added missing toggle button to `sidebar-single.php` for mobile
+
+### Changed
+- **Spacing Tightened**: Reduced global spacing variables
+  - `--fs-gap`: 2rem → 1.5rem
+  - `--fs-gap-sm`: 1rem → 0.75rem
+  - `--fs-gap-lg`: 3rem → 2rem
+- **Base Font Size**: Reduced from 15-17px to 14-15px for denser content
+- **Single Product Layout**: Added `.fs-product-main-right` wrapper for info + inquiry stacking
+- **Build Script**: `frontend.min.js` now includes `frontend-common.js` first in concatenation order
+
+### Fixed
+- **Double Event Binding**: Sidebar collapsible toggle was bound twice (from archive + single IIFEs), causing toggle-on then toggle-off (net zero). Fixed with `data-bound` guards.
+- **Mobile Filter Toggle**: Was missing from single product sidebar template
+- **768px Breakpoint Conflict**: Removed CSS that hid `.fs-filter-content` and required `.active` class (conflicted with `.is-collapsed` JS logic)
+
+### Technical
+- New file: `assets/js/frontend-common.js` — Shared sidebar module
+- New file: `templates/parts/product-inquiry.php` — Inquiry section template
+- Updated `templates/single-product.php`: Added `.fs-product-main-right` wrapper, inquiry after-info placement
+- Updated `templates/parts/sidebar-single.php`: Added toggle button
+- Updated `includes/class-fs-product-settings.php`: Added inquiry settings (defaults, sanitization, toggles)
+- Updated `includes/class-fs-product-frontend.php`: Added `render_inquiry_section()`, `render_inquiry_after_info()` methods
+- Updated `templates/admin/settings-page.php`: Added Inquiry tab (before Advanced)
+- Updated `assets/css/frontend-common.css`: Clickable header, +/− icons, spacing reduction, font size
+- Updated `assets/css/frontend-single.css`: Inquiry section styles, tighter spacing
+- Updated `assets/js/frontend-archive.js`: Removed Sidebar module (moved to common)
+- Updated `assets/js/frontend-single.js`: Removed Sidebar module (moved to common)
+- Updated `package.json`: Build includes `frontend-common.js`
+
 ## [2.1.0] - 2025-05-21
 
 ### Added

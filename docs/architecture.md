@@ -13,7 +13,7 @@ The plugin follows a static-class pattern with WordPress hooks. Each class handl
 | `FSProductCatalog\Taxonomies` | `includes/class-fs-product-taxonomies.php` | Taxonomy registration, image support |
 | `FSProductCatalog\ACF` | `includes/class-fs-product-acf.php` | ACF field groups, JSON save point |
 | `FSProductCatalog\TemplateLoader` | `includes/class-fs-product-template-loader.php` | Template hierarchy, theme overrides |
-| `FSProductCatalog\Frontend` | `includes/class-fs-product-frontend.php` | Asset loading, body classes, query modification, schema, LCP preload |
+| `FSProductCatalog\Frontend` | `includes/class-fs-product-frontend.php` | Asset loading, body classes, query modification, schema, LCP preload, inquiry rendering |
 | `FSProductCatalog\Ajax` | `includes/class-fs-product-ajax.php` | AJAX filter/load-more handlers |
 | `FSProductCatalog\Settings` | `includes/class-fs-product-settings.php` | Admin settings page, option management, filter integration |
 | `FSProductCatalog\RestAPI` | `includes/class-fs-product-rest-api.php` | REST API endpoints |
@@ -81,7 +81,8 @@ fs-product-catalog/
 ├── templates/
 │   ├── admin/                       # Admin page templates
 │   ├── parts/                       # Template parts
-│   │   └── loop/                    # Loop templates (card, pagination, no-products)
+│   │   ├── loop/                    # Loop templates (card, pagination, no-products)
+│   │   └── product-inquiry.php      # Inquiry/quote section (single product)
 │   ├── archive-product.php
 │   ├── single-product.php
 │   ├── search-products.php
@@ -108,6 +109,7 @@ The loader checks theme first, then falls back to plugin. Template parts use the
 ## Settings Architecture
 
 - Single option: `fs_product_catalog_settings` (serialized array)
+- Tabs: General, Single Product, Archive, Product Card, Inquiry, Advanced
 - Settings feed into existing `apply_filters()` hooks at priority 5
 - Developer filters at priority 10 always win
 - AJAX save with nonce verification and capability check

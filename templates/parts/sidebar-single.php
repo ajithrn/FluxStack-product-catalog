@@ -20,6 +20,9 @@ $items_limit = absint( apply_filters( 'fs_sidebar_items_limit', \FSProductCatalo
 	<div class="fs-filters-wrap">
 		<div class="fs-filters-header">
 			<h3 class="fs-filters-title"><?php esc_html_e( 'Browse Products', 'fs-product-catalog' ); ?></h3>
+			<button type="button" class="fs-filters-toggle" aria-label="<?php esc_attr_e( 'Toggle filters', 'fs-product-catalog' ); ?>">
+				<span class="fs-toggle-icon"></span>
+			</button>
 		</div>
 
 		<div class="fs-filters-content">

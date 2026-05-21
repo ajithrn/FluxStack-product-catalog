@@ -62,8 +62,9 @@ fs-product-catalog/
 │   │   └── frontend-archive.css
 │   └── js/
 │       ├── admin-settings.js
-│       ├── frontend-single.js
-│       └── frontend-archive.js
+│       ├── frontend-common.js
+│       ├── frontend-archive.js
+│       └── frontend-single.js
 ├── acf-json/                        # ACF field definitions
 └── languages/                       # Translation files
 ```
@@ -919,6 +920,27 @@ State classes (added via JS):
 
 ## JavaScript Modules
 
+### Sidebar Module (Common)
+
+**File**: `assets/js/frontend-common.js`
+
+Loaded on all product pages (archive + single). Handles the shared sidebar/filter panel interactions.
+
+```javascript
+const Sidebar = {
+    init: function() { },
+    bindMainToggle: function() { },
+    bindCollapsible: function() { },
+    bindShowMore: function() { }
+};
+```
+
+**Behavior**:
+- **`bindMainToggle()`** — Clicking the `.fs-filters-header` bar toggles the entire filter panel open/closed on mobile (adds `.active` class to `.fs-filters-wrap`). The `+`/`−` icon in the header serves as a visual indicator.
+- **`bindCollapsible()`** — Clicking a `.fs-filter-title--collapsible` header toggles its parent `.fs-filter-group` between expanded and collapsed (`.is-collapsed` class).
+- **`bindShowMore()`** — Clicking a `.fs-filter-show-more` button toggles `.is-expanded` on the group, switching between "Show more (N)" and "Show less" text.
+- All bindings use a `data-bound` attribute guard to prevent double-binding when the script runs alongside archive or single JS.
+
 ### Gallery Module
 
 **File**: `assets/js/frontend-single.js`
@@ -1025,6 +1047,70 @@ this.observer = new IntersectionObserver(function(entries) {
     rootMargin: '200px' // Trigger 200px before button
 });
 ```
+
+---
+
+## Product Inquiry System
+
+### Overview
+
+The inquiry system adds a "Request a Quote" section on single product pages. It includes a quantity input and action buttons that link to a quote form with product details pre-filled via URL parameters.
+
+### Settings
+
+All inquiry settings are in `Products > Settings > Inquiry` tab:
+
+| Setting | Key | Default | Description |
+|---------|-----|---------|-------------|
+| Enable | `inquiry_enabled` | `false` | Show/hide the inquiry section |
+| Placement | `inquiry_placement` | `after-info` | `after-info` (right column) or `full-width` (above specs) |
+| Show Quantity | `inquiry_show_quantity` | `true` | Show +/− quantity input |
+| Show Quote Button | `inquiry_show_quote_btn` | `true` | Show the primary quote button |
+| Show Contact Button | `inquiry_show_contact_btn` | `true` | Show the secondary contact button |
+| Quote Button Text | `inquiry_button_text` | `Request a Quote` | Primary button label |
+| Quote Form URL | `inquiry_form_url` | `/custom-quote/` | URL of the quote form page |
+| Contact Button Text | `inquiry_contact_text` | `Contact Us` | Secondary button label |
+| Contact Page URL | `inquiry_contact_url` | `/contact/` | URL of the contact page |
+
+### URL Parameters
+
+When the quote button is clicked, the following parameters are appended to the form URL:
+
+```
+/custom-quote/?product_name=Wire+Rope+Sling&product_id=123&quantity=5&product_category=Rigging
+```
+
+| Parameter | Source |
+|-----------|--------|
+| `product_name` | `get_the_title()` |
+| `product_id` | `get_the_ID()` |
+| `quantity` | User input (default: 1) |
+| `product_category` | First assigned `fs-product-category` term name |
+
+### Gravity Forms Integration
+
+For the pre-fill to work, the quote form needs hidden fields with `allowsPrepopulate: true` and matching `inputName` values:
+
+- Field with `inputName: "product_name"` → captures product name
+- Field with `inputName: "quantity"` → captures quantity
+- Field with `inputName: "product_id"` → captures product ID
+
+### Template
+
+The inquiry section is rendered via `templates/parts/product-inquiry.php`. It can be overridden by copying to your theme:
+
+```
+yourtheme/fs-product-catalog/parts/product-inquiry.php
+```
+
+### Placement Logic
+
+- **`after-info`**: Rendered inside `.fs-product-main-right` wrapper (below product info box, in the right column of the image/info grid). Called via `Frontend::render_inquiry_after_info()`.
+- **`full-width`**: Rendered via `fs_product_after_single_product` action hook (full content width, above specifications). Called via `Frontend::render_inquiry_section()`.
+
+### JavaScript
+
+The quantity +/− buttons and dynamic URL update are handled by inline `<script>` in the template (no external JS dependency). The URL is rebuilt on every quantity change using `URLSearchParams`.
 
 ---
 

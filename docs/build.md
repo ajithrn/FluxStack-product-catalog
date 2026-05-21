@@ -31,8 +31,9 @@ assets/css/frontend-common.css  ─┐
 assets/css/frontend-archive.css  ├─→ assets/dist/frontend.min.css
 assets/css/frontend-single.css  ─┘
 
-assets/js/frontend-archive.js  ─┐
-assets/js/frontend-single.js   ─┴─→ assets/dist/frontend.min.js
+assets/js/frontend-common.js   ─┐
+assets/js/frontend-archive.js   ├─→ assets/dist/frontend.min.js
+assets/js/frontend-single.js   ─┘
 
 assets/css/admin.css           ─┐
 assets/css/admin-settings.css  ─┴─→ assets/dist/admin.min.css
@@ -96,18 +97,19 @@ Examples:
 
 ### Frontend Modules
 
-Both JS files use an IIFE with module objects:
+JS is split into three files concatenated in order: common → archive → single.
+
+**frontend-common.js** (loads first, shared across all product pages):
+- `Sidebar` — Main toggle, collapsible sections, show more/less (with `data-bound` guards to prevent double-binding)
 
 **frontend-archive.js:**
-- `Filters` — AJAX filtering, search debounce, active filters display
+- `Filters` — AJAX filtering, search debounce, active filters display, sort dropdown
 - `LoadMore` — Load more button + optional infinite scroll
-- `Sidebar` — Show more/less, collapsible sections
 
 **frontend-single.js:**
 - `Gallery` — Lightbox, thumbnail switching
 - `Tabs` — Specification tab switching
 - `ResponsiveTables` — Table scroll toolbar
-- `Sidebar` — Show more/less, collapsible sections
 
 ### Admin JS
 

@@ -71,6 +71,17 @@ class Settings {
 
 		// Advanced.
 		'enable_rest_api'      => false,
+
+		// Inquiry / Quote.
+		'inquiry_enabled'          => false,
+		'inquiry_placement'        => 'after-info',
+		'inquiry_button_text'      => 'Request a Quote',
+		'inquiry_form_url'         => '/custom-quote/',
+		'inquiry_show_quantity'    => true,
+		'inquiry_show_quote_btn'   => true,
+		'inquiry_show_contact_btn' => true,
+		'inquiry_contact_text'     => 'Contact Us',
+		'inquiry_contact_url'      => '/contact/',
 	);
 
 	/**
@@ -217,6 +228,22 @@ class Settings {
 		$sanitized['load_more_text'] = isset( $input['load_more_text'] )
 			? sanitize_text_field( wp_unslash( $input['load_more_text'] ) ) : '';
 
+		// Inquiry text fields.
+		$sanitized['inquiry_button_text'] = isset( $input['inquiry_button_text'] )
+			? sanitize_text_field( wp_unslash( $input['inquiry_button_text'] ) ) : 'Request a Quote';
+
+		$sanitized['inquiry_form_url'] = isset( $input['inquiry_form_url'] )
+			? sanitize_text_field( wp_unslash( $input['inquiry_form_url'] ) ) : '/custom-quote/';
+
+		$sanitized['inquiry_contact_text'] = isset( $input['inquiry_contact_text'] )
+			? sanitize_text_field( wp_unslash( $input['inquiry_contact_text'] ) ) : 'Contact Us';
+
+		$sanitized['inquiry_contact_url'] = isset( $input['inquiry_contact_url'] )
+			? sanitize_text_field( wp_unslash( $input['inquiry_contact_url'] ) ) : '/contact/';
+
+		$sanitized['inquiry_placement'] = isset( $input['inquiry_placement'] ) && in_array( $input['inquiry_placement'], array( 'after-info', 'full-width' ), true )
+			? $input['inquiry_placement'] : 'after-info';
+
 		// Integers: related products count.
 		$sanitized['related_products_count'] = isset( $input['related_products_count'] )
 			? max( 1, min( absint( $input['related_products_count'] ), 8 ) ) : 4;
@@ -242,6 +269,10 @@ class Settings {
 			'show_related_products',
 			'show_sorting',
 			'enable_rest_api',
+			'inquiry_enabled',
+			'inquiry_show_quantity',
+			'inquiry_show_quote_btn',
+			'inquiry_show_contact_btn',
 		);
 
 		foreach ( $toggles as $toggle ) {

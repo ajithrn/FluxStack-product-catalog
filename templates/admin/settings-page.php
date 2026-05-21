@@ -44,6 +44,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<span class="dashicons dashicons-format-image"></span>
 			<?php esc_html_e( 'Product Card', 'fs-product-catalog' ); ?>
 		</button>
+		<button class="fs-settings-tabs__tab" data-tab="inquiry">
+			<span class="dashicons dashicons-email-alt"></span>
+			<?php esc_html_e( 'Inquiry', 'fs-product-catalog' ); ?>
+		</button>
 		<button class="fs-settings-tabs__tab" data-tab="advanced">
 			<span class="dashicons dashicons-admin-tools"></span>
 			<?php esc_html_e( 'Advanced', 'fs-product-catalog' ); ?>
@@ -324,6 +328,94 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<option value="16:9" <?php selected( $settings['card_image_ratio'], '16:9' ); ?>><?php esc_html_e( 'Landscape (16:9) — wider, good for horizontal products', 'fs-product-catalog' ); ?></option>
 					</select>
 					<span class="fs-settings-field__help"><?php esc_html_e( 'Upload images at or above this ratio for best results. Smaller images will be upscaled to fill.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<!-- Inquiry Tab -->
+	<div class="fs-settings-panel" data-panel="inquiry">
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Product Inquiry', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Adds a "Request a Quote" section on single product pages with quantity input and action buttons. Clicking the quote button takes the visitor to your quote form with the product name and quantity pre-filled.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[inquiry_enabled]" value="1" <?php checked( $settings['inquiry_enabled'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Enable Inquiry Section', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Shows a quote/inquiry box on single product pages.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Placement', 'fs-product-catalog' ); ?></label>
+					<select class="fs-settings-field__select" name="fs_settings[inquiry_placement]">
+						<option value="after-info" <?php selected( $settings['inquiry_placement'] ?? 'after-info', 'after-info' ); ?>><?php esc_html_e( 'Below Product Info (right column)', 'fs-product-catalog' ); ?></option>
+						<option value="full-width" <?php selected( $settings['inquiry_placement'] ?? 'after-info', 'full-width' ); ?>><?php esc_html_e( 'Full width (above specifications)', 'fs-product-catalog' ); ?></option>
+					</select>
+					<span class="fs-settings-field__help"><?php esc_html_e( '"Below Product Info" places it under the info box in the image/info grid. "Full width" spans the entire content area above specs.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[inquiry_show_quantity]" value="1" <?php checked( $settings['inquiry_show_quantity'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Show Quantity Field', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Lets visitors specify how many they need. The quantity is passed to the quote form.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Quote Button', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'The primary action button. Links to your quote/inquiry form page with product details pre-filled via URL parameters.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[inquiry_show_quote_btn]" value="1" <?php checked( $settings['inquiry_show_quote_btn'] ?? true ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Show Quote Button', 'fs-product-catalog' ); ?></span>
+					</label>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Button Text', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[inquiry_button_text]" value="<?php echo esc_attr( $settings['inquiry_button_text'] ); ?>" placeholder="<?php esc_attr_e( 'Request a Quote', 'fs-product-catalog' ); ?>">
+				</div>
+
+				<div class="fs-settings-field fs-settings-field--wide">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Quote Form URL', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[inquiry_form_url]" value="<?php echo esc_attr( $settings['inquiry_form_url'] ); ?>" placeholder="/custom-quote/">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'URL of your quote form page. Parameters appended automatically: ?product_name=...&quantity=...', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Contact Button', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'A secondary action button for general inquiries.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[inquiry_show_contact_btn]" value="1" <?php checked( $settings['inquiry_show_contact_btn'] ?? true ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Show Contact Button', 'fs-product-catalog' ); ?></span>
+					</label>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Button Text', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[inquiry_contact_text]" value="<?php echo esc_attr( $settings['inquiry_contact_text'] ); ?>" placeholder="<?php esc_attr_e( 'Contact Us', 'fs-product-catalog' ); ?>">
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Contact Page URL', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[inquiry_contact_url]" value="<?php echo esc_attr( $settings['inquiry_contact_url'] ); ?>" placeholder="/contact/">
 				</div>
 			</div>
 		</section>

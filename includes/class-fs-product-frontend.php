@@ -46,6 +46,9 @@ class Frontend {
 
 		// Product search results template.
 		add_filter( 'template_include', array( __CLASS__, 'search_results_template' ), 99 );
+
+		// Product inquiry section on single product.
+		add_action( 'fs_product_after_single_product', array( __CLASS__, 'render_inquiry_section' ), 5 );
 	}
 
 	/**
@@ -445,6 +448,27 @@ class Frontend {
 			if ( wp_using_ext_object_cache() ) {
 				wp_cache_delete( $cache_key, 'fs_product_catalog' );
 			}
+		}
+	}
+
+	/**
+	 * Render the product inquiry section (full-width, above specs).
+	 */
+	public static function render_inquiry_section() {
+		$placement = Settings::get( 'inquiry_placement', 'after-info' );
+		if ( 'full-width' === $placement ) {
+			TemplateLoader::get_template_part( 'product-inquiry' );
+		}
+	}
+
+	/**
+	 * Render the product inquiry section (after-info placement).
+	 * Called directly from the single product template.
+	 */
+	public static function render_inquiry_after_info() {
+		$placement = Settings::get( 'inquiry_placement', 'after-info' );
+		if ( 'after-info' === $placement ) {
+			TemplateLoader::get_template_part( 'product-inquiry' );
 		}
 	}
 

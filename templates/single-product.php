@@ -64,10 +64,17 @@ do_action( 'fs_product_before_main_content' );
 						\FSProductCatalog\TemplateLoader::get_template_part( 'product-image-gallery' );
 						?>
 
-						<?php
-						// Product info items (right side).
-						\FSProductCatalog\TemplateLoader::get_template_part( 'product-info-items' );
-						?>
+						<div class="fs-product-main-right">
+							<?php
+							// Product info items (right side).
+							\FSProductCatalog\TemplateLoader::get_template_part( 'product-info-items' );
+							?>
+
+							<?php
+							// Product inquiry (after-info placement).
+							\FSProductCatalog\Frontend::render_inquiry_after_info();
+							?>
+						</div>
 					</div>
 				</div>
 
