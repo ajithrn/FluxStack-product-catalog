@@ -65,6 +65,7 @@ class GitHubUpdater {
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 		add_filter( 'plugins_api', array( $this, 'plugin_info' ), 10, 3 );
 		add_action( 'upgrader_process_complete', array( $this, 'clear_transient_after_update' ), 10, 2 );
+		add_action( 'wp_ajax_fs_catalog_check_update', array( $this, 'ajax_check_update' ) );
 	}
 
 	/**
@@ -153,6 +154,38 @@ class GitHubUpdater {
 		if ( in_array( $this_plugin, $plugins, true ) ) {
 			delete_site_transient( $this->transient_key );
 		}
+	}
+
+	/**
+	 * AJAX handler for manual update check from settings page.
+	 */
+	public function ajax_check_update() {
+		check_ajax_referer( 'fs_product_settings_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+		}
+
+		// Clear cached transient to force a fresh check.
+		delete_site_transient( $this->transient_key );
+
+		$remote = $this->fetch_github_release();
+		if ( ! $remote ) {
+			wp_send_json_error( array( 'message' => __( 'Could not connect to GitHub.', 'fs-product-catalog' ) ) );
+		}
+
+		// Cache the fresh result.
+		set_site_transient( $this->transient_key, $remote, 12 * HOUR_IN_SECONDS );
+
+		$has_update = version_compare( FS_PRODUCT_CATALOG_VERSION, $remote->new_version, '<' );
+
+		wp_send_json_success( array(
+			'current_version' => FS_PRODUCT_CATALOG_VERSION,
+			'new_version'     => $remote->new_version,
+			'has_update'      => $has_update,
+			'download_url'    => $remote->package,
+			'release_url'     => $remote->url,
+		) );
 	}
 
 	/**

@@ -636,5 +636,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 			</div>
 		</section>
+
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Plugin Updates', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Check for new versions from the GitHub repository.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field fs-settings-field--inline" id="fs-update-check-wrap">
+					<div class="fs-update-status" id="fs-update-status">
+						<span class="fs-update-version"><?php printf( esc_html__( 'Current version: %s', 'fs-product-catalog' ), '<strong>' . esc_html( FS_PRODUCT_CATALOG_VERSION ) . '</strong>' ); ?></span>
+					</div>
+					<button type="button" class="button button-secondary" id="fs-check-update-btn">
+						<?php esc_html_e( 'Check for Updates', 'fs-product-catalog' ); ?>
+					</button>
+				</div>
+			</div>
+		</section>
 	</div>
 </div>

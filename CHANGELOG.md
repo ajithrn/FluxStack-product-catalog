@@ -5,6 +5,14 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2026-06-02
+
+### Added
+- **Manual Update Check**: "Check for Updates" button in Products > Settings > Advanced
+  - Force-checks GitHub for new releases (clears 12hr cache)
+  - Shows update available (red) or up-to-date (green) status inline
+  - Links to GitHub release page when update is available
+
 ## [2.4.0] - 2026-06-02
 
 ### Added

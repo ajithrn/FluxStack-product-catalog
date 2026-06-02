@@ -244,6 +244,63 @@
 	};
 
 	/**
+	 * Update Check Module
+	 * Handles the "Check for Updates" button in the Advanced tab.
+	 */
+	const UpdateCheck = {
+		init: function() {
+			var btn = document.getElementById('fs-check-update-btn');
+			if (!btn) return;
+
+			btn.addEventListener('click', function() {
+				UpdateCheck.check(btn);
+			});
+		},
+
+		check: function(btn) {
+			var statusEl = document.getElementById('fs-update-status');
+			var originalText = btn.textContent;
+			btn.textContent = 'Checking...';
+			btn.disabled = true;
+
+			var formData = new URLSearchParams();
+			formData.append('action', 'fs_catalog_check_update');
+			formData.append('nonce', config.nonce);
+
+			fetch(config.ajaxUrl, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: formData
+			})
+			.then(function(r) { return r.json(); })
+			.then(function(result) {
+				if (result.success && result.data) {
+					var data = result.data;
+					if (data.has_update) {
+						statusEl.innerHTML = '<span class="fs-update-available">Update available: <strong>v' + data.new_version + '</strong></span>' +
+							' <a href="' + data.release_url + '" target="_blank" class="fs-update-link">View release →</a>';
+						statusEl.style.color = '#d63638';
+					} else {
+						statusEl.innerHTML = '<span class="fs-update-current">✓ You are on the latest version (<strong>v' + data.current_version + '</strong>)</span>';
+						statusEl.style.color = '#00a32a';
+					}
+				} else {
+					statusEl.innerHTML = '<span class="fs-update-error">Could not check for updates.</span>';
+					statusEl.style.color = '#d63638';
+				}
+			})
+			.catch(function() {
+				statusEl.innerHTML = '<span class="fs-update-error">Connection error.</span>';
+				statusEl.style.color = '#d63638';
+			})
+			.finally(function() {
+				btn.textContent = originalText;
+				btn.disabled = false;
+			});
+		}
+	};
+
+	/**
 	 * Initialize on DOM ready.
 	 */
 	if (document.readyState === 'loading') {
@@ -252,12 +309,14 @@
 			Save.init();
 			ConditionalFields.init();
 			GFFieldPicker.init();
+			UpdateCheck.init();
 		});
 	} else {
 		Tabs.init();
 		Save.init();
 		ConditionalFields.init();
 		GFFieldPicker.init();
+		UpdateCheck.init();
 	}
 
 })();
