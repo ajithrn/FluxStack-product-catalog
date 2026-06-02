@@ -13,6 +13,7 @@ class ComposerStaticInit214561b1d40bab604e185e75161d4e9e
         'FSProductCatalog\\CPT' => __DIR__ . '/../..' . '/includes/class-fs-product-cpt.php',
         'FSProductCatalog\\Frontend' => __DIR__ . '/../..' . '/includes/class-fs-product-frontend.php',
         'FSProductCatalog\\GFIntegration' => __DIR__ . '/../..' . '/includes/class-fs-product-gf-integration.php',
+        'FSProductCatalog\\GitHubUpdater' => __DIR__ . '/../..' . '/includes/class-fs-product-github-updater.php',
         'FSProductCatalog\\Identification' => __DIR__ . '/../..' . '/includes/class-fs-product-identification.php',
         'FSProductCatalog\\ImportExport' => __DIR__ . '/../..' . '/includes/class-fs-product-import-export.php',
         'FSProductCatalog\\QuoteList' => __DIR__ . '/../..' . '/includes/class-fs-product-quote-list.php',

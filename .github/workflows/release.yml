@@ -1,0 +1,88 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+      - 'fs-product-catalog.php'
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Get Version
+        id: package-version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "Detected version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if tag exists
+        id: check-tag
+        uses: mukunku/tag-exists-action@v1.4.0
+        with:
+          tag: 'v${{ steps.package-version.outputs.version }}'
+
+      - name: Auto-Bump Version
+        if: steps.check-tag.outputs.exists == 'true'
+        run: |
+          CURRENT_VERSION="${{ steps.package-version.outputs.version }}"
+          echo "Tag v$CURRENT_VERSION exists. Auto-bumping..."
+
+          IFS='.' read -r -a parts <<< "$CURRENT_VERSION"
+          major="${parts[0]}"
+          minor="${parts[1]}"
+          patch="${parts[2]}"
+          new_patch=$((patch + 1))
+          NEW_VERSION="$major.$minor.$new_patch"
+          echo "New Version: $NEW_VERSION"
+
+          npm version $NEW_VERSION --no-git-tag-version
+
+          sed -i "s/Version: $CURRENT_VERSION/Version: $NEW_VERSION/" fs-product-catalog.php
+          sed -i "s/define( 'FS_PRODUCT_CATALOG_VERSION', '$CURRENT_VERSION' )/define( 'FS_PRODUCT_CATALOG_VERSION', '$NEW_VERSION' )/" fs-product-catalog.php
+
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add package.json fs-product-catalog.php
+          git commit -m "chore: auto-bump version to $NEW_VERSION"
+          git push origin main
+
+          echo "Bumped to $NEW_VERSION and pushed. New workflow will trigger."
+
+      - name: Install Dependencies
+        if: steps.check-tag.outputs.exists == 'false'
+        run: npm install
+
+      - name: Build Assets
+        if: steps.check-tag.outputs.exists == 'false'
+        run: npm run build
+
+      - name: Create ZIP
+        if: steps.check-tag.outputs.exists == 'false'
+        run: npm run zip
+
+      - name: Create Release
+        if: steps.check-tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          name: v${{ steps.package-version.outputs.version }}
+          files: fs-product-catalog.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

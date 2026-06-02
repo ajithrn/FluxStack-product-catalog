@@ -5,6 +5,26 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-06-02
+
+### Added
+- **GitHub Updater**: Automatic update notifications from GitHub releases
+  - Checks `ajithrn/FluxStack-product-catalog` for new releases
+  - Standard WordPress "update available" banner on plugins page
+  - One-click update from admin
+  - Clears cached transient after successful update (no stale notifications)
+- **Release Tooling**: Automated version management and release workflow
+  - `npm run release [major|minor|patch]` — bumps version, builds, commits + tags
+  - `npm run zip` — creates distributable zip excluding dev files
+  - `.github/workflows/release.yml` — auto-creates GitHub release with zip on push
+
+### Technical
+- New file: `includes/class-fs-product-github-updater.php` — GitHub release checker integrated with WP plugin update system
+- New file: `scripts/release.js` — Version bump + build + git tag automation
+- New file: `.github/workflows/release.yml` — CI/CD release workflow
+- Updated `fs-product-catalog.php`: Initialize GitHubUpdater in `init_hooks()` (independent of ACF)
+- Updated `package.json`: Version 2.4.0, added `zip` and `release` scripts
+
 ## [2.3.0] - 2026-06-02
 
 ### Added
@@ -29,6 +49,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Entry formatting: stores product table in entry meta
   - Auto-clear localStorage on successful GF submission
   - AJAX field loader when admin changes form selection
+- **GitHub Updater**: Automatic update notifications from GitHub releases
+  - Checks `ajithrn/FluxStack-product-catalog` for new releases
+  - Standard WordPress "update available" banner on plugins page
+  - One-click update from admin
+  - Clears cached transient after successful update
 
 ### Changed
 - **Product Card Layout**: Footer with "View Details" + "Add to List" on same line, pushed to bottom via flexbox

@@ -12,6 +12,7 @@ return array(
     'FSProductCatalog\\CPT' => $baseDir . '/includes/class-fs-product-cpt.php',
     'FSProductCatalog\\Frontend' => $baseDir . '/includes/class-fs-product-frontend.php',
     'FSProductCatalog\\GFIntegration' => $baseDir . '/includes/class-fs-product-gf-integration.php',
+    'FSProductCatalog\\GitHubUpdater' => $baseDir . '/includes/class-fs-product-github-updater.php',
     'FSProductCatalog\\Identification' => $baseDir . '/includes/class-fs-product-identification.php',
     'FSProductCatalog\\ImportExport' => $baseDir . '/includes/class-fs-product-import-export.php',
     'FSProductCatalog\\QuoteList' => $baseDir . '/includes/class-fs-product-quote-list.php',

@@ -1,6 +1,6 @@
 {
   "name": "fs-product-catalog",
-  "version": "2.0.0",
+  "version": "2.4.0",
   "description": "Build tools for FluxStack Product Catalog plugin",
   "private": true,
   "scripts": {
@@ -11,7 +11,9 @@
     "build:js": "npm run build:js:frontend && npm run build:js:admin",
     "build:js:frontend": "cat assets/js/frontend-common.js assets/js/frontend-quote-list.js assets/js/frontend-archive.js assets/js/frontend-single.js | terser -o assets/dist/frontend.min.js -c -m",
     "build:js:admin": "terser assets/js/admin-settings.js -o assets/dist/admin-settings.min.js -c -m",
-    "watch": "chokidar 'assets/css/*.css' 'assets/js/*.js' --ignore 'assets/dist' -c 'npm run build'"
+    "watch": "chokidar 'assets/css/*.css' 'assets/js/*.js' --ignore 'assets/dist' -c 'npm run build'",
+    "zip": "zip -r fs-product-catalog.zip . -x 'node_modules/*' '.git/*' '.github/*' 'scripts/*' '*.zip' '.DS_Store' 'package-lock.json'",
+    "release": "node scripts/release.js"
   },
   "devDependencies": {
     "clean-css-cli": "^5.6.3",

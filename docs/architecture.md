@@ -21,6 +21,7 @@ The plugin follows a static-class pattern with WordPress hooks. Each class handl
 | `FSProductCatalog\Identification` | `includes/class-fs-product-identification.php` | Product identification meta box (SKU, Part No., UOM, MOQ, etc.) |
 | `FSProductCatalog\QuoteList` | `includes/class-fs-product-quote-list.php` | Quote list frontend (panel, trigger, add buttons, localized config) |
 | `FSProductCatalog\GFIntegration` | `includes/class-fs-product-gf-integration.php` | Optional Gravity Forms integration (merge tag, entry formatting, auto-clear) |
+| `FSProductCatalog\GitHubUpdater` | `includes/class-fs-product-github-updater.php` | GitHub release update checker, WP plugin update integration |
 
 ## Initialization Flow
 
