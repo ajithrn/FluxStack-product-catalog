@@ -48,6 +48,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<span class="dashicons dashicons-email-alt"></span>
 			<?php esc_html_e( 'Inquiry', 'fs-product-catalog' ); ?>
 		</button>
+		<button class="fs-settings-tabs__tab" data-tab="quote-list">
+			<span class="dashicons dashicons-list-view"></span>
+			<?php esc_html_e( 'Quote List', 'fs-product-catalog' ); ?>
+		</button>
 		<button class="fs-settings-tabs__tab" data-tab="advanced">
 			<span class="dashicons dashicons-admin-tools"></span>
 			<?php esc_html_e( 'Advanced', 'fs-product-catalog' ); ?>
@@ -419,6 +423,192 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 			</div>
 		</section>
+	</div>
+
+	<!-- Quote List Tab -->
+	<div class="fs-settings-panel" data-panel="quote-list">
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Quote List', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Let visitors collect multiple products into a list and submit a single quote request. Works with any form plugin — just add a hidden field to your form.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[quote_list_enabled]" value="1" <?php checked( $settings['quote_list_enabled'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Enable Quote List', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Master toggle for the entire quote list feature.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[quote_list_show_on_cards]" value="1" <?php checked( $settings['quote_list_show_on_cards'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Show on Product Cards', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Display "Add to List" button on archive product cards.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[quote_list_show_on_single]" value="1" <?php checked( $settings['quote_list_show_on_single'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Show on Single Product', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Display "Add to List" button on single product pages.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Max Items', 'fs-product-catalog' ); ?></label>
+					<input type="number" class="fs-settings-field__input fs-settings-field__input--small" name="fs_settings[quote_list_max_items]" value="<?php echo esc_attr( $settings['quote_list_max_items'] ); ?>" min="1" max="100">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Maximum number of products allowed in the list (1-100).', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field fs-settings-field--wide">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Quote Form Page URL', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[quote_list_form_url]" value="<?php echo esc_attr( $settings['quote_list_form_url'] ); ?>" placeholder="/custom-quote/">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'URL of the page containing your quote form. Leave empty to use the Inquiry form URL.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Floating Button', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'A fixed-position button that shows the item count and opens the quote list panel.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[quote_list_show_float]" value="1" <?php checked( $settings['quote_list_show_float'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Show Floating Button', 'fs-product-catalog' ); ?></span>
+					</label>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Position', 'fs-product-catalog' ); ?></label>
+					<select class="fs-settings-field__select" name="fs_settings[quote_list_float_position]">
+						<option value="bottom-right" <?php selected( $settings['quote_list_float_position'], 'bottom-right' ); ?>><?php esc_html_e( 'Bottom Right', 'fs-product-catalog' ); ?></option>
+						<option value="bottom-left" <?php selected( $settings['quote_list_float_position'], 'bottom-left' ); ?>><?php esc_html_e( 'Bottom Left', 'fs-product-catalog' ); ?></option>
+					</select>
+				</div>
+			</div>
+		</section>
+
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Form Integration', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Configure how the quote list connects to your form. The plugin injects product data into a hidden field on your form page.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Product Field Selector', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[quote_list_field_selector]" value="<?php echo esc_attr( $settings['quote_list_field_selector'] ); ?>" placeholder="#fs-products-field">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'CSS selector for the hidden field that receives the product list text. Add a hidden field with this ID to your form.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Product Table Selector', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[quote_list_table_selector]" value="<?php echo esc_attr( $settings['quote_list_table_selector'] ); ?>" placeholder="#fs-products-table">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'CSS selector for the container where the visible product table renders on the form page. Add a div with this ID above your form.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Success Page URL', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[quote_list_success_url]" value="<?php echo esc_attr( $settings['quote_list_success_url'] ); ?>" placeholder="/thank-you/">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'URL of the confirmation/thank-you page. The quote list is automatically cleared when the user lands here.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field fs-settings-field--wide">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Product List Template', 'fs-product-catalog' ); ?></label>
+					<textarea class="fs-settings-field__textarea" name="fs_settings[quote_list_template]" rows="3" placeholder="{name} | SKU: {sku} | Part No: {part_no} | Qty: {qty}"><?php echo esc_textarea( $settings['quote_list_template'] ); ?></textarea>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Format for each product line in the hidden field. Available tags: {name}, {sku}, {part_no}, {qty}, {url}, {id}, {uom}. Segments with empty values are removed automatically.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Labels', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Customize the text shown to visitors.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Add Button Text', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[quote_list_add_btn_text]" value="<?php echo esc_attr( $settings['quote_list_add_btn_text'] ); ?>" placeholder="<?php esc_attr_e( 'Add to List', 'fs-product-catalog' ); ?>">
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Panel Title', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[quote_list_panel_title]" value="<?php echo esc_attr( $settings['quote_list_panel_title'] ); ?>" placeholder="<?php esc_attr_e( 'Quote List', 'fs-product-catalog' ); ?>">
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Submit Button Text', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[quote_list_submit_btn_text]" value="<?php echo esc_attr( $settings['quote_list_submit_btn_text'] ); ?>" placeholder="<?php esc_attr_e( 'Request Quote', 'fs-product-catalog' ); ?>">
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'SKU Label', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[sku_label]" value="<?php echo esc_attr( $settings['sku_label'] ); ?>" placeholder="SKU">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Custom label for the SKU field in the product editor and frontend display.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Part No. Label', 'fs-product-catalog' ); ?></label>
+					<input type="text" class="fs-settings-field__input" name="fs_settings[mfr_part_label]" value="<?php echo esc_attr( $settings['mfr_part_label'] ); ?>" placeholder="Mfr. Part No.">
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Custom label for the manufacturer part number field.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+
+	<?php if ( class_exists( 'GFForms' ) ) : ?>
+		<?php $gf_forms = \FSProductCatalog\GFIntegration::get_forms_list(); ?>
+		<section class="fs-settings-section">
+			<h2 class="fs-settings-section__title"><?php esc_html_e( 'Gravity Forms Integration', 'fs-product-catalog' ); ?></h2>
+			<p class="fs-settings-section__desc"><?php esc_html_e( 'Enhanced integration when Gravity Forms is active. Auto-targets form fields, formats entries as HTML tables, provides the {fs_product_table} merge tag for notifications, and auto-clears the list on submission.', 'fs-product-catalog' ); ?></p>
+
+			<div class="fs-settings-form">
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[quote_list_gf_enabled]" value="1" <?php checked( $settings['quote_list_gf_enabled'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Enable Gravity Forms Integration', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'When enabled, uses GF-specific field targeting instead of generic CSS selectors. The Product Field Selector setting above will be overridden.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Select Form', 'fs-product-catalog' ); ?></label>
+					<select class="fs-settings-field__select" name="fs_settings[quote_list_gf_form_id]" id="fs-gf-form-select">
+						<option value=""><?php esc_html_e( '— Select a form —', 'fs-product-catalog' ); ?></option>
+						<?php foreach ( $gf_forms as $gf_form ) : ?>
+							<option value="<?php echo esc_attr( $gf_form['id'] ); ?>" <?php selected( $settings['quote_list_gf_form_id'], $gf_form['id'] ); ?>>
+								<?php echo esc_html( $gf_form['title'] ); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Choose the Gravity Form used for quote requests.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__label"><?php esc_html_e( 'Select Product Field', 'fs-product-catalog' ); ?></label>
+					<select class="fs-settings-field__select" name="fs_settings[quote_list_gf_field_id]" id="fs-gf-field-select" data-saved-value="<?php echo esc_attr( $settings['quote_list_gf_field_id'] ); ?>">
+						<option value=""><?php esc_html_e( '— Select a field —', 'fs-product-catalog' ); ?></option>
+					</select>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Choose the Hidden or Textarea field that will receive the product list data. Fields load when a form is selected.', 'fs-product-catalog' ); ?></span>
+				</div>
+
+				<div class="fs-settings-field">
+					<label class="fs-settings-field__toggle">
+						<input type="checkbox" name="fs_settings[quote_list_gf_auto_clear]" value="1" <?php checked( $settings['quote_list_gf_auto_clear'] ); ?>>
+						<span class="fs-settings-field__toggle-slider"></span>
+						<span class="fs-settings-field__toggle-label"><?php esc_html_e( 'Auto-clear on submission', 'fs-product-catalog' ); ?></span>
+					</label>
+					<span class="fs-settings-field__help"><?php esc_html_e( 'Automatically clear the quote list from localStorage after successful form submission.', 'fs-product-catalog' ); ?></span>
+				</div>
+			</div>
+		</section>
+	<?php endif; ?>
 	</div>
 
 	<!-- Advanced Tab -->

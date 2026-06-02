@@ -575,6 +575,8 @@
 	overflow: hidden;
 	transition: all var(--fs-transition);
 	will-change: box-shadow;
+	display: flex;
+	flex-direction: column;
 }
 
 .fs-product-card:hover {
@@ -585,6 +587,7 @@
 	display: block;
 	text-decoration: none;
 	color: inherit;
+	flex: 1;
 }
 
 .fs-product-card-image {
@@ -646,6 +649,21 @@
 	font-size: var(--fs-font-size-sm);
 	color: var(--fs-primary);
 	font-weight: 500;
+	text-decoration: none;
+}
+
+.fs-product-card-more:hover {
+	color: var(--fs-primary-hover);
+}
+
+/* Card Footer (View Details + Add to List on one line, pinned to bottom) */
+.fs-product-card-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	padding: 0 var(--fs-gap-sm) var(--fs-gap-sm);
+	margin-top: auto;
 }
 
 /* Responsive Breakpoints */

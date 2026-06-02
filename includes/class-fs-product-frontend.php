@@ -55,8 +55,13 @@ class Frontend {
 	 * Enqueue frontend assets
 	 */
 	public static function enqueue_frontend_assets() {
-		// Check if we're on a product page.
-		if ( ! self::is_product_page() ) {
+		// Load on product pages always.
+		// Also load on any page when quote list is enabled
+		// (for floating trigger, form page integration, success page detection).
+		$is_product    = self::is_product_page();
+		$quote_enabled = QuoteList::is_enabled();
+
+		if ( ! $is_product && ! $quote_enabled ) {
 			return;
 		}
 
@@ -94,26 +99,61 @@ class Frontend {
 
 		// Archive page localizations.
 		if ( self::is_product_archive() ) {
+			$localize_data = array(
+				'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+				'nonce'          => wp_create_nonce( 'fs_product_filter_nonce' ),
+				'perPage'        => self::get_products_per_page(),
+				'paginationMode' => self::get_pagination_mode(),
+				'i18n'           => array(
+					'loading'      => esc_html__( 'Loading...', 'fs-product-catalog' ),
+					'loadMore'     => esc_html( self::get_load_more_text() ),
+					'noMore'       => esc_html__( 'No more products to load', 'fs-product-catalog' ),
+					'noResults'    => esc_html__( 'No products found', 'fs-product-catalog' ),
+					'clearFilters' => esc_html__( 'Clear All Filters', 'fs-product-catalog' ),
+					'filterBy'     => esc_html__( 'Filter By', 'fs-product-catalog' ),
+					'showing'      => esc_html__( 'Showing', 'fs-product-catalog' ),
+					'of'           => esc_html__( 'of', 'fs-product-catalog' ),
+					'products'     => esc_html__( 'products', 'fs-product-catalog' ),
+				),
+			);
+
+			/**
+			 * Filter the localized frontend data.
+			 * Used by QuoteList to add its configuration.
+			 *
+			 * @param array $localize_data Data to localize.
+			 */
+			$localize_data = apply_filters( 'fs_product_frontend_localize_data', $localize_data );
+
 			wp_localize_script(
 				'fs-product-catalog',
 				'fsProductCatalog',
-				array(
-					'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
-					'nonce'          => wp_create_nonce( 'fs_product_filter_nonce' ),
-					'perPage'        => self::get_products_per_page(),
-					'paginationMode' => self::get_pagination_mode(),
-					'i18n'           => array(
-						'loading'      => esc_html__( 'Loading...', 'fs-product-catalog' ),
-						'loadMore'     => esc_html( self::get_load_more_text() ),
-						'noMore'       => esc_html__( 'No more products to load', 'fs-product-catalog' ),
-						'noResults'    => esc_html__( 'No products found', 'fs-product-catalog' ),
-						'clearFilters' => esc_html__( 'Clear All Filters', 'fs-product-catalog' ),
-						'filterBy'     => esc_html__( 'Filter By', 'fs-product-catalog' ),
-						'showing'      => esc_html__( 'Showing', 'fs-product-catalog' ),
-						'of'           => esc_html__( 'of', 'fs-product-catalog' ),
-						'products'     => esc_html__( 'products', 'fs-product-catalog' ),
-					),
-				)
+				$localize_data
+			);
+		} elseif ( is_singular( 'fs-products' ) ) {
+			// Single product pages also need quote list data.
+			$localize_data = array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'fs_product_filter_nonce' ),
+			);
+
+			/** This filter is documented above. */
+			$localize_data = apply_filters( 'fs_product_frontend_localize_data', $localize_data );
+
+			wp_localize_script(
+				'fs-product-catalog',
+				'fsProductCatalog',
+				$localize_data
+			);
+		} elseif ( $quote_enabled ) {
+			// Non-product pages: localize quote list config for form page,
+			// success page detection, and floating trigger.
+			$localize_data = apply_filters( 'fs_product_frontend_localize_data', array() );
+
+			wp_localize_script(
+				'fs-product-catalog',
+				'fsProductCatalog',
+				$localize_data
 			);
 		}
 	}

@@ -27,13 +27,15 @@ npm run build
 Source files → concatenated → minified → `assets/dist/`
 
 ```
-assets/css/frontend-common.css  ─┐
-assets/css/frontend-archive.css  ├─→ assets/dist/frontend.min.css
-assets/css/frontend-single.css  ─┘
+assets/css/frontend-common.css      ─┐
+assets/css/frontend-quote-list.css   │
+assets/css/frontend-archive.css      ├─→ assets/dist/frontend.min.css
+assets/css/frontend-single.css      ─┘
 
-assets/js/frontend-common.js   ─┐
-assets/js/frontend-archive.js   ├─→ assets/dist/frontend.min.js
-assets/js/frontend-single.js   ─┘
+assets/js/frontend-common.js        ─┐
+assets/js/frontend-quote-list.js     │
+assets/js/frontend-archive.js        ├─→ assets/dist/frontend.min.js
+assets/js/frontend-single.js        ─┘
 
 assets/css/admin.css           ─┐
 assets/css/admin-settings.css  ─┴─→ assets/dist/admin.min.css
@@ -65,8 +67,9 @@ No webpack, vite, or bundler config needed.
 | File | Purpose |
 |------|---------|
 | `frontend-common.css` | Variables, shared components (sidebar, grid, cards, breadcrumbs) |
+| `frontend-quote-list.css` | Quote list panel, trigger button, add-to-list button, form table |
 | `frontend-archive.css` | Archive-specific (layout, results bar, sort, pagination, load more) |
-| `frontend-single.css` | Single product (gallery, lightbox, specs, info, related products) |
+| `frontend-single.css` | Single product (gallery, lightbox, specs, info, identification, related products) |
 | `admin.css` | Admin list table styling |
 | `admin-settings.css` | Settings page UI (tabs, toggles, forms, toast) |
 
@@ -97,10 +100,13 @@ Examples:
 
 ### Frontend Modules
 
-JS is split into three files concatenated in order: common → archive → single.
+JS is split into four files concatenated in order: common → quote-list → archive → single.
 
 **frontend-common.js** (loads first, shared across all product pages):
 - `Sidebar` — Main toggle, collapsible sections, show more/less (with `data-bound` guards to prevent double-binding)
+
+**frontend-quote-list.js** (shared across all product pages):
+- `QuoteList` — localStorage CRUD, panel UI, floating trigger, form page integration, template tag parsing
 
 **frontend-archive.js:**
 - `Filters` — AJAX filtering, search debounce, active filters display, sort dropdown

@@ -3,7 +3,7 @@
  * Plugin Name: FluxStack Product Catalog
  * Plugin URI: https://ajithrn.com
  * Description: A custom product catalog system without e-commerce functionality. Creates a custom post type for products with categories, brands, tags, and types.
- * Version: 2.2.0
+ * Version: 2.3.0
  * Author: Ajith R N
  * Author URI: https://ajithrn.com
  * Text Domain: fs-product-catalog
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'FS_PRODUCT_CATALOG_VERSION', '2.2.0' );
+define( 'FS_PRODUCT_CATALOG_VERSION', '2.3.0' );
 define( 'FS_PRODUCT_CATALOG_ASSET_VERSION', filemtime( plugin_dir_path( __FILE__ ) . 'assets/dist/frontend.min.css' ) ?: '2.0.0' );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FS_PRODUCT_CATALOG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -40,6 +40,9 @@ use FSProductCatalog\Ajax;
 use FSProductCatalog\Settings;
 use FSProductCatalog\RestAPI;
 use FSProductCatalog\ImportExport;
+use FSProductCatalog\Identification;
+use FSProductCatalog\QuoteList;
+use FSProductCatalog\GFIntegration;
 
 /**
  * Main Plugin Class
@@ -162,6 +165,9 @@ class FS_Product_Catalog {
 		Settings::init();
 		RestAPI::init();
 		ImportExport::init();
+		Identification::init();
+		QuoteList::init();
+		GFIntegration::init();
 	}
 
 	/**

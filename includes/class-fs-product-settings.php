@@ -82,6 +82,33 @@ class Settings {
 		'inquiry_show_contact_btn' => true,
 		'inquiry_contact_text'     => 'Contact Us',
 		'inquiry_contact_url'      => '/contact/',
+
+		// Quote List.
+		'quote_list_enabled'        => false,
+		'quote_list_show_on_cards'  => true,
+		'quote_list_show_on_single' => true,
+		'quote_list_show_float'     => true,
+		'quote_list_float_position' => 'bottom-right',
+		'quote_list_max_items'      => 50,
+		'quote_list_form_url'       => '',
+		'quote_list_field_selector' => '#fs-products-field',
+		'quote_list_table_selector' => '#fs-products-table',
+		'quote_list_success_url'    => '',
+		'quote_list_template'       => '{name} | SKU: {sku} | Part No: {part_no} | Qty: {qty}',
+		'quote_list_add_btn_text'   => 'Add to List',
+		'quote_list_panel_title'    => 'Quote List',
+		'quote_list_submit_btn_text' => 'Request Quote',
+
+		// Product Identification Labels.
+		'sku_label'                 => 'SKU',
+		'mfr_part_label'            => 'Mfr. Part No.',
+		'card_show_sku'             => false,
+
+		// Gravity Forms Integration (optional).
+		'quote_list_gf_enabled'     => false,
+		'quote_list_gf_form_id'     => 0,
+		'quote_list_gf_field_id'    => 0,
+		'quote_list_gf_auto_clear'  => true,
 	);
 
 	/**
@@ -244,6 +271,51 @@ class Settings {
 		$sanitized['inquiry_placement'] = isset( $input['inquiry_placement'] ) && in_array( $input['inquiry_placement'], array( 'after-info', 'full-width' ), true )
 			? $input['inquiry_placement'] : 'after-info';
 
+		// Quote List text fields.
+		$sanitized['quote_list_form_url'] = isset( $input['quote_list_form_url'] )
+			? sanitize_text_field( wp_unslash( $input['quote_list_form_url'] ) ) : '';
+
+		$sanitized['quote_list_field_selector'] = isset( $input['quote_list_field_selector'] )
+			? sanitize_text_field( wp_unslash( $input['quote_list_field_selector'] ) ) : '#fs-products-field';
+
+		$sanitized['quote_list_table_selector'] = isset( $input['quote_list_table_selector'] )
+			? sanitize_text_field( wp_unslash( $input['quote_list_table_selector'] ) ) : '#fs-products-table';
+
+		$sanitized['quote_list_success_url'] = isset( $input['quote_list_success_url'] )
+			? sanitize_text_field( wp_unslash( $input['quote_list_success_url'] ) ) : '';
+
+		$sanitized['quote_list_template'] = isset( $input['quote_list_template'] )
+			? sanitize_textarea_field( wp_unslash( $input['quote_list_template'] ) ) : '{name} | SKU: {sku} | Part No: {part_no} | Qty: {qty}';
+
+		$sanitized['quote_list_add_btn_text'] = isset( $input['quote_list_add_btn_text'] )
+			? sanitize_text_field( wp_unslash( $input['quote_list_add_btn_text'] ) ) : 'Add to List';
+
+		$sanitized['quote_list_panel_title'] = isset( $input['quote_list_panel_title'] )
+			? sanitize_text_field( wp_unslash( $input['quote_list_panel_title'] ) ) : 'Quote List';
+
+		$sanitized['quote_list_submit_btn_text'] = isset( $input['quote_list_submit_btn_text'] )
+			? sanitize_text_field( wp_unslash( $input['quote_list_submit_btn_text'] ) ) : 'Request Quote';
+
+		$sanitized['quote_list_float_position'] = isset( $input['quote_list_float_position'] ) && in_array( $input['quote_list_float_position'], array( 'bottom-right', 'bottom-left' ), true )
+			? $input['quote_list_float_position'] : 'bottom-right';
+
+		$sanitized['quote_list_max_items'] = isset( $input['quote_list_max_items'] )
+			? max( 1, min( absint( $input['quote_list_max_items'] ), 100 ) ) : 50;
+
+		// Product Identification Labels.
+		$sanitized['sku_label'] = isset( $input['sku_label'] )
+			? sanitize_text_field( wp_unslash( $input['sku_label'] ) ) : 'SKU';
+
+		$sanitized['mfr_part_label'] = isset( $input['mfr_part_label'] )
+			? sanitize_text_field( wp_unslash( $input['mfr_part_label'] ) ) : 'Mfr. Part No.';
+
+		// Gravity Forms Integration.
+		$sanitized['quote_list_gf_form_id'] = isset( $input['quote_list_gf_form_id'] )
+			? absint( $input['quote_list_gf_form_id'] ) : 0;
+
+		$sanitized['quote_list_gf_field_id'] = isset( $input['quote_list_gf_field_id'] )
+			? absint( $input['quote_list_gf_field_id'] ) : 0;
+
 		// Integers: related products count.
 		$sanitized['related_products_count'] = isset( $input['related_products_count'] )
 			? max( 1, min( absint( $input['related_products_count'] ), 8 ) ) : 4;
@@ -273,6 +345,13 @@ class Settings {
 			'inquiry_show_quantity',
 			'inquiry_show_quote_btn',
 			'inquiry_show_contact_btn',
+			'quote_list_enabled',
+			'quote_list_show_on_cards',
+			'quote_list_show_on_single',
+			'quote_list_show_float',
+			'card_show_sku',
+			'quote_list_gf_enabled',
+			'quote_list_gf_auto_clear',
 		);
 
 		foreach ( $toggles as $toggle ) {

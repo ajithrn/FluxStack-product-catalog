@@ -44,13 +44,19 @@ $product_id = get_the_ID();
 					<?php echo wp_kses_post( get_the_excerpt() ); ?>
 				</div>
 			<?php endif; ?>
-			
-			<?php if ( apply_filters( 'fs_product_card_show_more_link', true ) ) : ?>
-				<span class="fs-product-card-more">
-					<?php esc_html_e( 'View Details', 'fs-product-catalog' ); ?>
-					<span aria-hidden="true">→</span>
-				</span>
-			<?php endif; ?>
 		</div>
 	</a>
+
+	<div class="fs-product-card-footer">
+		<?php if ( apply_filters( 'fs_product_card_show_more_link', true ) ) : ?>
+			<a href="<?php the_permalink(); ?>" class="fs-product-card-more">
+				<?php esc_html_e( 'View Details', 'fs-product-catalog' ); ?>
+				<span aria-hidden="true">→</span>
+			</a>
+		<?php endif; ?>
+
+		<?php if ( \FSProductCatalog\QuoteList::is_enabled() && \FSProductCatalog\Settings::get( 'quote_list_show_on_cards', true ) ) : ?>
+			<?php \FSProductCatalog\QuoteList::render_add_button( $product_id ); ?>
+		<?php endif; ?>
+	</div>
 </article>

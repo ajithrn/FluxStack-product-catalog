@@ -175,6 +175,75 @@
 	};
 
 	/**
+	 * GF Field Picker Module
+	 * Loads form fields via AJAX when a Gravity Forms form is selected.
+	 */
+	const GFFieldPicker = {
+		init: function() {
+			var formSelect = document.getElementById('fs-gf-form-select');
+			var fieldSelect = document.getElementById('fs-gf-field-select');
+			if (!formSelect || !fieldSelect) return;
+
+			var self = this;
+
+			// Load fields for the initially selected form (if any).
+			if (formSelect.value) {
+				self.loadFields(formSelect.value, fieldSelect);
+			}
+
+			// Reload fields when form selection changes.
+			formSelect.addEventListener('change', function() {
+				self.loadFields(this.value, fieldSelect);
+			});
+		},
+
+		loadFields: function(formId, fieldSelect) {
+			if (!formId) {
+				fieldSelect.innerHTML = '<option value="">— Select a field —</option>';
+				return;
+			}
+
+			fieldSelect.innerHTML = '<option value="">Loading…</option>';
+			fieldSelect.disabled = true;
+
+			var formData = new URLSearchParams();
+			formData.append('action', 'fs_gf_get_form_fields');
+			formData.append('nonce', config.nonce);
+			formData.append('form_id', formId);
+
+			fetch(config.ajaxUrl, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: formData
+			})
+			.then(function(r) { return r.json(); })
+			.then(function(result) {
+				fieldSelect.innerHTML = '<option value="">— Select a field —</option>';
+				if (result.success && result.data && result.data.fields) {
+					result.data.fields.forEach(function(field) {
+						var opt = document.createElement('option');
+						opt.value = field.id;
+						opt.textContent = field.label + ' (' + field.type + ')';
+						fieldSelect.appendChild(opt);
+					});
+
+					// Restore previously saved value.
+					var savedValue = fieldSelect.dataset.savedValue;
+					if (savedValue) {
+						fieldSelect.value = savedValue;
+					}
+				}
+			})
+			.catch(function() {
+				fieldSelect.innerHTML = '<option value="">Error loading fields</option>';
+			})
+			.finally(function() {
+				fieldSelect.disabled = false;
+			});
+		}
+	};
+
+	/**
 	 * Initialize on DOM ready.
 	 */
 	if (document.readyState === 'loading') {
@@ -182,11 +251,13 @@
 			Tabs.init();
 			Save.init();
 			ConditionalFields.init();
+			GFFieldPicker.init();
 		});
 	} else {
 		Tabs.init();
 		Save.init();
 		ConditionalFields.init();
+		GFFieldPicker.init();
 	}
 
 })();

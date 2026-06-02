@@ -771,9 +771,9 @@
 
 .fs-product-inquiry__inner {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-start;
 	gap: 1rem;
-	flex-wrap: wrap;
 }
 
 /* Quantity Control */
@@ -831,8 +831,14 @@
 .fs-product-inquiry__actions {
 	display: flex;
 	gap: 0.75rem;
-	flex-wrap: wrap;
+	width: 100%;
+}
+
+.fs-product-inquiry__actions .fs-inquiry-btn,
+.fs-product-inquiry__actions .fs-add-to-list {
 	flex: 1;
+	justify-content: center;
+	box-sizing: border-box;
 }
 
 .fs-inquiry-btn {
@@ -874,20 +880,73 @@
 }
 
 @media (max-width: 576px) {
-	.fs-product-inquiry__inner {
-		flex-direction: column;
-		align-items: stretch;
-	}
-
-	.fs-qty-control {
-		align-self: flex-start;
-	}
-
 	.fs-product-inquiry__actions {
 		flex-direction: column;
 	}
 
-	.fs-inquiry-btn {
-		justify-content: center;
+	.fs-product-inquiry__actions .fs-inquiry-btn,
+	.fs-product-inquiry__actions .fs-add-to-list {
+		width: 100%;
 	}
+}
+
+/* ─── Product Identification ─── */
+.fs-product-identification {
+	margin-top: var(--fs-gap-sm);
+	padding: var(--fs-gap-sm) var(--fs-gap);
+	background: var(--fs-bg);
+	border: 1px solid var(--fs-border);
+	border-radius: var(--fs-border-radius-lg);
+}
+
+.fs-product-identification__list {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.5rem 1.5rem;
+	margin: 0;
+}
+
+.fs-product-identification__item {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.fs-product-identification__label {
+	font-size: var(--fs-font-size-xs);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	color: var(--fs-text-lighter);
+	margin: 0;
+}
+
+.fs-product-identification__value {
+	font-size: var(--fs-font-size-sm);
+	color: var(--fs-text);
+	margin: 0;
+}
+
+@media (max-width: 576px) {
+	.fs-product-identification__list {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ─── Add to List (Single Product) ─── */
+.fs-product-add-to-list-wrap {
+	margin-top: var(--fs-gap-sm);
+}
+
+.fs-product-add-to-list-wrap .fs-add-to-list {
+	width: 100%;
+	justify-content: center;
+	padding: 0.6rem 1rem;
+	font-size: var(--fs-font-size);
+}
+
+/* ─── Add to List (Product Card) ─── */
+.fs-product-card-footer .fs-add-to-list {
+	padding: 0.35rem 0.6rem;
+	font-size: var(--fs-font-size-xs, 12px);
 }

@@ -35,6 +35,8 @@ All display options are configurable from **Products > Settings**:
 - **Single Product** — sidebar, related products
 - **Archive** — sorting dropdown, filter sidebar
 - **Product Card** — visible elements, image ratio
+- **Inquiry** — quote request button on single products
+- **Quote List** — multi-product quote collection, floating button, form integration
 - **Advanced** — REST API toggle
 
 ## Documentation

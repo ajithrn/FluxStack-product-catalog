@@ -14,23 +14,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$settings        = \FSProductCatalog\Settings::get_all();
-$inquiry_enabled = ! empty( $settings['inquiry_enabled'] );
+$settings           = \FSProductCatalog\Settings::get_all();
+$inquiry_enabled    = ! empty( $settings['inquiry_enabled'] );
+$quote_list_enabled = \FSProductCatalog\QuoteList::is_enabled();
+$show_quote_list    = $quote_list_enabled && ( $settings['quote_list_show_on_single'] ?? true );
 
-if ( ! $inquiry_enabled ) {
+if ( ! $inquiry_enabled && ! $show_quote_list ) {
 	return;
 }
 
-$show_quote_btn   = $settings['inquiry_show_quote_btn'] ?? true;
-$show_contact_btn = $settings['inquiry_show_contact_btn'] ?? true;
+$show_quote_btn   = $inquiry_enabled && ( $settings['inquiry_show_quote_btn'] ?? true );
+$show_contact_btn = $inquiry_enabled && ( $settings['inquiry_show_contact_btn'] ?? true );
 $button_text      = ! empty( $settings['inquiry_button_text'] ) ? $settings['inquiry_button_text'] : __( 'Request a Quote', 'fs-product-catalog' );
 $form_url         = ! empty( $settings['inquiry_form_url'] ) ? $settings['inquiry_form_url'] : '/custom-quote/';
 $show_quantity    = ! empty( $settings['inquiry_show_quantity'] );
 $contact_text     = ! empty( $settings['inquiry_contact_text'] ) ? $settings['inquiry_contact_text'] : __( 'Contact Us', 'fs-product-catalog' );
 $contact_url      = ! empty( $settings['inquiry_contact_url'] ) ? $settings['inquiry_contact_url'] : '/contact/';
 
-// Don't render if both buttons are off
-if ( ! $show_quote_btn && ! $show_contact_btn ) {
+// Don't render if all buttons are off
+if ( ! $show_quote_btn && ! $show_contact_btn && ! $show_quote_list ) {
 	return;
 }
 
@@ -42,21 +44,29 @@ $product_url  = get_the_permalink();
 $categories    = get_the_terms( $product_id, 'fs-product-category' );
 $category_name = ( ! empty( $categories ) && ! is_wp_error( $categories ) ) ? $categories[0]->name : '';
 
+// MOQ info
+$id_data = \FSProductCatalog\Identification::get_all( $product_id );
+$moq     = ! empty( $id_data['moq'] ) ? intval( $id_data['moq'] ) : 1;
+
 ?>
 
 <div class="fs-product-inquiry" id="fs-product-inquiry">
 	<div class="fs-product-inquiry__inner">
-		<?php if ( $show_quantity ) : ?>
+		<?php if ( $show_quantity || $show_quote_list ) : ?>
 			<div class="fs-product-inquiry__quantity">
 				<div class="fs-qty-control">
 					<button type="button" class="fs-qty-control__btn" data-action="minus" aria-label="<?php esc_attr_e( 'Decrease quantity', 'fs-product-catalog' ); ?>">&minus;</button>
-					<input type="number" id="fs-inquiry-qty" class="fs-qty-control__input" value="1" min="1" max="9999" step="1">
+					<input type="number" id="fs-inquiry-qty" class="fs-qty-control__input" value="<?php echo esc_attr( $moq ); ?>" min="<?php echo esc_attr( $moq ); ?>" max="9999" step="1">
 					<button type="button" class="fs-qty-control__btn" data-action="plus" aria-label="<?php esc_attr_e( 'Increase quantity', 'fs-product-catalog' ); ?>">&plus;</button>
 				</div>
 			</div>
 		<?php endif; ?>
 
 		<div class="fs-product-inquiry__actions">
+			<?php if ( $show_quote_list ) : ?>
+				<?php \FSProductCatalog\QuoteList::render_add_button(); ?>
+			<?php endif; ?>
+
 			<?php if ( $show_quote_btn ) : ?>
 				<a href="<?php echo esc_url( $form_url ); ?>"
 				   class="fs-inquiry-btn fs-inquiry-btn--primary"
@@ -80,20 +90,22 @@ $category_name = ( ! empty( $categories ) && ! is_wp_error( $categories ) ) ? $c
 	</div>
 </div>
 
-<?php if ( $show_quote_btn ) : ?>
+<?php if ( $show_quantity || $show_quote_list ) : ?>
 <script>
 (function() {
-	var quoteBtn = document.getElementById('fs-inquiry-quote-btn');
-	if (!quoteBtn) return;
-
 	var qtyInput = document.getElementById('fs-inquiry-qty');
-	var baseUrl = quoteBtn.getAttribute('data-base-url');
-	var productName = quoteBtn.getAttribute('data-product-name');
-	var productUrl = quoteBtn.getAttribute('data-product-url');
-	var productCategory = quoteBtn.getAttribute('data-product-category');
+	if (!qtyInput) return;
+
+	var minVal = parseInt(qtyInput.getAttribute('min'), 10) || 1;
+	var quoteBtn = document.getElementById('fs-inquiry-quote-btn');
 
 	function buildUrl() {
-		var qty = qtyInput ? (parseInt(qtyInput.value, 10) || 1) : 1;
+		if (!quoteBtn) return;
+		var baseUrl = quoteBtn.getAttribute('data-base-url');
+		var productName = quoteBtn.getAttribute('data-product-name');
+		var productUrl = quoteBtn.getAttribute('data-product-url');
+		var productCategory = quoteBtn.getAttribute('data-product-category');
+		var qty = parseInt(qtyInput.value, 10) || minVal;
 
 		var params = new URLSearchParams();
 		params.set('product_name', productName);
@@ -105,18 +117,21 @@ $category_name = ( ! empty( $categories ) && ! is_wp_error( $categories ) ) ? $c
 	}
 
 	// Bind quantity buttons
-	if (qtyInput) {
-		document.querySelectorAll('.fs-qty-control__btn').forEach(function(btn) {
-			btn.addEventListener('click', function() {
-				var val = parseInt(qtyInput.value, 10) || 1;
-				if (this.dataset.action === 'minus' && val > 1) qtyInput.value = val - 1;
-				if (this.dataset.action === 'plus') qtyInput.value = val + 1;
-				buildUrl();
-			});
+	document.querySelectorAll('#fs-product-inquiry .fs-qty-control__btn').forEach(function(btn) {
+		btn.addEventListener('click', function() {
+			var val = parseInt(qtyInput.value, 10) || minVal;
+			if (this.dataset.action === 'minus' && val > minVal) {
+				qtyInput.value = val - 1;
+			}
+			if (this.dataset.action === 'plus') {
+				qtyInput.value = val + 1;
+			}
+			buildUrl();
 		});
-		qtyInput.addEventListener('change', buildUrl);
-		qtyInput.addEventListener('input', buildUrl);
-	}
+	});
+
+	qtyInput.addEventListener('change', buildUrl);
+	qtyInput.addEventListener('input', buildUrl);
 
 	// Initial URL build
 	buildUrl();

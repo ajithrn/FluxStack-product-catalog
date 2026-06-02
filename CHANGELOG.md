@@ -5,6 +5,58 @@ All notable changes to the FluxStack Product Catalog plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-06-02
+
+### Added
+- **Quote List Feature**: Multi-product quote collection with localStorage persistence
+  - "Add to List" button on product cards and single product pages (toggle in settings)
+  - Floating trigger button with badge count (configurable position: bottom-right/left)
+  - Slide-out panel: item thumbnails, SKU subtitle, quantity controls (respects MOQ), remove, clear all
+  - Form page integration: renders visible product table + injects formatted text into hidden field
+  - Configurable template with tags: `{name}`, `{sku}`, `{part_no}`, `{qty}`, `{url}`, `{id}`, `{uom}`
+  - Smart cleanup: empty segments (e.g. "Part No: " with no value) auto-removed from output
+  - Success page detection: auto-clears list when user lands on configured URL
+  - "Clear List" button on form page for manual reset
+  - New settings tab: **Quote List** (General, Floating Button, Form Integration, Labels)
+- **Product Identification Fields**: Native meta box (no ACF dependency) with 7 fields
+  - SKU, Mfr. Part No., Unit of Measure, Min. Order Qty, Lead Time, Weight, Dimensions
+  - Displayed on single product page in a compact grid layout
+  - Customizable field labels (SKU Label, Part No. Label) in settings
+  - Data passed to quote list button via `data-*` attributes
+- **Gravity Forms Integration** (optional, loads only when GF active)
+  - Form + field picker dropdowns in settings (no manual CSS selector needed)
+  - `{fs_product_table}` merge tag for email notifications (renders HTML table)
+  - Entry formatting: stores product table in entry meta
+  - Auto-clear localStorage on successful GF submission
+  - AJAX field loader when admin changes form selection
+
+### Changed
+- **Product Card Layout**: Footer with "View Details" + "Add to List" on same line, pushed to bottom via flexbox
+- **Product Card Structure**: Card uses `display: flex; flex-direction: column` for consistent height alignment
+- **Frontend Assets**: Now load on all pages when quote list is enabled (needed for form page, trigger, success detection)
+- **Localized JS Data**: Added `fs_product_frontend_localize_data` filter for extensibility; data localized on single product pages and non-product pages (when quote list enabled)
+
+### Technical
+- New file: `includes/class-fs-product-identification.php` — Native meta box for product identification fields
+- New file: `includes/class-fs-product-quote-list.php` — Quote list frontend controller
+- New file: `includes/class-fs-product-gf-integration.php` — Optional Gravity Forms integration
+- New file: `assets/js/frontend-quote-list.js` — QuoteList JS module (localStorage, panel, form integration)
+- New file: `assets/css/frontend-quote-list.css` — Trigger, panel, add button, form table styles
+- New file: `templates/parts/quote-list-panel.php` — Slide-out panel template
+- New file: `templates/parts/quote-list-trigger.php` — Floating trigger button template
+- New file: `templates/parts/product-identification.php` — Identification fields display
+- Updated `fs-product-catalog.php`: Version 2.3.0, added Identification, QuoteList, GFIntegration classes
+- Updated `includes/class-fs-product-settings.php`: Quote list + GF + identification label settings (defaults, sanitization, toggles)
+- Updated `includes/class-fs-product-frontend.php`: `fs_product_frontend_localize_data` filter, asset loading on all pages when quote list enabled
+- Updated `templates/single-product.php`: Added identification display + "Add to List" button
+- Updated `templates/parts/loop/product-card.php`: New footer structure with "View Details" + "Add to List"
+- Updated `templates/admin/settings-page.php`: Quote List tab, GF integration section
+- Updated `assets/js/admin-settings.js`: GFFieldPicker module for AJAX field loading
+- Updated `assets/css/frontend-common.css`: Flexbox card layout, card footer styles
+- Updated `assets/css/frontend-single.css`: Identification display, add-to-list button styles
+- Updated `package.json`: Build includes `frontend-quote-list.css` and `frontend-quote-list.js`
+- Updated `docs/architecture.md`, `docs/build.md`, `docs/developer.md`, `README.md`
+
 ## [2.2.0] - 2026-05-21
 
 ### Added

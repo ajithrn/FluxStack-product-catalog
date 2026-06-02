@@ -15,9 +15,11 @@ This document provides detailed technical information for developers working wit
 7. [Import / Export](#import--export)
 8. [CSS Architecture](#css-architecture)
 9. [JavaScript Modules](#javascript-modules)
-8. [Extending the Plugin](#extending-the-plugin)
-9. [Best Practices](#best-practices)
-10. [Troubleshooting](#troubleshooting)
+10. [Product Inquiry System](#product-inquiry-system)
+11. [Quote List Feature](#quote-list-feature)
+12. [Extending the Plugin](#extending-the-plugin)
+13. [Best Practices](#best-practices)
+14. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -1114,6 +1116,50 @@ The quantity +/− buttons and dynamic URL update are handled by inline `<script
 
 ---
 
+## Quote List Feature
+
+The Quote List feature allows users to compile products as they browse and submit a bulk request via a centralized form page. It supports optional Gravity Forms integration.
+
+### Storage & Core Logic
+- **Client-Side Storage**: Maintained in `localStorage` under the key `fs_quote_list`.
+- **Item Schema**:
+  ```json
+  {
+    "id": 123,
+    "name": "Product Title",
+    "sku": "WRS-6x19-3/8",
+    "partNo": "6x19-IWRC-3/8",
+    "qty": 5,
+    "moq": 1,
+    "url": "/products/product-title/",
+    "image": "/wp-content/uploads/..."
+  }
+  ```
+- **Constraints**: Enforces Minimum Order Quantity (MOQ) and a configurable maximum limit of items (default 50).
+
+### Frontend UI Components
+- **Floating Trigger Button**: Positioned dynamically (bottom-right or bottom-left) displaying the current item count badge. Swapped to a shopping basket icon.
+- **Detached Popover Panel**: Anchored above the trigger button. Displays list items, supports quantity adjustments, individual removal, and a clear button.
+- **Mobile Experience**: Responsive CSS query adapts the popover to a full-screen drawer that slides up from the bottom on devices under `576px`.
+- **Layout Stabilization**: Utilizes `html { scrollbar-gutter: stable; }` to eliminate layout shift/flicker when page body scroll is disabled on popover opening.
+- **Interactive Form Cart**: Renders an inline summary block with thumbnails, product names, SKUs, quantity controls, and delete actions directly on the custom form page within `#fs-products-table`.
+
+### Plain Text & Hidden Field List Formatting
+- **Form Injection**: The JS module automatically populates the configured selector (e.g. `#fs-products-field`) with a clean plain-text list using the configurable template:
+  `Product A | SKU: 123 | Qty: 5`
+  `Product B | SKU: 456 | Qty: 2`
+- **Template Tags**: `{name}`, `{sku}`, `{part_no}`, `{qty}`, `{url}`, `{id}`, `{uom}` — segments with empty values are auto-removed.
+- **Dynamic Re-syncing**: Modifying quantities or deleting items from the inline form cart automatically updates the hidden text field value before the form is submitted.
+
+### Gravity Forms Integration (`\FSProductCatalog\GFIntegration`)
+- **Admin Configuration**: A dedicated settings section allows selecting the active form, mapping the field dynamically using an AJAX-populated field dropdown, and toggling submission cleanup.
+- **Merge Tag `{fs_product_table}`**: Provides a merge tag for email notifications and confirmations, rendering a formatted HTML table of the quote.
+- **Entry Enhancement**: Automatically converts the raw plain-text value into a structured HTML table stored in the entry metadata.
+- **String Sanitization**: Strips prepended list numbers/bullets (e.g. `1. `, `- `, `• `) when rendering the HTML tables to ensure product names are displayed cleanly.
+- **Local Storage Cleanup**: Automatically appends a script to clean `localStorage` upon successful confirmation load.
+
+---
+
 ## Extending the Plugin
 
 ### Adding Custom Product Fields
@@ -1408,7 +1454,7 @@ check_ajax_referer('fs_product_filter_nonce', 'nonce');
 - `will-change: box-shadow` on product cards for GPU-accelerated hover transitions
 - Table styles respect WYSIWYG inline styles — no forced overrides that conflict with content
 
----
+
 
 ## Additional Resources
 

@@ -71,9 +71,15 @@ do_action( 'fs_product_before_main_content' );
 							?>
 
 							<?php
+							// Product identification (SKU, Part No., etc.)
+							\FSProductCatalog\TemplateLoader::get_template_part( 'product-identification' );
+							?>
+
+							<?php
 							// Product inquiry (after-info placement).
 							\FSProductCatalog\Frontend::render_inquiry_after_info();
 							?>
+
 						</div>
 					</div>
 				</div>
